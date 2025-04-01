@@ -101,11 +101,16 @@ export default function HomePage() {
 
   /* ---------------------- Retrieving All Master Cities --------------------*/
   const [masterCities, setMasterCities] = useState([]);
+  const [isProcessing, setIsProcessing] = useState(false);
   useEffect(() => {
     async function fetchMasterCity() {
       try {
-        const cities = fetchMasterCities();
-        console.log("cities in use", cities);
+        if (isProcessing) {
+          return;
+        }
+        setIsProcessing(true);
+        const citiesResponse = fetchMasterCities();
+        setMasterCities(citiesResponse.data);
       } catch (error) {
         /*
         toast.error(
@@ -118,10 +123,12 @@ export default function HomePage() {
           }
         );
         */
+      } finally {
+        setIsProcessing(false);
       }
     }
     fetchMasterCity();
-  });
+  }, []);
 
   // Mobile layout
   if (isMobile) {
