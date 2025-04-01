@@ -586,6 +586,7 @@ export default function HomePage() {
             {postings?.map((post, index) => (
               <SocialPostCard
                 key={post.id || post._id || index}
+                post={post}
                 username="Bishwa Kiran Poudel"
                 images={[
                   "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ofUhN9KOwqsoSgDe5cA9ZgKpazulFa.png",

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { MoreHorizontal, Heart, MessageCircle, ThumbsDown } from "lucide-react";
 
 const SocialPostCard = ({
+  post,
   isMobile = false,
   username = "Aarav Patel",
   handle = "@AaravAdventures",
@@ -79,14 +80,14 @@ const SocialPostCard = ({
               <div className="h-10 w-10 bg-gray-200 rounded-full mr-3 overflow-hidden">
                 <img
                   src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                  alt={username}
+                  alt={post.username}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div>
                 <div className="font-medium">{username}</div>
                 <div className="text-xs text-gray-500">
-                  {handle} · {timeAgo}
+                  {post.username} · {timeAgo}
                 </div>
               </div>
             </div>
@@ -96,10 +97,10 @@ const SocialPostCard = ({
           </div>
 
           {/* Category */}
-          {category && (
+          {post.scoopname && (
             <div className="mb-2">
               <span className="inline-block bg-gray-100 text-gray-800 text-xs px-3 py-1 rounded-full">
-                {category}
+                {post.scoopname}
               </span>
             </div>
           )}
@@ -113,14 +114,14 @@ const SocialPostCard = ({
           </div>
 
           {/* Hashtags */}
-          {hashtags && hashtags.length > 0 && (
+          {post.hoops && post.hoops.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-3">
-              {hashtags.map((tag, index) => (
+              {post.hoops.map((tag, index) => (
                 <span
                   key={index}
                   className="bg-purple-50 text-purple-800 text-xs px-3 py-1 rounded-full"
                 >
-                  #{tag}
+                  {tag.hooptag}
                 </span>
               ))}
             </div>
@@ -167,10 +168,10 @@ const SocialPostCard = ({
         </div>
         <div className="ml-3 flex-1">
           <div className="flex items-center">
-            <span className="font-semibold text-sm">{username}</span>
+            <span className="font-semibold text-sm">{post.username}</span>
           </div>
           <div className="text-gray-500 text-xs flex items-center">
-            <span>{handle}</span>
+            <span>@{post.username}</span>
             <span className="mx-1">•</span>
             <span>{timeAgo}</span>
           </div>
@@ -243,31 +244,31 @@ const SocialPostCard = ({
       </div>
 
       {/* Category */}
-      {category && (
+      {post.scoopname && (
         <div className="px-4 pt-3">
           <button className="bg-gray-100 text-gray-800 font-medium text-sm rounded-full border border-gray-200 px-4 py-1.5">
-            {category}
+            {post.scoopname}
           </button>
         </div>
       )}
 
       {/* Content */}
       <div className="p-4 pt-2">
-        <p className="text-sm text-gray-800 mb-2">{content}</p>
+        <p className="text-sm text-gray-800 mb-2">{post.contentinfo}</p>
         <button className="text-sm text-gray-800 font-medium italic border-b border-gray-800 pb-0.5 inline-block">
           Read more
         </button>
       </div>
 
       {/* Hashtags */}
-      {hashtags && hashtags.length > 0 && (
+      {post.hoops && post.hoops.length > 0 && (
         <div className="px-4 pb-3 flex flex-wrap gap-2">
-          {hashtags.map((tag, index) => (
+          {post.hoops.map((tag, index) => (
             <span
               key={index}
               className="bg-purple-50 text-purple-800 text-xs px-3 py-1 rounded-full"
             >
-              #{tag}
+              {tag.hooptag}
             </span>
           ))}
         </div>
