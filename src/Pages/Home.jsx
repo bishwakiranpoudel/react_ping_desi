@@ -15,7 +15,7 @@ import {
   ThumbsDown,
   X,
   Menu,
-  MapPin,
+  MapPin
 } from "react-feather"; // Using react-feather instead of lucide-react
 
 import { useIsMobile } from "../hooks/use-mobile";
@@ -31,6 +31,8 @@ import NotificationCard from "../components/home_components/NotificationCard";
 import HomePromotionCard from "../components/home_components/HomePromotionCard";
 import BottomNavbar from "../components/home_components/BottomNavBar";
 import MobileSidebar from "../components/home_components/MobileSidebar";
+
+import { fetchMasterCities } from "../services/locationServices";
 
 export default function HomePage() {
   // State to track viewport height for proper sidebar sizing
@@ -73,26 +75,53 @@ export default function HomePage() {
     return () => window.removeEventListener("resize", updateViewportHeight);
   }, []);
 
-  useEffect(()=>{
-  })
+  useEffect(() => {});
   // Add this new useEffect for scroll handling in the mobile view
+  useEffect(
+    () => {
+      if (!isMobile) return;
+
+      const handleScroll = () => {
+        const currentScrollPos = window.pageYOffset;
+
+        // Determine if we should show or hide based on scroll direction
+        // Also, don't hide navbar when at the top of the page
+        const visible =
+          prevScrollPos > currentScrollPos || currentScrollPos < 10;
+
+        setPrevScrollPos(currentScrollPos);
+        setIsNavbarVisible(visible);
+      };
+
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    },
+    [prevScrollPos, isMobile]
+  );
+
+  /* ---------------------- Retrieving All Master Cities --------------------*/
+  const [masterCities, setMasterCities] = useState([]);
   useEffect(() => {
-    if (!isMobile) return;
-
-    const handleScroll = () => {
-      const currentScrollPos = window.pageYOffset;
-
-      // Determine if we should show or hide based on scroll direction
-      // Also, don't hide navbar when at the top of the page
-      const visible = prevScrollPos > currentScrollPos || currentScrollPos < 10;
-
-      setPrevScrollPos(currentScrollPos);
-      setIsNavbarVisible(visible);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [prevScrollPos, isMobile]);
+    async function fetchMasterCity() {
+      try {
+        const cities = fetchMasterCities();
+        console.log("cities in use", cities);
+      } catch (error) {
+        /*
+        toast.error(
+          "" + (error.response?.data?.message ?? error.data?.message ?? error),
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true
+          }
+        );
+        */
+      }
+    }
+    fetchMasterCity();
+  });
 
   // Mobile layout
   if (isMobile) {
@@ -104,7 +133,7 @@ export default function HomePage() {
           style={{
             boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
             background:
-              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)",
+              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)"
           }}
         >
           <div className="flex items-center p-4">
@@ -397,9 +426,9 @@ export default function HomePage() {
                 </div>
                 <div className="flex justify-center py-2">
                   <div className="flex space-x-1">
-                    <div className="h-1.5 w-1.5 rounded-full bg-gray-300"></div>
-                    <div className="h-1.5 w-1.5 rounded-full bg-purple-600"></div>
-                    <div className="h-1.5 w-1.5 rounded-full bg-gray-300"></div>
+                    <div className="h-1.5 w-1.5 rounded-full bg-gray-300" />
+                    <div className="h-1.5 w-1.5 rounded-full bg-purple-600" />
+                    <div className="h-1.5 w-1.5 rounded-full bg-gray-300" />
                   </div>
                 </div>
               </div>
@@ -433,7 +462,7 @@ export default function HomePage() {
             top: 0,
             overflowY: "auto",
             background:
-              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)",
+              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)"
           }}
         >
           <div className="flex flex-col h-full">
@@ -526,7 +555,7 @@ export default function HomePage() {
               images={[
                 "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ofUhN9KOwqsoSgDe5cA9ZgKpazulFa.png",
                 "/placeholder.svg?height=400&width=600",
-                "/placeholder.svg?height=400&width=600",
+                "/placeholder.svg?height=400&width=600"
               ]}
             />
 
@@ -534,7 +563,7 @@ export default function HomePage() {
               images={[
                 "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ofUhN9KOwqsoSgDe5cA9ZgKpazulFa.png",
                 "/placeholder.svg?height=400&width=600",
-                "/placeholder.svg?height=400&width=600",
+                "/placeholder.svg?height=400&width=600"
               ]}
             />
           </div>
@@ -559,7 +588,7 @@ export default function HomePage() {
               <AllergyCard />
 
               {/* Divider */}
-              <div className="w-full h-px bg-gray-200 my-4"></div>
+              <div className="w-full h-px bg-gray-200 my-4" />
               <div className="mb-2">
                 <h2 className="text-xl font-bold font-fraunces">
                   <span>Local </span>

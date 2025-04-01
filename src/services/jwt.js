@@ -1,33 +1,20 @@
 "use client";
-import { jwtDecode, JwtPayload } from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { getApiUrl } from "../hooks/api";
 
 class TokenRefreshError extends Error {
-  constructor(message: string) {
+  constructor(message) {
     super(message);
     this.name = "TokenRefreshError";
   }
 }
 
-export interface TokenResponse {
-  token: {
-    access: string;
-    refresh: string;
-  };
-  status: string;
-  message: string;
-}
-export interface Token {
-  access: string;
-  refresh: string;
-}
-
-const isTokenValid = (token: string | null): boolean => {
+const isTokenValid = (token) => {
   if (!token) return false;
 
   try {
-    const decodedToken = jwtDecode<JwtPayload>(token);
+    const decodedToken = jwtDecode(token);
     if (!decodedToken.exp) return false;
     const currentTime = Date.now() / 1000;
     return decodedToken.exp > currentTime;
@@ -37,7 +24,7 @@ const isTokenValid = (token: string | null): boolean => {
   }
 };
 
-export const refreshToken = async (refreshToken: string): Promise<Token> => {
+export const refreshToken = async (refreshToken) => {
   if (!isTokenValid(refreshToken)) {
     console.log("Refresh token is invalid");
     localStorage.clear();
@@ -51,7 +38,7 @@ export const refreshToken = async (refreshToken: string): Promise<Token> => {
   };
 
   try {
-    const response = await axios.post<TokenResponse>(tokenEndpoint, payload, {
+    const response = await axios.post(tokenEndpoint, payload, {
       headers: {
         "Content-Type": "application/json"
       }
@@ -72,7 +59,7 @@ export const refreshToken = async (refreshToken: string): Promise<Token> => {
   }
 };
 
-const getValidToken = async (currentTokens: Token): Promise<Token> => {
+const getValidToken = async (currentTokens) => {
   console.log("Checking token validity...");
   if (isTokenValid(currentTokens.access)) {
     console.log("TOKEN VALID returning current tokens");
