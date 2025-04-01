@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+// import { handlePostRequest } from "../hooks/api";
 import {
   Search,
   Home,
@@ -51,6 +53,62 @@ export default function HomePage() {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
+  //for social media posts
+  // const [postings, setPostings] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+
+  // useEffect(() => {
+  //   const fetchPostings = async () => {
+  //     setLoading(true);
+  //     setError(null);
+
+  //     const geohash = localStorage.getItem("geohash") || "9v6m";
+  //     const endpoint = "/v1/posting/getAllPostings";
+  //     const requestBody = { geohash, offset: 0 };
+
+  //     try {
+  //       const response = await handlePostRequest(
+  //         endpoint,
+  //         requestBody,
+  //         {},
+  //         false
+  //       );
+
+  //       if (response?.error) {
+  //         setError(response.error);
+  //         toast.error(response.error, {
+  //           position: "top-right",
+  //           autoClose: 5000,
+  //           hideProgressBar: false,
+  //           closeOnClick: true,
+  //         });
+  //       } else {
+  //         setPostings(response);
+  //       }
+  //     } catch (error) {
+  //       const errorMessage =
+  //         error.response?.data?.message ?? error.data?.message ?? error;
+  //       setError(errorMessage);
+
+  //       toast.error("" + errorMessage, {
+  //         position: "top-right",
+  //         autoClose: 5000,
+  //         hideProgressBar: false,
+  //         closeOnClick: true,
+  //       });
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchPostings();
+  // }, []);
+
+  // console.log(postings, "posting");
+
+  //end of social media posts
+
   // Function to handle close button click
   const handleCloseClick = () => {
     setIsFirstCardVisible(false);
@@ -73,8 +131,7 @@ export default function HomePage() {
     return () => window.removeEventListener("resize", updateViewportHeight);
   }, []);
 
-  useEffect(()=>{
-  })
+  useEffect(() => {});
   // Add this new useEffect for scroll handling in the mobile view
   useEffect(() => {
     if (!isMobile) return;
