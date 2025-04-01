@@ -30,6 +30,7 @@ import {
   fetchMasterCities,
   retrieveMasterCity
 } from "../services/locationServices";
+import { fetchWeatherForecast } from "../services/forecast";
 
 export default function HomePage() {
   // State to track viewport height for proper sidebar sizing
