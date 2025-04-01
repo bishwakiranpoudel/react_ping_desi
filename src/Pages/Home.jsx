@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-// import { handlePostRequest } from "../hooks/api";
+import { handlePostRequest } from "../hooks/api";
 import {
   Search,
   Home,
@@ -17,9 +17,8 @@ import {
   ThumbsDown,
   X,
   Menu,
-  MapPin
+  MapPin,
 } from "react-feather"; // Using react-feather instead of lucide-react
-
 import { useIsMobile } from "../hooks/use-mobile";
 import { TabbedContent } from "../components/home_components/tabbed-content";
 import HoroscopeCard from "../components/home_components/HoroscopeCard";
@@ -33,8 +32,6 @@ import NotificationCard from "../components/home_components/NotificationCard";
 import HomePromotionCard from "../components/home_components/HomePromotionCard";
 import BottomNavbar from "../components/home_components/BottomNavBar";
 import MobileSidebar from "../components/home_components/MobileSidebar";
-
-import { fetchMasterCities } from "../services/locationServices";
 
 export default function HomePage() {
   // State to track viewport height for proper sidebar sizing
@@ -55,61 +52,63 @@ export default function HomePage() {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
-  //for social media posts
-  // const [postings, setPostings] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
+  /***********************social media*****************/
 
-  // useEffect(() => {
-  //   const fetchPostings = async () => {
-  //     setLoading(true);
-  //     setError(null);
+  const [postings, setPostings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  //     const geohash = localStorage.getItem("geohash") || "9v6m";
-  //     const endpoint = "/v1/posting/getAllPostings";
-  //     const requestBody = { geohash, offset: 0 };
+  useEffect(() => {
+    const fetchPostings = async () => {
+      setLoading(true);
+      setError(null);
 
-  //     try {
-  //       const response = await handlePostRequest(
-  //         endpoint,
-  //         requestBody,
-  //         {},
-  //         false
-  //       );
+      const geohash = localStorage.getItem("geohash") || "9v6m";
+      const endpoint = "/posting/getAllPostings";
+      const requestBody = { geohash, offset: 0 };
 
-  //       if (response?.error) {
-  //         setError(response.error);
-  //         toast.error(response.error, {
-  //           position: "top-right",
-  //           autoClose: 5000,
-  //           hideProgressBar: false,
-  //           closeOnClick: true,
-  //         });
-  //       } else {
-  //         setPostings(response);
-  //       }
-  //     } catch (error) {
-  //       const errorMessage =
-  //         error.response?.data?.message ?? error.data?.message ?? error;
-  //       setError(errorMessage);
+      try {
+        const response = await handlePostRequest(
+          endpoint,
+          requestBody,
+          {},
+          false
+        );
 
-  //       toast.error("" + errorMessage, {
-  //         position: "top-right",
-  //         autoClose: 5000,
-  //         hideProgressBar: false,
-  //         closeOnClick: true,
-  //       });
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+        if (response?.error) {
+          setError(response.error);
+          toast.error(response.error, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          });
+        } else {
+          setPostings(response.posts);
+        }
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message ?? error.data?.message ?? error;
+        setError(errorMessage);
 
-  //   fetchPostings();
-  // }, []);
+        toast.error("" + errorMessage, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  // console.log(postings, "posting");
+    fetchPostings();
+  }, []);
 
-  //end of social media posts
+  console.log(postings, "posting");
+  console.log(postings.posts, "posting");
+
+  /***********************social media end*****************/
 
   // Function to handle close button click
   const handleCloseClick = () => {
@@ -133,53 +132,24 @@ export default function HomePage() {
     return () => window.removeEventListener("resize", updateViewportHeight);
   }, []);
 
-  useEffect(() => {});
   // Add this new useEffect for scroll handling in the mobile view
-  useEffect(
-    () => {
-      if (!isMobile) return;
-
-      const handleScroll = () => {
-        const currentScrollPos = window.pageYOffset;
-
-        // Determine if we should show or hide based on scroll direction
-        // Also, don't hide navbar when at the top of the page
-        const visible =
-          prevScrollPos > currentScrollPos || currentScrollPos < 10;
-
-        setPrevScrollPos(currentScrollPos);
-        setIsNavbarVisible(visible);
-      };
-
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    },
-    [prevScrollPos, isMobile]
-  );
-
-  /* ---------------------- Retrieving All Master Cities --------------------*/
-  const [masterCities, setMasterCities] = useState([]);
   useEffect(() => {
-    async function fetchMasterCity() {
-      try {
-        const cities = fetchMasterCities();
-        console.log("cities in use", cities);
-      } catch (error) {
-        /*
-        toast.error(
-          "" + (error.response?.data?.message ?? error.data?.message ?? error),
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true
-          }
-        );
-        */
-      }
-    }
-    fetchMasterCity();
-  });
+    if (!isMobile) return;
+
+    const handleScroll = () => {
+      const currentScrollPos = window.pageYOffset;
+
+      // Determine if we should show or hide based on scroll direction
+      // Also, don't hide navbar when at the top of the page
+      const visible = prevScrollPos > currentScrollPos || currentScrollPos < 10;
+
+      setPrevScrollPos(currentScrollPos);
+      setIsNavbarVisible(visible);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [prevScrollPos, isMobile]);
 
   // Mobile layout
   if (isMobile) {
@@ -191,7 +161,7 @@ export default function HomePage() {
           style={{
             boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
             background:
-              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)"
+              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)",
           }}
         >
           <div className="flex items-center p-4">
@@ -346,8 +316,13 @@ export default function HomePage() {
               {/* Social Post */}
               <div className="overflow-x-auto ">
                 <div className="flex space-x-4">
-                  <SocialPostCard isMobile={isMobile} />
-                  <SocialPostCard isMobile={isMobile} />
+                  {postings?.map((post) => (
+                    <SocialPostCard
+                      key={post.id || post._id}
+                      post={post}
+                      isMobile={isMobile}
+                    />
+                  ))}
                 </div>
               </div>
             </section>
@@ -484,9 +459,9 @@ export default function HomePage() {
                 </div>
                 <div className="flex justify-center py-2">
                   <div className="flex space-x-1">
-                    <div className="h-1.5 w-1.5 rounded-full bg-gray-300" />
-                    <div className="h-1.5 w-1.5 rounded-full bg-purple-600" />
-                    <div className="h-1.5 w-1.5 rounded-full bg-gray-300" />
+                    <div className="h-1.5 w-1.5 rounded-full bg-gray-300"></div>
+                    <div className="h-1.5 w-1.5 rounded-full bg-purple-600"></div>
+                    <div className="h-1.5 w-1.5 rounded-full bg-gray-300"></div>
                   </div>
                 </div>
               </div>
@@ -520,7 +495,7 @@ export default function HomePage() {
             top: 0,
             overflowY: "auto",
             background:
-              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)"
+              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)",
           }}
         >
           <div className="flex flex-col h-full">
@@ -608,22 +583,17 @@ export default function HomePage() {
             <h1 className="text-xl lg:text-2xl font-bold mb-4 mt-3 font-fraunces">
               Scoops Around You
             </h1>
-            <SocialPostCard
-              username="Bishwa Kiran Poudel"
-              images={[
-                "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ofUhN9KOwqsoSgDe5cA9ZgKpazulFa.png",
-                "/placeholder.svg?height=400&width=600",
-                "/placeholder.svg?height=400&width=600"
-              ]}
-            />
-
-            <SocialPostCard
-              images={[
-                "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ofUhN9KOwqsoSgDe5cA9ZgKpazulFa.png",
-                "/placeholder.svg?height=400&width=600",
-                "/placeholder.svg?height=400&width=600"
-              ]}
-            />
+            {postings?.map((post, index) => (
+              <SocialPostCard
+                key={post.id || post._id || index}
+                username="Bishwa Kiran Poudel"
+                images={[
+                  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ofUhN9KOwqsoSgDe5cA9ZgKpazulFa.png",
+                  "/placeholder.svg?height=400&width=600",
+                  "/placeholder.svg?height=400&width=600",
+                ]}
+              />
+            ))}
           </div>
         </main>
 
@@ -646,7 +616,7 @@ export default function HomePage() {
               <AllergyCard />
 
               {/* Divider */}
-              <div className="w-full h-px bg-gray-200 my-4" />
+              <div className="w-full h-px bg-gray-200 my-4"></div>
               <div className="mb-2">
                 <h2 className="text-xl font-bold font-fraunces">
                   <span>Local </span>
