@@ -6,13 +6,9 @@ const SocialPostCard = ({
   post,
   isMobile = false,
   username = "Aarav Patel",
-  handle = "@AaravAdventures",
   timeAgo = "9h ago",
   content = "Just had an amazing dinner at The Spice Lounge with my family. If you're nearby, you have to check this place out—it's a vibe. From the cozy ambiance to the chef's special Biriyani, everything was spot-on. Can't wait to go back!",
-  images = ["/placeholder.svg"],
-  likes = 12,
-  category = "Classifieds",
-  hashtags = ["InfoDrop", "Dine in", "Take out", "Review"],
+  images,
   onLike,
   onComment,
   className = "",
@@ -136,7 +132,7 @@ const SocialPostCard = ({
                     isLiked ? "fill-red-500 text-red-500" : ""
                   }`}
                 />
-                <span className="ml-1 text-sm">{likes}</span>
+                <span className="ml-1 text-sm">{post.totalLikes}</span>
               </button>
               <button className="flex items-center text-gray-500">
                 <MessageCircle className="h-5 w-5" />
@@ -190,6 +186,7 @@ const SocialPostCard = ({
       </div>
 
       {/* Image Carousel */}
+
       <div className="relative flex-grow">
         <div className="w-full h-full relative">
           <img
@@ -299,7 +296,7 @@ const SocialPostCard = ({
           </button>
           ...{" "}
           <div className="flex items-center">
-            <span className="text-sm font-medium mr-1">{likes}</span>
+            <span className="text-sm font-medium mr-1">{post.totalLikes}</span>
             <img
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Frame%201000014772-A60n4ByPCLjN4CrTB0VOCyvtZbXDvp.png"
               alt="Like"

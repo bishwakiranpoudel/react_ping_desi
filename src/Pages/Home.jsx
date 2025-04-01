@@ -588,11 +588,7 @@ export default function HomePage() {
                 key={post.id || post._id || index}
                 post={post}
                 username="Bishwa Kiran Poudel"
-                images={[
-                  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ofUhN9KOwqsoSgDe5cA9ZgKpazulFa.png",
-                  "/placeholder.svg?height=400&width=600",
-                  "/placeholder.svg?height=400&width=600",
-                ]}
+                images={[post.photopath]}
               />
             ))}
           </div>
