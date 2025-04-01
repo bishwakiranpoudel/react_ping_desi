@@ -17,6 +17,7 @@ import {
   Menu,
   MapPin,
 } from "react-feather"; // Using react-feather instead of lucide-react
+
 import { useIsMobile } from "../hooks/use-mobile";
 import { TabbedContent } from "../components/home_components/tabbed-content";
 import HoroscopeCard from "../components/home_components/HoroscopeCard";
@@ -72,6 +73,8 @@ export default function HomePage() {
     return () => window.removeEventListener("resize", updateViewportHeight);
   }, []);
 
+  useEffect(()=>{
+  })
   // Add this new useEffect for scroll handling in the mobile view
   useEffect(() => {
     if (!isMobile) return;

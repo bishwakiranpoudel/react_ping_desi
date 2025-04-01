@@ -1,10 +1,6 @@
-import {getValidToken, refreshToken, Token} from '@/services/jwt';
+import {getValidToken, refreshToken, Token} from '../services/jwt';
 import axios from 'axios'
-
-interface TokenResponse {
-  access_token: string;
-  refresh_token: string;
-}
+import {envConfig} from '../config/env';
 
 const handleAxiosError = (
   error: unknown
@@ -22,7 +18,7 @@ const handleAxiosError = (
 };
 
   export const getApiUrl = (): string => {
-    return  process.env.NEXT_PUBLIC_BACKEND_URL
+    return  envConfig.apiUrl
   };
 
   export const handleGetToken = (): string | null => {
