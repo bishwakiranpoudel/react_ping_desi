@@ -13,35 +13,55 @@ const BottomNavbar = ({ isNavbarVisible }) => {
           href="/"
           className="flex flex-col items-center justify-center text-purple-600"
         >
-          <Home className="h-5 w-5" />
+          <img
+            src={"/images/home_icon.svg"}
+            alt="Home icon"
+            className="w-5 h-5"
+          />
           <span className="text-xs mt-1">Home</span>
         </a>
         <a
           href="/discover"
           className="flex flex-col items-center justify-center text-gray-500"
         >
-          <Search className="h-5 w-5" />
+          <img
+            src={"/images/search_icon.svg"}
+            alt="Discover icon"
+            className="w-5 h-5"
+          />
           <span className="text-xs mt-1">Discover</span>
         </a>
         <a
           href="/scoops"
           className="flex flex-col items-center justify-center text-gray-500"
         >
-          <MessageSquare className="h-5 w-5" />
+          <img
+            src={"/images/scoops_icon.svg"}
+            alt="scoops icon"
+            className="w-5 h-5"
+          />
           <span className="text-xs mt-1">Scoops</span>
         </a>
         <a
           href="/classifieds"
           className="flex flex-col items-center justify-center text-gray-500"
         >
-          <FileText className="h-5 w-5" />
+          <img
+            src={"/images/classfields_icon.svg"}
+            alt="classfields icon"
+            className="w-5 h-5"
+          />
           <span className="text-xs mt-1">Classifieds</span>
         </a>
         <a
           href="/profile"
           className="flex flex-col items-center justify-center text-gray-500"
         >
-          <User className="h-5 w-5" />
+          <img
+            src={"/images/profile_icon.svg"}
+            alt="profile icon"
+            className="w-5 h-5"
+          />
           <span className="text-xs mt-1">Profile</span>
         </a>
       </div>
