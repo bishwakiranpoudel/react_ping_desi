@@ -12,7 +12,7 @@ export const fetchWeatherForecast = async () => {
   return weatherForecast;
 };
 
-export const fetchAllergyForecast = async payload => {
+export const fetchAllergyForecast = async () => {
   const payload = { geohash: localStorage.getItem("geohash") || "geohash" };
   const allergyForecast = await handlePostRequest(
     "/news/allergySummary",
