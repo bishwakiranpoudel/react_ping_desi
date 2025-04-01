@@ -53,7 +53,6 @@ export default function HomePage() {
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
   /***********************social media*****************/
-
   const [postings, setPostings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
