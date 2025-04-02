@@ -26,6 +26,7 @@ import NotificationCard from "../components/home_components/NotificationCard";
 import HomePromotionCard from "../components/home_components/HomePromotionCard";
 import BottomNavbar from "../components/home_components/BottomNavBar";
 import MobileSidebar from "../components/home_components/MobileSidebar";
+import HappeningCard from "../components/home_components/HappeningCard";
 
 import {
   fetchMasterCities,
@@ -352,7 +353,10 @@ export default function HomePage() {
           <div className="p-4">
             {/* First Card - Initially visible with close button */}
             {isFirstCardVisible && (
-              <NotificationCard onClose={handleCloseClick} />
+              <NotificationCard
+                onClose={handleCloseClick}
+                isMobile={isMobile}
+              />
             )}
 
             {/* Second Card - Initially invisible, appears when first card is closed */}
@@ -507,82 +511,48 @@ export default function HomePage() {
                   className="flex space-x-4"
                   style={{ minWidth: "min-content" }}
                 >
-                  <div className="bg-white rounded-lg shadow-sm overflow-hidden w-[280px] flex-shrink-0">
-                    <div className="relative h-40 w-full">
-                      <img
-                        src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                        alt="Gender Reveal Party"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-2 left-2 bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-sm">
-                        👨‍👩‍👧‍👦 Community
-                      </div>
-                    </div>
-                    <div className="p-3">
-                      <h3 className="font-medium">Our Gender Reveal Party</h3>
-                      <p className="text-xs text-gray-600 mt-1 mb-2">
-                        Join us as we reveal the exciting news and celebrate
-                        with family and friends!
-                      </p>
-                      <div className="flex justify-between items-center">
-                        <div className="flex flex-col">
-                          <div className="text-sm font-medium">11:00 AM</div>
-                          <div className="flex items-center text-xs text-gray-500">
-                            <MapPin className="h-3 w-3 mr-1" /> Cesar Chavez
-                            Avenue
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <div className="text-center bg-gray-100 rounded-sm p-1 w-10">
-                            <div className="text-lg font-bold">13</div>
-                            <div className="text-xs">Nov</div>
-                            <div className="text-xs">2024</div>
-                          </div>
-                        </div>
-                      </div>
-                      <button className="mt-3 w-full py-1.5 bg-white border border-gray-300 text-gray-800 rounded-md text-sm">
-                        Get Direction
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="bg-white rounded-lg shadow-sm overflow-hidden w-[280px] flex-shrink-0">
-                    <div className="relative h-40 w-full">
-                      <img
-                        src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                        alt="Another Event"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-2 left-2 bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-sm">
-                        🎭 Entertainment
-                      </div>
-                    </div>
-                    <div className="p-3">
-                      <h3 className="font-medium">Storytelling Night</h3>
-                      <p className="text-xs text-gray-600 mt-1 mb-2">
-                        Join us for an evening of traditional Desi stories and
-                        folklore with community members.
-                      </p>
-                      <div className="flex justify-between items-center">
-                        <div className="flex flex-col">
-                          <div className="text-sm font-medium">7:00 PM</div>
-                          <div className="flex items-center text-xs text-gray-500">
-                            <MapPin className="h-3 w-3 mr-1" /> Community Center
-                          </div>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <div className="text-center bg-gray-100 rounded-sm p-1 w-10">
-                            <div className="text-lg font-bold">15</div>
-                            <div className="text-xs">Nov</div>
-                            <div className="text-xs">2024</div>
-                          </div>
-                        </div>
-                      </div>
-                      <button className="mt-3 w-full py-1.5 bg-white border border-gray-300 text-gray-800 rounded-md text-sm">
-                        Get Direction
-                      </button>
-                    </div>
-                  </div>
+                  <HappeningCard
+                    image="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                    imageAlt="Gender Reveal Party"
+                    category={{
+                      name: "Community",
+                      icon: "👨‍👩‍👧‍👦",
+                      bgColor: "bg-blue-100",
+                      textColor: "text-blue-800",
+                    }}
+                    title="Our Gender Reveal Party"
+                    description="Join us as we reveal the exciting news and celebrate with family and friends!"
+                    time="11:00 AM"
+                    location="Cesar Chavez Avenue"
+                    date={{ day: 13, month: "Nov", year: 2024 }}
+                    isMobile={true}
+                    onGetDirection={() =>
+                      console.log(
+                        "Get direction clicked for Gender Reveal Party"
+                      )
+                    }
+                  />
+                  <HappeningCard
+                    image="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                    imageAlt="Another Event"
+                    category={{
+                      name: "Entertainment",
+                      icon: "🎭",
+                      bgColor: "bg-purple-100",
+                      textColor: "text-purple-800",
+                    }}
+                    title="Storytelling Night"
+                    description="Join us for an evening of traditional Desi stories and folklore with community members."
+                    time="7:00 PM"
+                    location="Community Center"
+                    date={{ day: 15, month: "Nov", year: 2024 }}
+                    isMobile={true}
+                    onGetDirection={() =>
+                      console.log(
+                        "Get direction clicked for Storytelling Night"
+                      )
+                    }
+                  />
                 </div>
               </div>
             </section>
@@ -691,42 +661,72 @@ export default function HomePage() {
                   href="#"
                   className="flex items-center gap-3 text-sm py-2 px-3 rounded-md bg-white"
                 >
-                  <Home className="h-5 w-5 text-gray-500" />
+                  <img
+                    src={"/images/home_icon.svg"}
+                    alt="Home icon"
+                    className="w-5 h-5"
+                  />
+
                   <span>Home</span>
                 </a>
                 <a
                   href="#"
                   className="flex items-center gap-3 text-sm py-2 px-3 rounded-md hover:bg-white"
                 >
-                  <Search className="h-5 w-5 text-gray-500" />
+                  <img
+                    src={"/images/search_icon.svg"}
+                    alt="Discover icon"
+                    className="w-5 h-5"
+                  />
+
                   <span>Discover</span>
                 </a>
                 <a
                   href="#"
                   className="flex items-center gap-3 text-sm py-2 px-3 rounded-md hover:bg-white"
                 >
-                  <MessageSquare className="h-5 w-5 text-gray-500" />
+                  <img
+                    src={"/images/scoops_icon.svg"}
+                    alt="scoops icon"
+                    className="w-5 h-5"
+                  />
+
                   <span>Scoops</span>
                 </a>
                 <a
                   href="#"
                   className="flex items-center gap-3 text-sm py-2 px-3 rounded-md hover:bg-white"
                 >
-                  <FileText className="h-5 w-5 text-gray-500" />
+                  <img
+                    src={"/images/classfields_icon.svg"}
+                    alt="classfields icon"
+                    className="w-5 h-5"
+                  />
+
                   <span>Classifieds</span>
                 </a>
                 <a
                   href="#"
                   className="flex items-center gap-3 text-sm py-2 px-3 rounded-md hover:bg-white"
                 >
-                  <User className="h-5 w-5 text-gray-500" />
+                  <img
+                    src={"/images/profile_icon.svg"}
+                    alt="profile icon"
+                    className="w-5 h-5"
+                  />
+
                   <span>Profile</span>
                 </a>
                 <a
                   href="#"
                   className="flex items-center gap-3 text-sm py-2 px-3 rounded-md hover:bg-white"
                 >
-                  <MoreHorizontal className="h-5 w-5 text-gray-500" />
+                  <img
+                    src={"/images/more_icon.svg"}
+                    alt="more icon"
+                    className="w-5 h-5"
+                  />
+
                   <span>More</span>
                 </a>
               </div>
@@ -772,6 +772,48 @@ export default function HomePage() {
                 You've reached the end of the content
               </div>
             )}
+            <h1 className="text-xl lg:text-2xl font-bold mb-4 mt-3 font-fraunces">
+              Happening Near You
+            </h1>
+            <HappeningCard
+              image="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+              imageAlt="Gender Reveal Party"
+              category={{
+                name: "Community",
+                icon: "👨‍👩‍👧‍👦",
+                bgColor: "bg-blue-100",
+                textColor: "text-blue-800",
+              }}
+              title="Our Gender Reveal Party"
+              description="Join us as we reveal the exciting news and celebrate with family and friends!"
+              time="11:00 AM"
+              location="Cesar Chavez Avenue"
+              date={{ day: 13, month: "Nov", year: 2024 }}
+              isMobile={false}
+              onGetDirection={() =>
+                console.log("Get direction clicked for Gender Reveal Party")
+              }
+            />
+
+            <HappeningCard
+              image="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+              imageAlt="Another Event"
+              category={{
+                name: "Entertainment",
+                icon: "🎭",
+                bgColor: "bg-purple-100",
+                textColor: "text-purple-800",
+              }}
+              title="Storytelling Night"
+              description="Join us for an evening of traditional Desi stories and folklore with community members."
+              time="7:00 PM"
+              location="Community Center"
+              date={{ day: 15, month: "Nov", year: 2024 }}
+              isMobile={false}
+              onGetDirection={() =>
+                console.log("Get direction clicked for Storytelling Night")
+              }
+            />
           </div>
         </main>
 
