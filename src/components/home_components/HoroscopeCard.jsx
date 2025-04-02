@@ -78,7 +78,7 @@ export default function HoroscopeCard() {
         <div className="p-4 bg-white">
           <div className="flex items-center gap-2 mb-2">
             <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-            <span className="font-medium text-gray-800">
+            <span className="font-medium text-md text-gray-800">
               Today's Vibe: Embrace the Unexpected
             </span>
           </div>

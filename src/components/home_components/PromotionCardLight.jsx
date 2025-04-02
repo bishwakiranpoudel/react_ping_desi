@@ -1,7 +1,7 @@
 export default function PromotionCardLight() {
   return (
     <div className=" mx-3 mb-10">
-      <div className="relative rounded-2xl overflow-hidden shadow bg-white p-4 pb-0">
+      <div className="relative rounded-2xl overflow-hidden shadow bg-white p-4 pt-1 pb-0">
         {/* Logo */}
         <div className="flex items-center mb-8">
           <img
