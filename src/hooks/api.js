@@ -1,4 +1,4 @@
-import {getValidToken, refreshToken} from '../services/jwt';
+import {getValidToken} from '../services/jwt';
 import axios from 'axios'
 import {envConfig} from '../config/env';
 
