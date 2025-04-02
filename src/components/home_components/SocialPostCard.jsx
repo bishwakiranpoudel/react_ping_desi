@@ -10,7 +10,7 @@ const SocialPostCard = ({
   images = [],
   onLike,
   onComment,
-  className = ""
+  className = "",
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
@@ -23,54 +23,50 @@ const SocialPostCard = ({
   const reactionsRef = useRef(null);
 
   // Fetch all scoops data on component mount
-  useEffect(
-    () => {
-      const fetchScoops = async () => {
-        try {
-          const scoopResponse = await handlePostRequest(
-            "/scoop/getAllScoops",
-            { scoopname: post.scoopname },
-            {},
-            false
-          );
-          console.log(scoopResponse, "respsones");
-          setAllScoops(scoopResponse);
+  useEffect(() => {
+    const fetchScoops = async () => {
+      try {
+        const scoopResponse = await handlePostRequest(
+          "/scoop/getAllScoops",
+          { scoopname: post.scoopname },
+          {},
+          false
+        );
+        console.log(scoopResponse, "respsones");
+        setAllScoops(scoopResponse);
 
-          // Find the scoop data that matches the post's scoopname
-          if (post.scoopname) {
-            const matchingScoop = scoopResponse.find(
-              scoop => scoop.scoopname === post.scoopname
-            );
-            if (matchingScoop) {
-              setScoopData(matchingScoop);
-            }
+        // Find the scoop data that matches the post's scoopname
+        if (post.scoopname) {
+          const matchingScoop = scoopResponse.find(
+            (scoop) => scoop.scoopname === post.scoopname
+          );
+          if (matchingScoop) {
+            setScoopData(matchingScoop);
           }
-        } catch (error) {
-          toast.error(
-            "" +
-              (error.response?.data?.message ?? error.data?.message ?? error),
-            {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true
-            }
-          );
-        } finally {
-          setIsProcessing(false);
         }
-      };
-
-      if (post.scoopname) {
-        fetchScoops();
+      } catch (error) {
+        toast.error(
+          "" + (error.response?.data?.message ?? error.data?.message ?? error),
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          }
+        );
+      } finally {
+        setIsProcessing(false);
       }
-    },
-    [post.scoopname]
-  );
+    };
+
+    if (post.scoopname) {
+      fetchScoops();
+    }
+  }, [post.scoopname]);
 
   // Close reactions panel when clicking outside
   useEffect(() => {
-    const handleClickOutside = event => {
+    const handleClickOutside = (event) => {
       if (
         reactionsRef.current &&
         !reactionsRef.current.contains(event.target) &&
@@ -88,11 +84,13 @@ const SocialPostCard = ({
   }, []);
 
   const handlePrevImage = () => {
-    setCurrentImageIndex(prev => (prev > 0 ? prev - 1 : prev));
+    setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : prev));
   };
 
   const handleNextImage = () => {
-    setCurrentImageIndex(prev => (prev < images.length - 1 ? prev + 1 : prev));
+    setCurrentImageIndex((prev) =>
+      prev < images.length - 1 ? prev + 1 : prev
+    );
   };
 
   const handleLikeHover = () => {
@@ -108,7 +106,7 @@ const SocialPostCard = ({
     }, 300);
   };
 
-  const handleReactionSelect = reaction => {
+  const handleReactionSelect = (reaction) => {
     setSelectedReaction(reaction);
     setIsLiked(true);
     setShowReactions(false);
@@ -134,13 +132,13 @@ const SocialPostCard = ({
       setIsLiked(false);
     } else {
       // Default like
-      setIsLiked(prev => !prev);
+      setIsLiked((prev) => !prev);
       if (onLike) onLike();
     }
   };
 
   // Function to calculate time ago from post creation date
-  const getTimeAgo = createdDate => {
+  const getTimeAgo = (createdDate) => {
     if (!createdDate) return "";
 
     const created = new Date(createdDate);
@@ -206,7 +204,7 @@ const SocialPostCard = ({
     totalDots = 3,
     activeDot = 0,
     onDotClick,
-    className = ""
+    className = "",
   }) => {
     return (
       <div
@@ -247,7 +245,7 @@ const SocialPostCard = ({
         onMouseEnter={() => setShowReactions(true)}
         onMouseLeave={() => setShowReactions(false)}
       >
-        {scoopData.emojis.map(reaction => (
+        {scoopData.emojis.map((reaction) => (
           <button
             key={reaction.emojiid}
             className="hover:scale-125 transition-transform duration-200 px-2 py-1 relative group"
@@ -310,19 +308,18 @@ const SocialPostCard = ({
           </div>
 
           {/* Hashtags */}
-          {post.hoops &&
-            post.hoops.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-3">
-                {post.hoops.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="bg-purple-50 text-purple-800 text-xs px-3 py-1 rounded-full"
-                  >
-                    {tag.hooptag}
-                  </span>
-                ))}
-              </div>
-            )}
+          {post.hoops && post.hoops.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-3">
+              {post.hoops.map((tag, index) => (
+                <span
+                  key={index}
+                  className="bg-purple-50 text-purple-800 text-xs px-3 py-1 rounded-full"
+                >
+                  {tag.hooptag}
+                </span>
+              ))}
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
@@ -349,8 +346,9 @@ const SocialPostCard = ({
                   <span className="ml-1 text-sm">{post.totalLikes}</span>
                 </button>
 
-                {showReactions &&
-                  scoopData && <ReactionsPanel scoopData={scoopData} />}
+                {showReactions && scoopData && (
+                  <ReactionsPanel scoopData={scoopData} />
+                )}
               </div>
               <button className="flex items-center text-gray-500">
                 <MessageCircle className="h-5 w-5" />
@@ -405,62 +403,61 @@ const SocialPostCard = ({
 
       {/* Image Carousel */}
 
-      {images &&
-        images.length > 0 && (
-          <div className="relative flex-grow">
-            <div className="w-full h-full relative rounded-lg pr-4 pl-4 bg-white overflow-hidden">
-              <div className="w-full h-full rounded-lg overflow-hidden ">
-                <img
-                  src={images[currentImageIndex] || "/placeholder.svg"}
-                  alt="Post image"
-                  className="w-full h-[388px] object-cover"
-                  style={{}}
+      {images && images.length > 0 && (
+        <div className="relative flex-grow">
+          <div className="w-full h-full relative rounded-lg pr-4 pl-4 bg-white overflow-hidden">
+            <div className="w-full h-full rounded-lg overflow-hidden ">
+              <img
+                src={images[currentImageIndex] || "/placeholder.svg"}
+                alt="Post image"
+                className="w-full h-[388px] object-cover"
+                style={{}}
+              />
+            </div>
+          </div>
+          {images.length > 1 && (
+            <>
+              <div className="absolute left-6 top-1/2 transform -translate-y-1/2 z-10">
+                <button
+                  onClick={handlePrevImage}
+                  disabled={currentImageIndex === 0}
+                  className="disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none"
+                  aria-label="Previous image"
+                >
+                  <img
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Frame%201171279062-vnAwUYEvftwRA2jmHffSdx5SwWvC3I.svg"
+                    alt="Previous"
+                    width="24"
+                    height="24"
+                  />
+                </button>
+              </div>
+              <div className="absolute right-6 top-1/2 transform -translate-y-1/2 z-10">
+                <button
+                  onClick={handleNextImage}
+                  disabled={currentImageIndex === images.length - 1}
+                  className="disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none"
+                  aria-label="Next image"
+                >
+                  <img
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Frame%201171279061-n6vOnZLf3AKojY7n8t2UlShZOLgyyP.svg"
+                    alt="Next"
+                    width="24"
+                    height="24"
+                  />
+                </button>
+              </div>
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
+                <PaginationDots
+                  totalDots={images.length}
+                  activeDot={currentImageIndex}
+                  onDotClick={setCurrentImageIndex}
                 />
               </div>
-            </div>
-            {images.length > 1 && (
-              <>
-                <div className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10">
-                  <button
-                    onClick={handlePrevImage}
-                    disabled={currentImageIndex === 0}
-                    className="disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none"
-                    aria-label="Previous image"
-                  >
-                    <img
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Frame%201171279062-vnAwUYEvftwRA2jmHffSdx5SwWvC3I.svg"
-                      alt="Previous"
-                      width="24"
-                      height="24"
-                    />
-                  </button>
-                </div>
-                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10">
-                  <button
-                    onClick={handleNextImage}
-                    disabled={currentImageIndex === images.length - 1}
-                    className="disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none"
-                    aria-label="Next image"
-                  >
-                    <img
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Frame%201171279061-n6vOnZLf3AKojY7n8t2UlShZOLgyyP.svg"
-                      alt="Next"
-                      width="24"
-                      height="24"
-                    />
-                  </button>
-                </div>
-                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
-                  <PaginationDots
-                    totalDots={images.length}
-                    activeDot={currentImageIndex}
-                    onDotClick={setCurrentImageIndex}
-                  />
-                </div>
-              </>
-            )}
-          </div>
-        )}
+            </>
+          )}
+        </div>
+      )}
 
       {/* Category */}
       {post.scoopname && (
@@ -480,19 +477,18 @@ const SocialPostCard = ({
       </div>
 
       {/* Hashtags */}
-      {post.hoops &&
-        post.hoops.length > 0 && (
-          <div className="px-4 pb-3 flex flex-wrap gap-2">
-            {post.hoops.map((tag, index) => (
-              <span
-                key={index}
-                className="bg-purple-50 text-purple-800 text-xs px-3 py-1 rounded-full"
-              >
-                {tag.hooptag}
-              </span>
-            ))}
-          </div>
-        )}
+      {post.hoops && post.hoops.length > 0 && (
+        <div className="px-4 pb-3 flex flex-wrap gap-2">
+          {post.hoops.map((tag, index) => (
+            <span
+              key={index}
+              className="bg-purple-50 text-purple-800 text-xs px-3 py-1 rounded-full"
+            >
+              {tag.hooptag}
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* Actions */}
       <div className="border-t border-gray-100 px-4 py-3 flex items-center mt-auto">
@@ -526,8 +522,9 @@ const SocialPostCard = ({
               )}
             </button>
 
-            {showReactions &&
-              scoopData && <ReactionsPanel scoopData={scoopData} />}
+            {showReactions && scoopData && (
+              <ReactionsPanel scoopData={scoopData} />
+            )}
           </div>
 
           <div className="flex items-center">
