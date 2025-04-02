@@ -33,24 +33,23 @@ export default function WeatherCard({
           {/* Content overlay */}
           <div className="relative z-10 flex justify-between items-center w-full">
             {/* Day Section */}
-            <div className="flex flex-col items-center">
-              <div className="text-gray-800 font-medium font-afacad">
-                At Day
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl  font-bold font-fraunces">
-                  {dayTemp}°
-                </span>
-                <span className="text-sm text-gray-600 font-afacad">
-                  Highest
-                </span>
-              </div>
-              <div className="w-10 h-10 relative mt-1 bg-white/50 rounded-full p-1">
+            <div class="flex items-center">
+              <div class="h-full flex-shrink-0">
                 <img
                   src={dayIcon}
                   alt="Day icon"
-                  className="w-full h-full object-contain absolute inset-0"
+                  class="h-full object-contain rounded-full"
                 />
+              </div>
+
+              <div class="ml-4 flex flex-col justify-center">
+                <div class="text-gray-800 font-medium font-afacad">At Day</div>
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl font-bold font-fraunces">
+                    {dayTemp}°
+                  </span>
+                  <span class="text-sm text-gray-600 font-afacad">Highest</span>
+                </div>
               </div>
             </div>
 
@@ -58,23 +57,24 @@ export default function WeatherCard({
             <div className="h-16 w-px bg-gray-300"></div>
 
             {/* Night Section */}
-            <div className="flex flex-col items-center">
-              <div className="text-gray-800 font-medium font-afacad">
-                At Night
+            <div class="flex items-center">
+              <div class="ml-4 flex flex-col justify-center">
+                <div class="text-gray-800 font-medium font-afacad">
+                  At Night
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl font-bold font-fraunces">
+                    {nightTemp}°
+                  </span>
+                  <span class="text-sm text-gray-600 font-afacad">Lowest</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold font-fraunces">
-                  {nightTemp}°
-                </span>
-                <span className="text-sm text-gray-600 font-afacad">
-                  Lowest
-                </span>
-              </div>
-              <div className="w-10 h-10 relative mt-1 bg-white/50 rounded-full p-1">
+
+              <div class="h-full flex-shrink-0">
                 <img
                   src={nightIcon}
                   alt="Night icon"
-                  className="w-full h-full object-contain absolute inset-0"
+                  class="h-full object-contain rounded-full"
                 />
               </div>
             </div>
