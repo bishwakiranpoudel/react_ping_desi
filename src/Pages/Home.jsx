@@ -790,7 +790,7 @@ export default function HomePage() {
                 <SocialPostCard
                   post={post}
                   username="Bishwa Kiran Poudel"
-                  images={[post.photopath]}
+                  images={post.photopath?post.photopath.split(','): []}
                 />
               </div>
             ))}
