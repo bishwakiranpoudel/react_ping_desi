@@ -100,11 +100,11 @@ export default function WeatherCard({
                 />
               </div>
 
-              <div className="ml-4 flex flex-col justify-center">
+              <div className="ml-1 flex flex-col justify-center">
                 <div className="text-gray-800 font-medium font-afacad">
                   At Day
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <span className="text-2xl font-bold font-fraunces">
                     {maxtemp}°
                   </span>
