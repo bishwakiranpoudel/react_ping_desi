@@ -487,6 +487,7 @@ export default function HomePage() {
                           ? lastPostElementRef
                           : null
                       }
+                      className="min-w-full"
                     >
                       <SocialPostCard post={post} isMobile={isMobile} />
                     </div>
