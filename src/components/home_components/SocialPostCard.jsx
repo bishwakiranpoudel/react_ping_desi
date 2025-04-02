@@ -368,7 +368,7 @@ const SocialPostCard = ({
 
   return (
     <div
-      className={`bg-white border rounded-xl shadow-sm overflow-hidden max-h-[675px] mb-6 flex flex-col ${className}`}
+      className={`bg-white border rounded-xl shadow-sm overflow-hidden h-full mb-6 flex flex-col ${className}`}
     >
       {/* Header */}
       <div className="flex items-center p-4">
