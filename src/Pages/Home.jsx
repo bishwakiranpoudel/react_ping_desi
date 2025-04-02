@@ -4,14 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
 import { handlePostRequest } from "../hooks/api";
 import {
-  Search,
-  Home,
-  MessageSquare,
-  FileText,
-  User,
-  MoreHorizontal,
   Menu,
-  MapPin
 } from "react-feather"; // Using react-feather instead of lucide-react
 import { useIsMobile } from "../hooks/use-mobile";
 import { TabbedContent } from "../components/home_components/tabbed-content";
@@ -21,7 +14,6 @@ import WeatherCard from "../components/home_components/WeatherCard";
 import PromotionCard from "../components/home_components/PromotionCard";
 import PromotionCardLight from "../components/home_components/PromotionCardLight";
 import SocialPostCard from "../components/home_components/SocialPostCard";
-import { useLocation } from "../context/location-context";
 import NotificationCard from "../components/home_components/NotificationCard";
 import HomePromotionCard from "../components/home_components/HomePromotionCard";
 import BottomNavbar from "../components/home_components/BottomNavBar";
@@ -32,7 +24,6 @@ import {
   fetchMasterCities,
   retrieveMasterCity
 } from "../services/locationServices";
-import { fetchWeatherForecast } from "../services/forecast";
 import { fetchCommunityEvents } from "../services/events";
 import { convertDateToObject } from "../lib/utils";
 
