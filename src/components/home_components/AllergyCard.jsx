@@ -86,7 +86,7 @@ export default function AllergyCard({
                 className="absolute inset-0"
                 style={{
                   backdropFilter: "blur(2px)",
-                  backgroundColor: "rgba(0, 0, 0, 0.05)",
+                  backgroundColor: "rgba(0, 0, 0, 0.1)",
                 }}
               ></div>
             </div>
@@ -95,7 +95,7 @@ export default function AllergyCard({
           {/* Grid layout with proper dividers */}
           <div className="relative z-10 grid grid-cols-2 divide-x divide-gray-300">
             {/* Top row */}
-            <div className="p-4 flex flex-col items-center justify-center">
+            <div className="p-2 flex flex-col items-center justify-center">
               <AllergenItem
                 icon={allergens[0].icon}
                 name={allergens[0].name}
@@ -105,7 +105,7 @@ export default function AllergyCard({
               />
             </div>
 
-            <div className="p-4 flex flex-col items-center justify-center">
+            <div className="p-2 flex flex-col items-center justify-center">
               <AllergenItem
                 icon={allergens[1].icon}
                 name={allergens[1].name}
@@ -119,7 +119,7 @@ export default function AllergyCard({
             <div className="col-span-2 h-px bg-gray-300"></div>
 
             {/* Bottom row */}
-            <div className="p-4 flex flex-col items-center justify-center">
+            <div className="p-2 flex flex-col items-center justify-center">
               <AllergenItem
                 icon={allergens[2].icon}
                 name={allergens[2].name}
@@ -129,7 +129,7 @@ export default function AllergyCard({
               />
             </div>
 
-            <div className="p-4 flex flex-col items-center justify-center">
+            <div className="p-2 flex flex-col items-center justify-center">
               <AllergenItem
                 icon={allergens[3].icon}
                 name={allergens[3].name}
