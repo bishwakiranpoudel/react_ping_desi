@@ -417,7 +417,7 @@ const SocialPostCard = ({
           </div>
           {images.length > 1 && (
             <>
-              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10">
+              <div className="absolute left-6 top-1/2 transform -translate-y-1/2 z-10">
                 <button
                   onClick={handlePrevImage}
                   disabled={currentImageIndex === 0}
@@ -432,7 +432,7 @@ const SocialPostCard = ({
                   />
                 </button>
               </div>
-              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10">
+              <div className="absolute right-6 top-1/2 transform -translate-y-1/2 z-10">
                 <button
                   onClick={handleNextImage}
                   disabled={currentImageIndex === images.length - 1}
