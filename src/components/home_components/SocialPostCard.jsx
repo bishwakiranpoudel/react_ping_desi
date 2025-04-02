@@ -1,20 +1,87 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { MoreHorizontal, Heart, MessageCircle, ThumbsDown } from "lucide-react";
+import { handlePostRequest } from "../../hooks/api";
+import { toast } from "react-toastify";
 
 const SocialPostCard = ({
   post,
   isMobile = false,
-  username = "Aarav Patel",
-  timeAgo = "9h ago",
-  content = "Just had an amazing dinner at The Spice Lounge with my family. If you're nearby, you have to check this place out—it's a vibe. From the cozy ambiance to the chef's special Biriyani, everything was spot-on. Can't wait to go back!",
-  images,
+  images = [],
   onLike,
   onComment,
   className = "",
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [showReactions, setShowReactions] = useState(false);
+  const [selectedReaction, setSelectedReaction] = useState(null);
+  const [scoopData, setScoopData] = useState(null);
+  const [allScoops, setAllScoops] = useState([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const likeButtonRef = useRef(null);
+  const reactionsRef = useRef(null);
+
+  // Fetch all scoops data on component mount
+  useEffect(() => {
+    const fetchScoops = async () => {
+      try {
+        const scoopResponse = await handlePostRequest(
+          "/scoop/getAllScoops",
+          { scoopname: post.scoopname },
+          {},
+          false
+        );
+        console.log(scoopResponse, "respsones");
+        setAllScoops(scoopResponse);
+
+        // Find the scoop data that matches the post's scoopname
+        if (post.scoopname) {
+          const matchingScoop = scoopResponse.find(
+            (scoop) => scoop.scoopname === post.scoopname
+          );
+          if (matchingScoop) {
+            setScoopData(matchingScoop);
+          }
+        }
+      } catch (error) {
+        toast.error(
+          "" + (error.response?.data?.message ?? error.data?.message ?? error),
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          }
+        );
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+
+    if (post.scoopname) {
+      fetchScoops();
+    }
+  }, [post.scoopname]);
+
+  // Close reactions panel when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        reactionsRef.current &&
+        !reactionsRef.current.contains(event.target) &&
+        likeButtonRef.current &&
+        !likeButtonRef.current.contains(event.target)
+      ) {
+        setShowReactions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -26,10 +93,111 @@ const SocialPostCard = ({
     );
   };
 
-  const handleLike = () => {
-    setIsLiked((prev) => !prev);
-    if (onLike) onLike();
+  const handleLikeHover = () => {
+    setShowReactions(true);
   };
+
+  const handleLikeLeave = () => {
+    // Don't hide immediately to allow clicking on reactions
+    setTimeout(() => {
+      if (!reactionsRef.current?.matches(":hover")) {
+        setShowReactions(false);
+      }
+    }, 300);
+  };
+
+  const handleReactionSelect = (reaction) => {
+    setSelectedReaction(reaction);
+    setIsLiked(true);
+    setShowReactions(false);
+
+    // Call the onLike callback with the selected reaction
+    if (onLike) {
+      onLike(reaction);
+    }
+
+    // Here you would make a POST request to your API with the reaction data
+    // Example:
+    // fetch('your-api-endpoint', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ postId: post.id, reaction: reaction })
+    // });
+  };
+
+  const handleLikeClick = () => {
+    if (selectedReaction) {
+      // If already has a reaction, remove it
+      setSelectedReaction(null);
+      setIsLiked(false);
+    } else {
+      // Default like
+      setIsLiked((prev) => !prev);
+      if (onLike) onLike();
+    }
+  };
+
+  // Function to calculate time ago from post creation date
+  const getTimeAgo = (createdDate) => {
+    if (!createdDate) return "";
+
+    const created = new Date(createdDate);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - created) / 1000);
+
+    // Less than a minute
+    if (diffInSeconds < 60) {
+      return "Just now";
+    }
+
+    // Less than an hour
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}m ago`;
+    }
+
+    // Less than a day
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+      return `${diffInHours}h ago`;
+    }
+
+    // Less than a week
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays === 1) {
+      return "1 day ago";
+    }
+    if (diffInDays < 7) {
+      return `${diffInDays} days ago`;
+    }
+
+    // Less than a month
+    const diffInWeeks = Math.floor(diffInDays / 7);
+    if (diffInWeeks === 1) {
+      return "1 week ago";
+    }
+    if (diffInWeeks < 4) {
+      return `${diffInWeeks} weeks ago`;
+    }
+
+    // Less than a year
+    const diffInMonths = Math.floor(diffInDays / 30);
+    if (diffInMonths === 1) {
+      return "1 month ago";
+    }
+    if (diffInMonths < 12) {
+      return `${diffInMonths} months ago`;
+    }
+
+    // More than a year
+    const diffInYears = Math.floor(diffInDays / 365);
+    if (diffInYears === 1) {
+      return "1 year ago";
+    }
+    return `${diffInYears} years ago`;
+  };
+
+  const timeAgo = getTimeAgo(post.createdate);
 
   // PaginationDots component embedded in the same file
   const PaginationDots = ({
@@ -66,6 +234,34 @@ const SocialPostCard = ({
     );
   };
 
+  // Reactions panel component
+  const ReactionsPanel = ({ scoopData }) => {
+    if (!scoopData || !scoopData.emojis) return null;
+
+    return (
+      <div
+        ref={reactionsRef}
+        className="absolute bottom-full left-0 mb-2 bg-white rounded-full shadow-lg px-2 py-1 flex items-center transition-all duration-300 z-20"
+        onMouseEnter={() => setShowReactions(true)}
+        onMouseLeave={() => setShowReactions(false)}
+      >
+        {scoopData.emojis.map((reaction) => (
+          <button
+            key={reaction.emojiid}
+            className="hover:scale-125 transition-transform duration-200 px-2 py-1 relative group"
+            onClick={() => handleReactionSelect(reaction)}
+            aria-label={reaction.title}
+          >
+            <span className="text-xl">{reaction.emoji}</span>
+            <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 whitespace-nowrap">
+              {reaction.title}
+            </span>
+          </button>
+        ))}
+      </div>
+    );
+  };
+
   if (isMobile) {
     return (
       <div className="bg-white rounded-lg shadow-sm overflow-hidden w-full flex-shrink-0">
@@ -81,7 +277,7 @@ const SocialPostCard = ({
                 />
               </div>
               <div>
-                <div className="font-medium">{username}</div>
+                <div className="font-medium">{post.username}</div>
                 <div className="text-xs text-gray-500">
                   {post.username} · {timeAgo}
                 </div>
@@ -103,7 +299,7 @@ const SocialPostCard = ({
 
           {/* Content */}
           <div className="mb-3">
-            <p className="text-sm text-gray-800">{content}</p>
+            <p className="text-sm text-gray-800">{post.contentinfo}</p>
             <button className="text-sm text-purple-600 font-medium mt-1">
               Read more
             </button>
@@ -126,14 +322,32 @@ const SocialPostCard = ({
           {/* Actions */}
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
             <div className="flex items-center space-x-4">
-              <button className="flex items-center text-gray-500">
-                <Heart
-                  className={`h-5 w-5 ${
-                    isLiked ? "fill-red-500 text-red-500" : ""
-                  }`}
-                />
-                <span className="ml-1 text-sm">{post.totalLikes}</span>
-              </button>
+              <div className="relative">
+                <button
+                  ref={likeButtonRef}
+                  className="flex items-center text-gray-500"
+                  onMouseEnter={handleLikeHover}
+                  onMouseLeave={handleLikeLeave}
+                  onClick={handleLikeClick}
+                >
+                  {selectedReaction ? (
+                    <span className="text-xl mr-1">
+                      {selectedReaction.emoji}
+                    </span>
+                  ) : (
+                    <Heart
+                      className={`h-5 w-5 ${
+                        isLiked ? "fill-red-500 text-red-500" : ""
+                      }`}
+                    />
+                  )}
+                  <span className="ml-1 text-sm">{post.totalLikes}</span>
+                </button>
+
+                {showReactions && scoopData && (
+                  <ReactionsPanel scoopData={scoopData} />
+                )}
+              </div>
               <button className="flex items-center text-gray-500">
                 <MessageCircle className="h-5 w-5" />
               </button>
@@ -157,7 +371,7 @@ const SocialPostCard = ({
         <div className="h-10 w-10 rounded-full overflow-hidden relative">
           <img
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image%20%281%29-VNHYdwoXdSCUtVSUkbo0TIIpdt9Mzf.png"
-            alt={username}
+            alt={post.username}
             className="w-full h-full object-cover"
             style={{ position: "absolute", top: 0, left: 0 }}
           />
@@ -186,7 +400,6 @@ const SocialPostCard = ({
       </div>
 
       {/* Image Carousel */}
-
       <div className="relative flex-grow">
         <div className="w-full h-full relative">
           <img
@@ -274,27 +487,40 @@ const SocialPostCard = ({
       {/* Actions */}
       <div className="border-t border-gray-100 px-4 py-3 flex items-center mt-auto">
         <div className="flex items-center space-x-4">
-          <button
-            onClick={handleLike}
-            className="flex items-center"
-            aria-label={isLiked ? "Unlike" : "Like"}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
+          <div className="relative">
+            <button
+              ref={likeButtonRef}
+              onClick={handleLikeClick}
+              onMouseEnter={handleLikeHover}
+              onMouseLeave={handleLikeLeave}
+              className="flex items-center"
+              aria-label={isLiked ? "Unlike" : "Like"}
             >
-              <path
-                d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z"
-                fill={isLiked ? "#FF0000" : "none"}
-                stroke={isLiked ? "#FF0000" : "#000000"}
-                strokeWidth="1.5"
-              />
-            </svg>
-          </button>
-          ...{" "}
+              {selectedReaction ? (
+                <span className="text-xl mr-1">{selectedReaction.emoji}</span>
+              ) : (
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z"
+                    fill={isLiked ? "#FF0000" : "none"}
+                    stroke={isLiked ? "#FF0000" : "#000000"}
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              )}
+            </button>
+
+            {showReactions && scoopData && (
+              <ReactionsPanel scoopData={scoopData} />
+            )}
+          </div>
+
           <div className="flex items-center">
             <span className="text-sm font-medium mr-1">{post.totalLikes}</span>
             <img
