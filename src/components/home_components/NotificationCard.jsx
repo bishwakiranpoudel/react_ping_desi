@@ -61,7 +61,7 @@ const NotificationCard = ({
                 <img
                   src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/download-on-the-app-store-apple-logo-svgrepo-com%201-IIS3UHJPhxe7pkO2z90baSIKjxO9w7.svg"
                   alt="Download on App Store"
-                  width={120}
+                  width={135}
                   height={36}
                 />
               </a>
