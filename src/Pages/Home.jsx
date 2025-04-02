@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
 import { handlePostRequest } from "../hooks/api";
 import {
@@ -55,56 +55,138 @@ export default function HomePage() {
   const [postings, setPostings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const observer = useRef();
+  const POSTS_PER_PAGE = 10;
 
-  useEffect(() => {
-    const fetchPostings = async () => {
-      setLoading(true);
-      setError(null);
+  // Last element ref callback for intersection observer
+  const lastPostElementRef = useCallback(
+    (node) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
 
-      const geohash = localStorage.getItem("geohash") || "9v6m";
-      const endpoint = "/posting/getAllPostings";
-      const requestBody = { geohash, offset: 0 };
-
-      try {
-        const response = await handlePostRequest(
-          endpoint,
-          requestBody,
-          {},
-          false
-        );
-
-        if (response?.error) {
-          setError(response.error);
-          toast.error(response.error, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-          });
-        } else {
-          setPostings(response.posts);
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasMore) {
+            fetchMorePosts();
+          }
+        },
+        {
+          rootMargin: "100px",
         }
-      } catch (error) {
-        const errorMessage =
-          error.response?.data?.message ?? error.data?.message ?? error;
-        setError(errorMessage);
+      );
 
-        toast.error("" + errorMessage, {
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore]
+  );
+
+  // Function to fetch initial posts
+  const fetchInitialPosts = async () => {
+    setLoading(true);
+    setError(null);
+
+    const geohash = localStorage.getItem("geohash") || "9v6m";
+    const endpoint = "/posting/getAllPostings";
+    const requestBody = { geohash, offset: 0 };
+
+    try {
+      const response = await handlePostRequest(
+        endpoint,
+        requestBody,
+        {},
+        false
+      );
+
+      if (response?.error) {
+        setError(response.error);
+        toast.error(response.error, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
         });
-      } finally {
-        setLoading(false);
+        setHasMore(false);
+      } else {
+        setPostings(response.posts || []);
+        setOffset(POSTS_PER_PAGE);
+        setHasMore((response.posts || []).length >= POSTS_PER_PAGE);
       }
-    };
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ?? error.data?.message ?? error;
+      setError(errorMessage);
 
-    fetchPostings();
+      toast.error("" + errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+      });
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Function to fetch more posts
+  const fetchMorePosts = async () => {
+    if (!hasMore || loading) return;
+
+    setLoading(true);
+    const geohash = localStorage.getItem("geohash") || "9v6m";
+    const endpoint = "/posting/getAllPostings";
+    const requestBody = { geohash, offset };
+
+    try {
+      const response = await handlePostRequest(
+        endpoint,
+        requestBody,
+        {},
+        false
+      );
+
+      if (response?.error) {
+        setError(response.error);
+        toast.error(response.error, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+        });
+        setHasMore(false);
+      } else {
+        const newPosts = response.posts || [];
+        if (newPosts.length > 0) {
+          setPostings((prevPosts) => [...prevPosts, ...newPosts]);
+          setOffset((prevOffset) => prevOffset + POSTS_PER_PAGE);
+          setHasMore(newPosts.length >= POSTS_PER_PAGE);
+        } else {
+          setHasMore(false);
+        }
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ?? error.data?.message ?? error;
+      setError(errorMessage);
+      toast.error("" + errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+      });
+      setHasMore(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchInitialPosts();
   }, []);
 
   console.log(postings, "posting");
-  console.log(postings.posts, "posting");
 
   /***********************social media end*****************/
 
@@ -220,6 +302,13 @@ export default function HomePage() {
     }
   }
   /* ----------------------- Location Service end ----------------------_*/
+
+  // Loading spinner component
+  const LoadingSpinner = () => (
+    <div className="flex justify-center items-center py-4">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-700"></div>
+    </div>
+  );
 
   // Mobile layout
   if (isMobile) {
@@ -386,15 +475,21 @@ export default function HomePage() {
               {/* Social Post */}
               <div className="overflow-x-auto ">
                 <div className="flex space-x-4">
-                  {postings?.map((post) => (
-                    <SocialPostCard
-                      key={post.id || post._id}
-                      post={post}
-                      isMobile={isMobile}
-                    />
+                  {postings?.map((post, index) => (
+                    <div
+                      key={post.id || post._id || index}
+                      ref={
+                        index === postings.length - 1
+                          ? lastPostElementRef
+                          : null
+                      }
+                    >
+                      <SocialPostCard post={post} isMobile={isMobile} />
+                    </div>
                   ))}
                 </div>
               </div>
+              {loading && <LoadingSpinner />}
             </section>
 
             <section className="mb-6">
@@ -653,14 +748,30 @@ export default function HomePage() {
             <h1 className="text-xl lg:text-2xl font-bold mb-4 mt-3 font-fraunces">
               Scoops Around You
             </h1>
+
+            {/* Social Posts with Infinite Scroll */}
             {postings?.map((post, index) => (
-              <SocialPostCard
+              <div
                 key={post.id || post._id || index}
-                post={post}
-                username="Bishwa Kiran Poudel"
-                images={[post.photopath]}
-              />
+                ref={index === postings.length - 1 ? lastPostElementRef : null}
+              >
+                <SocialPostCard
+                  post={post}
+                  username="Bishwa Kiran Poudel"
+                  images={[post.photopath]}
+                />
+              </div>
             ))}
+
+            {/* Loading indicator */}
+            {loading && <LoadingSpinner />}
+
+            {/* End of content message */}
+            {!loading && !hasMore && postings.length > 0 && (
+              <div className="text-center py-4 text-gray-500">
+                You've reached the end of the content
+              </div>
+            )}
           </div>
         </main>
 
