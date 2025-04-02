@@ -91,6 +91,71 @@ const SocialPostCard = ({
     if (onLike) onLike();
   };
 
+  /*************************************time ago creation*************** */
+  // Function to calculate time ago from post creation date
+  const getTimeAgo = (createdDate) => {
+    if (!createdDate) return "";
+
+    const created = new Date(createdDate);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - created) / 1000);
+
+    // Less than a minute
+    if (diffInSeconds < 60) {
+      return "Just now";
+    }
+
+    // Less than an hour
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}m ago`;
+    }
+
+    // Less than a day
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+      return `${diffInHours}h ago`;
+    }
+
+    // Less than a week
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays === 1) {
+      return "1 day ago";
+    }
+    if (diffInDays < 7) {
+      return `${diffInDays} days ago`;
+    }
+
+    // Less than a month
+    const diffInWeeks = Math.floor(diffInDays / 7);
+    if (diffInWeeks === 1) {
+      return "1 week ago";
+    }
+    if (diffInWeeks < 4) {
+      return `${diffInWeeks} weeks ago`;
+    }
+
+    // Less than a year
+    const diffInMonths = Math.floor(diffInDays / 30);
+    if (diffInMonths === 1) {
+      return "1 month ago";
+    }
+    if (diffInMonths < 12) {
+      return `${diffInMonths} months ago`;
+    }
+
+    // More than a year
+    const diffInYears = Math.floor(diffInDays / 365);
+    if (diffInYears === 1) {
+      return "1 year ago";
+    }
+    return `${diffInYears} years ago`;
+  };
+
+  const timeAgo = getTimeAgo(post.createdate);
+
+  // *********************************end of time ago creation**********
+
   // PaginationDots component embedded in the same file
   const PaginationDots = ({
     totalDots = 3,
