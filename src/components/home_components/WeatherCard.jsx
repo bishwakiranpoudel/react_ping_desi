@@ -9,37 +9,7 @@ export default function WeatherCard({
   dayIcon = "/images/sun-icon.png",
   nightIcon = "/images/moon-icon.png",
 }) {
-  const [weatherData, setWeatherData] = useState({
-    status: "success",
-    count: 1,
-    data: {
-      id: 16611,
-      mintemp: "70",
-      maxtemp: "83",
-      tempinfo: null,
-      pollenday: null,
-      pollennight: null,
-      trending: "Splish-Splash, it's a Rainy Day Bash!",
-      day: "2025-04-02T00:00:00.000Z",
-      hour: null,
-      status: null,
-      createdby: null,
-      createddate: null,
-      updatedby: null,
-      updateddate: null,
-      tempicon: null,
-      dayicon: 8,
-      nighticon: 34,
-      geohash: "9v6m",
-      long: "-97.7431",
-      lat: "30.2672",
-      key: "351193",
-      algtrending:
-        "Well, darling, it's time to dust off those wellies and cozy sweaters because Mother Nature is serving up a cool, wet day!",
-      dayiconphrase: "Dreary",
-      nighticonphrase: "Mostly clear",
-    },
-  });
+  const [weatherData, setWeatherData] = useState(null);
   const [isProcessing, setIsProcessing] = useState(true);
 
   const requestData = {
@@ -80,14 +50,24 @@ export default function WeatherCard({
   }, []);
 
   // Extract data from the response
-  const {
-    mintemp,
-    maxtemp,
-    trending,
-    algtrending,
-    dayiconphrase,
-    nighticonphrase,
-  } = weatherData.data;
+  const maxtemp = weatherData?.data?.maxtemp || 0;
+  const mintemp = weatherData?.data?.mintemp || 0;
+  const trending = weatherData?.data?.trending || "Weather forecast";
+  const algtrending =
+    weatherData?.data?.algtrending ||
+    "Weather details unavailable at the moment.";
+  const dayiconphrase = weatherData?.data?.dayiconphrase || "Day";
+  const nighticonphrase = weatherData?.data?.nighticonphrase || "Night";
+
+  if (isProcessing) {
+    return (
+      <div className="max-w-md mx-auto">
+        <div className="rounded-2xl border overflow-hidden shadow-sm bg-gray-100 p-4">
+          <p className="text-center">Loading weather data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-md mx-auto">
@@ -112,24 +92,24 @@ export default function WeatherCard({
           {/* Content overlay */}
           <div className="relative z-10 flex justify-between items-center w-full">
             {/* Day Section */}
-            <div className="flex flex-col items-center">
-              <div className="text-gray-800 font-medium font-afacad">
-                At Day
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold font-fraunces">
-                  {maxtemp}°
-                </span>
-                <span className="text-sm text-gray-600 font-afacad">
-                  Highest
-                </span>
-              </div>
-              <div className="w-10 h-10 relative mt-1 bg-white/50 rounded-full p-1">
+
+            <div class="flex items-center">
+              <div class="h-full flex-shrink-0">
                 <img
                   src={dayIcon}
-                  alt={dayiconphrase}
-                  className="w-full h-full object-contain absolute inset-0"
+                  alt="Day icon"
+                  class="h-full object-contain rounded-full"
                 />
+              </div>
+
+              <div class="ml-4 flex flex-col justify-center">
+                <div class="text-gray-800 font-medium font-afacad">At Day</div>
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl font-bold font-fraunces">
+                    {maxtemp}°
+                  </span>
+                  <span class="text-sm text-gray-600 font-afacad">Highest</span>
+                </div>
               </div>
             </div>
 
@@ -137,23 +117,24 @@ export default function WeatherCard({
             <div className="h-16 w-px bg-gray-300"></div>
 
             {/* Night Section */}
-            <div className="flex flex-col items-center">
-              <div className="text-gray-800 font-medium font-afacad">
-                At Night
+            <div class="flex items-center">
+              <div class="ml-4 flex flex-col justify-center">
+                <div class="text-gray-800 font-medium font-afacad">
+                  At Night
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-2xl font-bold font-fraunces">
+                    {mintemp}°
+                  </span>
+                  <span class="text-sm text-gray-600 font-afacad">Lowest</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold font-fraunces">
-                  {mintemp}°
-                </span>
-                <span className="text-sm text-gray-600 font-afacad">
-                  Lowest
-                </span>
-              </div>
-              <div className="w-10 h-10 relative mt-1 bg-white/50 rounded-full p-1">
+
+              <div class="h-full flex-shrink-0">
                 <img
                   src={nightIcon}
-                  alt={nighticonphrase}
-                  className="w-full h-full object-contain absolute inset-0"
+                  alt="Night icon"
+                  class="h-full object-contain rounded-full"
                 />
               </div>
             </div>

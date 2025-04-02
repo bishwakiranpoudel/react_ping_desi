@@ -299,7 +299,9 @@ const SocialPostCard = ({
 
           {/* Content */}
           <div className="mb-3">
-            <p className="text-sm text-gray-800">{post.contentinfo}</p>
+            <p className="text-sm text-gray-800 h-[60px] overflow-clip">
+              {post.contentinfo}
+            </p>
             <button className="text-sm text-purple-600 font-medium mt-1">
               Read more
             </button>
