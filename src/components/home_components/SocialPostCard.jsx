@@ -403,15 +403,16 @@ const SocialPostCard = ({
 
       {/* Image Carousel */}
       <div className="relative flex-grow">
-        <div className="w-full h-full relative">
-          <img
-            src={images[currentImageIndex] || "/placeholder.svg"}
-            alt="Post image"
-            className="w-full h-full object-cover"
-            style={{ position: "absolute", top: 0, left: 0 }}
-          />
+        <div className="w-full h-full relative rounded-lg pr-4 pl-4 bg-white overflow-hidden">
+          <div className="w-full h-full rounded-lg overflow-hidden ">
+            <img
+              src={images[currentImageIndex] || "/placeholder.svg"}
+              alt="Post image"
+              className="w-full h-[388px] object-cover"
+              style={{}}
+            />
+          </div>
         </div>
-
         {images.length > 1 && (
           <>
             <div className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10">

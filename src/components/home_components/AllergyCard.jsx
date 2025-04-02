@@ -6,31 +6,55 @@ import { handlePostRequest } from "../../hooks/api";
 // Component for the circular icon with colored border
 const AllergenIcon = ({ icon, borderColor, alt }) => (
   <div
-    className="relative w-10 h-10 flex items-center justify-center rounded-full bg-white font-afacad"
+    className="flex items-center justify-center rounded-full bg-none font-afacad w-25 h-25 p-2"
     style={{ border: `1px solid ${borderColor}` }}
   >
     <img
       src={icon || "/placeholder.svg"}
       alt={alt}
-      width={20}
-      height={20}
       className="object-contain"
     />
   </div>
 );
 
 // Component for each allergen item
-const AllergenItem = ({ icon, name, category, color, alt }) => (
-  <div className="flex flex-col items-center">
-    <AllergenIcon icon={icon} borderColor={color} alt={alt} />
-    <div className="mt-1 text-center">
-      <div className="text-gray-700 text-sm font-medium">{name}</div>
-      <div className="text-sm font-medium" style={{ color }}>
-        {category}
-      </div>
+const AllergenItem = ({ icon, name, category, color, alt, isLeft = false }) => {
+  return (
+    <div className="flex items-center gap-4 w-full ">
+      {isLeft ? (
+        <>
+          {/* Rest of the content */}
+          <div className="flex items-center justify-end w-full">
+            <div className="text-right">
+              <div className="text-gray-700 text-lg font-medium">{name}</div>
+              <div className="text-sm font-medium" style={{ color }}>
+                {category}
+              </div>
+            </div>
+            {/* Allergen Icon */}
+            <div className="flex flex-shrink-0 ml-2">
+              <AllergenIcon icon={icon} borderColor={color} alt={alt} />
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Allergen Icon */}
+          <div className="flex flex-shrink-0">
+            <AllergenIcon icon={icon} borderColor={color} alt={alt} />
+          </div>
+          {/* Rest of the content */}
+          <div className="flex-grow">
+            <div className="text-gray-700 text-lg font-medium">{name}</div>
+            <div className="text-sm font-medium" style={{ color }}>
+              {category}
+            </div>
+          </div>
+        </>
+      )}
     </div>
-  </div>
-);
+  );
+};
 
 // Map category to color
 const categoryToColor = {
@@ -41,10 +65,10 @@ const categoryToColor = {
 
 // Map allergen name to icon path
 const allergenToIcon = {
-  "Tree Pollen": "/images/tree-icon.png",
-  "Ragweed Pollen": "/images/ragweed-icon.png",
-  Mold: "/images/mold-icon.png",
-  "Grass Pollen": "/images/grass-icon.png",
+  "Tree Pollen": "/images/tree.svg",
+  "Ragweed Pollen": "/images/Ragweed.svg",
+  Mold: "/images/Moss.svg",
+  "Grass Pollen": "/images/Grass.svg",
 };
 
 export default function AllergyCard({
@@ -168,26 +192,27 @@ export default function AllergyCard({
                 className="absolute inset-0"
                 style={{
                   backdropFilter: "blur(2px)",
-                  backgroundColor: "rgba(0, 0, 0, 0.1)",
+                  backgroundColor: "rgba(255, 255, 255, 0.7)",
                 }}
               ></div>
             </div>
           </div>
 
           {/* Grid layout with proper dividers */}
-          <div className="relative z-10 grid grid-cols-2 divide-x divide-gray-300">
+          <div className="relative z-10 grid grid-cols-2 justify-center items-center">
             {/* Top row */}
-            <div className="p-2 flex flex-col items-center justify-center">
+            <div className="p-2 pr-7 ml-auto flex flex-col items-center justify-center">
               <AllergenItem
                 icon={allergens[0]?.icon}
                 name={allergens[0]?.name}
                 category={allergens[0]?.category}
                 color={categoryToColor[allergens[0]?.category]}
                 alt={allergens[0]?.alt}
+                isLeft={true}
               />
             </div>
 
-            <div className="p-2 flex flex-col items-center justify-center">
+            <div className="p-2 pl-7 flex flex-col items-center justify-center">
               <AllergenItem
                 icon={allergens[1]?.icon}
                 name={allergens[1]?.name}
@@ -197,21 +222,25 @@ export default function AllergyCard({
               />
             </div>
 
-            {/* Horizontal divider */}
-            <div className="col-span-2 h-px bg-gray-300"></div>
+            {/* Vertical Divider */}
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-px h-[90%] bg-gray-300"></div>
+
+            {/* Horizontal Divider */}
+            <div className="col-span-2 h-px w-[80%] bg-gray-300 mx-auto my-2"></div>
 
             {/* Bottom row */}
-            <div className="p-2 flex flex-col items-center justify-center">
+            <div className="p-2 pr-7 flex ml-auto flex-col items-center justify-center">
               <AllergenItem
                 icon={allergens[2]?.icon}
                 name={allergens[2]?.name}
                 category={allergens[2]?.category}
                 color={categoryToColor[allergens[2]?.category]}
                 alt={allergens[2]?.alt}
+                isLeft={true}
               />
             </div>
 
-            <div className="p-2 flex flex-col items-center justify-center">
+            <div className="p-2 pl-7 flex flex-col items-center justify-center">
               <AllergenItem
                 icon={allergens[3]?.icon}
                 name={allergens[3]?.name}
@@ -226,7 +255,6 @@ export default function AllergyCard({
         {/* Bottom section with alert */}
         <div className="p-4 bg-white">
           <div className="flex items-start gap-2 mb-2">
-            {alertIcon}
             <div>
               <div className="font-medium text-gray-800">
                 {title || "Allergy Summary"}

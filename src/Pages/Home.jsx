@@ -11,7 +11,7 @@ import {
   User,
   MoreHorizontal,
   Menu,
-  MapPin
+  MapPin,
 } from "react-feather"; // Using react-feather instead of lucide-react
 import { useIsMobile } from "../hooks/use-mobile";
 import { TabbedContent } from "../components/home_components/tabbed-content";
@@ -30,7 +30,7 @@ import HappeningCard from "../components/home_components/HappeningCard";
 
 import {
   fetchMasterCities,
-  retrieveMasterCity
+  retrieveMasterCity,
 } from "../services/locationServices";
 import { fetchWeatherForecast } from "../services/forecast";
 import { fetchCommunityEvents } from "../services/events";
@@ -65,18 +65,18 @@ export default function HomePage() {
 
   // Last element ref callback for intersection observer
   const lastPostElementRef = useCallback(
-    node => {
+    (node) => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver(
-        entries => {
+        (entries) => {
           if (entries[0].isIntersecting && hasMore) {
             fetchMorePosts();
           }
         },
         {
-          rootMargin: "100px"
+          rootMargin: "100px",
         }
       );
 
@@ -108,7 +108,7 @@ export default function HomePage() {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true
+          closeOnClick: true,
         });
         setHasMore(false);
       } else {
@@ -125,7 +125,7 @@ export default function HomePage() {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true
+        closeOnClick: true,
       });
       setHasMore(false);
     } finally {
@@ -156,14 +156,14 @@ export default function HomePage() {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true
+          closeOnClick: true,
         });
         setHasMore(false);
       } else {
         const newPosts = response.posts || [];
         if (newPosts.length > 0) {
-          setPostings(prevPosts => [...prevPosts, ...newPosts]);
-          setOffset(prevOffset => prevOffset + POSTS_PER_PAGE);
+          setPostings((prevPosts) => [...prevPosts, ...newPosts]);
+          setOffset((prevOffset) => prevOffset + POSTS_PER_PAGE);
           setHasMore(newPosts.length >= POSTS_PER_PAGE);
         } else {
           setHasMore(false);
@@ -177,7 +177,7 @@ export default function HomePage() {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true
+        closeOnClick: true,
       });
       setHasMore(false);
     } finally {
@@ -217,34 +217,30 @@ export default function HomePage() {
 
   // Add this new useEffect for scroll handling in the mobile view
 
-  useEffect(
-    () => {
-      if (!isMobile) return;
+  useEffect(() => {
+    if (!isMobile) return;
 
-      const handleScroll = () => {
-        const currentScrollPos = window.pageYOffset;
+    const handleScroll = () => {
+      const currentScrollPos = window.pageYOffset;
 
-        // Determine if we should show or hide based on scroll direction
-        // Also, don't hide navbar when at the top of the page
-        const visible =
-          prevScrollPos > currentScrollPos || currentScrollPos < 10;
+      // Determine if we should show or hide based on scroll direction
+      // Also, don't hide navbar when at the top of the page
+      const visible = prevScrollPos > currentScrollPos || currentScrollPos < 10;
 
-        setPrevScrollPos(currentScrollPos);
-        setIsNavbarVisible(visible);
-      };
+      setPrevScrollPos(currentScrollPos);
+      setIsNavbarVisible(visible);
+    };
 
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    },
-    [prevScrollPos, isMobile]
-  );
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [prevScrollPos, isMobile]);
 
   /* ---------------------- Retrieving All Master Cities --------------------*/
   const [masterCities, setMasterCities] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState({
     state: "",
-    city: ""
+    city: "",
   });
   const [communityEvents, setCommunityEvents] = useState([]);
   useEffect(() => {
@@ -264,7 +260,7 @@ export default function HomePage() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true
+            closeOnClick: true,
           }
         );
       } finally {
@@ -281,7 +277,7 @@ export default function HomePage() {
         setIsProcessing(true);
         const eventsResponse = await fetchCommunityEvents({
           state: "Texas",
-          city: "Austin"
+          city: "Austin",
         });
         console.log("eeve", eventsResponse.data);
         setCommunityEvents(eventsResponse.data);
@@ -292,7 +288,7 @@ export default function HomePage() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true
+            closeOnClick: true,
           }
         );
       } finally {
@@ -308,7 +304,7 @@ export default function HomePage() {
       latitude: 0.0,
       longitude: 0.0,
       city: selectedLocation.city,
-      state: selectedLocation.state
+      state: selectedLocation.state,
     };
     console.log("pay", payload);
     try {
@@ -326,7 +322,7 @@ export default function HomePage() {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true
+          closeOnClick: true,
         }
       );
     } finally {
@@ -548,7 +544,7 @@ export default function HomePage() {
                       name: "Community",
                       icon: "👨‍👩‍👧‍👦",
                       bgColor: "bg-blue-100",
-                      textColor: "text-blue-800"
+                      textColor: "text-blue-800",
                     }}
                     title="Our Gender Reveal Party"
                     description="Join us as we reveal the exciting news and celebrate with family and friends!"
@@ -569,7 +565,7 @@ export default function HomePage() {
                       name: "Entertainment",
                       icon: "🎭",
                       bgColor: "bg-purple-100",
-                      textColor: "text-purple-800"
+                      textColor: "text-purple-800",
                     }}
                     title="Storytelling Night"
                     description="Join us for an evening of traditional Desi stories and folklore with community members."
@@ -648,19 +644,19 @@ export default function HomePage() {
 
   // Desktop layout (original code)
   return (
-    <div className="flex justify-center w-full bg-pink-50 font-afacad">
+    <div className="flex justify-center w-full bg-pink-50 font-afacad ">
       {/* Main container with max-width for large screens */}
       <div className="grid grid-cols-12 w-full max-w-[1600px] bg-white">
         {/* Left Sidebar - 20% width (spans 2.4/12 columns) */}
         <aside
-          className="col-span-3 lg:col-span-2 xl:col-span-2 border-r  font-afacad"
+          className="col-span-4 lg:col-span-2 xl:col-span-2 border-r  font-afacad"
           style={{
             height: viewportHeight,
             position: "sticky",
             top: 0,
             overflowY: "auto",
             background:
-              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)"
+              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)",
           }}
         >
           <div className="flex flex-col h-full">
@@ -766,7 +762,7 @@ export default function HomePage() {
         </aside>
 
         {/* Middle Content Area - 50% width (spans 6/12 columns) */}
-        <main className="col-span-9 lg:col-span-7 xl:col-span-7 overflow-y-auto border-r border-gray-200">
+        <main className="col-span-8 lg:col-span-6 xl:col-span-6 overflow-y-auto border-gray-200">
           <div className="p-4 lg:p-6 max-w-5xl mx-auto">
             {/* First Card - Initially visible with close button */}
             {isFirstCardVisible && (
@@ -777,6 +773,7 @@ export default function HomePage() {
             <h1 className="text-xl lg:text-2xl font-bold mb-4 mt-3 font-fraunces">
               Scoops Around You
             </h1>
+
             {/* Social Posts with Infinite Scroll */}
             {postings?.slice(0, 5).map((post, index) => (
               <div
@@ -797,18 +794,16 @@ export default function HomePage() {
             {/* Loading indicator */}
             {loading && <LoadingSpinner />}
             {/* End of content message */}
-            {!loading &&
-              !hasMore &&
-              postings.length > 0 && (
-                <div className="text-center py-4 text-gray-500">
-                  You've reached the end of the content
-                </div>
-              )}
+            {!loading && !hasMore && postings.length > 0 && (
+              <div className="text-center py-4 text-gray-500">
+                You've reached the end of the content
+              </div>
+            )}
             <h1 className="text-xl lg:text-2xl font-bold mb-4 mt-3 font-fraunces">
               Happening Near You
             </h1>
             {communityEvents &&
-              communityEvents.map(event => (
+              communityEvents.map((event) => (
                 <HappeningCard
                   image="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
                   imageAlt="Gender Reveal Party"
@@ -816,7 +811,7 @@ export default function HomePage() {
                     name: "Community",
                     icon: "👨‍👩‍👧‍👦",
                     bgColor: "bg-blue-100",
-                    textColor: "text-blue-800"
+                    textColor: "text-blue-800",
                   }}
                   title={event.name}
                   description={event.description}
@@ -833,8 +828,8 @@ export default function HomePage() {
         </main>
 
         {/* Right Sidebar - 30% width (spans 3.6/12 columns) */}
-        <aside className="col-span-0 lg:col-span-3 xl:col-span-3 hidden lg:block border border-gray-100 overflow-y-auto">
-          <div className="p-4 flex flex-col">
+        <aside className="col-span-0 lg:col-span-4 xl:col-span-4 hidden lg:block border-l-2 border-gray-100 overflow-y-auto h-fit">
+          <div className="p-5 flex flex-col">
             {/* Header section */}
             <div className="mb-2">
               <div className="text-gray-500 text-sm mb-1">Thursday, 30 Jan</div>
@@ -847,8 +842,10 @@ export default function HomePage() {
             {/* Cards container with flex layout and fixed gap */}
             <div className="flex flex-col gap-[10px] mt-2">
               <WeatherCard />
-              <HoroscopeCard />
+
               <AllergyCard />
+
+              <HoroscopeCard />
 
               {/* Divider */}
               <div className="w-full h-px bg-gray-200 my-4" />
