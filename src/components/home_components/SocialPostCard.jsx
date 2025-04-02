@@ -5,9 +5,6 @@ import { MoreHorizontal, Heart, MessageCircle, ThumbsDown } from "lucide-react";
 const SocialPostCard = ({
   post,
   isMobile = false,
-  username = "Aarav Patel",
-  timeAgo = "9h ago",
-  content = "Just had an amazing dinner at The Spice Lounge with my family. If you're nearby, you have to check this place out—it's a vibe. From the cozy ambiance to the chef's special Biriyani, everything was spot-on. Can't wait to go back!",
   images,
   onLike,
   onComment,
@@ -15,6 +12,69 @@ const SocialPostCard = ({
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+
+  // Function to calculate time ago from post creation date
+  const getTimeAgo = (createdDate) => {
+    if (!createdDate) return "";
+
+    const created = new Date(createdDate);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - created) / 1000);
+
+    // Less than a minute
+    if (diffInSeconds < 60) {
+      return "Just now";
+    }
+
+    // Less than an hour
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes}m ago`;
+    }
+
+    // Less than a day
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) {
+      return `${diffInHours}h ago`;
+    }
+
+    // Less than a week
+    const diffInDays = Math.floor(diffInHours / 24);
+    if (diffInDays === 1) {
+      return "1 day ago";
+    }
+    if (diffInDays < 7) {
+      return `${diffInDays} days ago`;
+    }
+
+    // Less than a month
+    const diffInWeeks = Math.floor(diffInDays / 7);
+    if (diffInWeeks === 1) {
+      return "1 week ago";
+    }
+    if (diffInWeeks < 4) {
+      return `${diffInWeeks} weeks ago`;
+    }
+
+    // Less than a year
+    const diffInMonths = Math.floor(diffInDays / 30);
+    if (diffInMonths === 1) {
+      return "1 month ago";
+    }
+    if (diffInMonths < 12) {
+      return `${diffInMonths} months ago`;
+    }
+
+    // More than a year
+    const diffInYears = Math.floor(diffInDays / 365);
+    if (diffInYears === 1) {
+      return "1 year ago";
+    }
+    return `${diffInYears} years ago`;
+  };
+
+  // Calculate timeAgo from post creation date
+  const timeAgo = getTimeAgo(post.createdate);
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -81,7 +141,7 @@ const SocialPostCard = ({
                 />
               </div>
               <div>
-                <div className="font-medium">{username}</div>
+                <div className="font-medium">{post.username}</div>
                 <div className="text-xs text-gray-500">
                   {post.username} · {timeAgo}
                 </div>
@@ -103,7 +163,7 @@ const SocialPostCard = ({
 
           {/* Content */}
           <div className="mb-3">
-            <p className="text-sm text-gray-800">{content}</p>
+            <p className="text-sm text-gray-800">{post.contentinfo}</p>
             <button className="text-sm text-purple-600 font-medium mt-1">
               Read more
             </button>
@@ -157,7 +217,7 @@ const SocialPostCard = ({
         <div className="h-10 w-10 rounded-full overflow-hidden relative">
           <img
             src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image%20%281%29-VNHYdwoXdSCUtVSUkbo0TIIpdt9Mzf.png"
-            alt={username}
+            alt={post.username}
             className="w-full h-full object-cover"
             style={{ position: "absolute", top: 0, left: 0 }}
           />
