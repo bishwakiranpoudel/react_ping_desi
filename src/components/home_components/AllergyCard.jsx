@@ -1,4 +1,7 @@
 import { Flower } from "lucide-react";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { handlePostRequest } from "../../hooks/api";
 
 // Component for the circular icon with colored border
 const AllergenIcon = ({ icon, borderColor, alt }) => (
@@ -17,57 +20,136 @@ const AllergenIcon = ({ icon, borderColor, alt }) => (
 );
 
 // Component for each allergen item
-const AllergenItem = ({ icon, name, level, color, alt }) => (
+const AllergenItem = ({ icon, name, category, color, alt }) => (
   <div className="flex flex-col items-center">
     <AllergenIcon icon={icon} borderColor={color} alt={alt} />
     <div className="mt-1 text-center">
       <div className="text-gray-700 text-sm font-medium">{name}</div>
       <div className="text-sm font-medium" style={{ color }}>
-        {level}
+        {category}
       </div>
     </div>
   </div>
 );
 
-// Map level to color
-const levelToColor = {
+// Map category to color
+const categoryToColor = {
   High: "#CA1C1E", // Red
-  Medium: "#E9B949", // Yellow
+  Moderate: "#E9B949", // Yellow
   Low: "#4EA737", // Green
 };
 
+// Map allergen name to icon path
+const allergenToIcon = {
+  "Tree Pollen": "/images/tree-icon.png",
+  "Ragweed Pollen": "/images/ragweed-icon.png",
+  Mold: "/images/mold-icon.png",
+  "Grass Pollen": "/images/grass-icon.png",
+};
+
 export default function AllergyCard({
-  allergens = [
-    {
-      icon: "/images/tree-icon.png",
-      name: "Tree",
-      level: "Low",
-      alt: "Tree icon",
-    },
-    {
-      icon: "/images/ragweed-icon.png",
-      name: "Ragweed",
-      level: "Medium",
-      alt: "Ragweed icon",
-    },
-    {
-      icon: "/images/mold-icon.png",
-      name: "Mold",
-      level: "Low",
-      alt: "Mold icon",
-    },
-    {
-      icon: "/images/grass-icon.png",
-      name: "Grass",
-      level: "High",
-      alt: "Grass icon",
-    },
-  ],
   backgroundImg = "/images/textured-bg.png",
-  title = "Allergy Alert: High Pollen Count",
-  description = "High pollen levels expected this afternoon. If you're allergy-prone, consider limiting outdoor time and taking antihistamines.",
   alertIcon = <Flower className="h-5 w-5 text-gray-800 mt-0.5" />,
 }) {
+  const [allergyData, setAllergyData] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(true);
+  const [error, setError] = useState(null);
+  const data = {
+    lat: "30.2711286",
+    lang: "-97.7436995",
+    geohash: "9v6m",
+  };
+
+  useEffect(() => {
+    const fetchAllergySummary = async () => {
+      try {
+        setIsProcessing(true);
+        setError(null);
+
+        const response = await handlePostRequest(
+          "/news/allergySummary",
+          data,
+          {},
+          false
+        );
+        console.log(response, "Allergy Summary Response");
+
+        setAllergyData(response);
+      } catch (error) {
+        setError(error.response?.data?.message ?? error.data?.message ?? error);
+        toast.error("Error fetching allergy summary: " + error, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+        });
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+
+    fetchAllergySummary();
+  }, []);
+
+  // Extract data
+  const allergysummary = allergyData?.data.allergysummary ?? "";
+  const polleninfo = allergyData?.data.polleninfo ?? [];
+  const [title, description] = allergysummary.split("\n");
+  console.log(polleninfo);
+
+  // Create allergen items from API data
+  const getAllergenItems = () => {
+    if (!polleninfo || polleninfo.length === 0) {
+      return [
+        {
+          icon: "/images/tree-icon.png",
+          name: "Tree",
+          category: "Low",
+          alt: "Tree icon",
+        },
+        {
+          icon: "/images/ragweed-icon.png",
+          name: "Ragweed",
+          category: "Medium",
+          alt: "Ragweed icon",
+        },
+        {
+          icon: "/images/mold-icon.png",
+          name: "Mold",
+          category: "Low",
+          alt: "Mold icon",
+        },
+        {
+          icon: "/images/grass-icon.png",
+          name: "Grass",
+          category: "High",
+          alt: "Grass icon",
+        },
+      ];
+    }
+
+    return polleninfo.map((item) => ({
+      icon: allergenToIcon[item.Name] || "/placeholder.svg",
+      name: item.Name.replace(" Pollen", ""),
+      category: item.Category,
+      alt: `${item.Name} icon`,
+    }));
+  };
+
+  const allergens = getAllergenItems();
+
+  if (isProcessing) {
+    return <div className="max-w-md mx-auto p-4">Loading allergy data...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-md mx-auto p-4 text-red-500">
+        Error loading allergy data
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-md mx-auto">
       <div className="rounded-2xl overflow-hidden shadow-sm border">
@@ -97,21 +179,21 @@ export default function AllergyCard({
             {/* Top row */}
             <div className="p-2 flex flex-col items-center justify-center">
               <AllergenItem
-                icon={allergens[0].icon}
-                name={allergens[0].name}
-                level={allergens[0].level}
-                color={levelToColor[allergens[0].level]}
-                alt={allergens[0].alt}
+                icon={allergens[0]?.icon}
+                name={allergens[0]?.name}
+                category={allergens[0]?.category}
+                color={categoryToColor[allergens[0]?.category]}
+                alt={allergens[0]?.alt}
               />
             </div>
 
             <div className="p-2 flex flex-col items-center justify-center">
               <AllergenItem
-                icon={allergens[1].icon}
-                name={allergens[1].name}
-                level={allergens[1].level}
-                color={levelToColor[allergens[1].level]}
-                alt={allergens[1].alt}
+                icon={allergens[1]?.icon}
+                name={allergens[1]?.name}
+                category={allergens[1]?.category}
+                color={categoryToColor[allergens[1]?.category]}
+                alt={allergens[1]?.alt}
               />
             </div>
 
@@ -121,21 +203,21 @@ export default function AllergyCard({
             {/* Bottom row */}
             <div className="p-2 flex flex-col items-center justify-center">
               <AllergenItem
-                icon={allergens[2].icon}
-                name={allergens[2].name}
-                level={allergens[2].level}
-                color={levelToColor[allergens[2].level]}
-                alt={allergens[2].alt}
+                icon={allergens[2]?.icon}
+                name={allergens[2]?.name}
+                category={allergens[2]?.category}
+                color={categoryToColor[allergens[2]?.category]}
+                alt={allergens[2]?.alt}
               />
             </div>
 
             <div className="p-2 flex flex-col items-center justify-center">
               <AllergenItem
-                icon={allergens[3].icon}
-                name={allergens[3].name}
-                level={allergens[3].level}
-                color={levelToColor[allergens[3].level]}
-                alt={allergens[3].alt}
+                icon={allergens[3]?.icon}
+                name={allergens[3]?.name}
+                category={allergens[3]?.category}
+                color={categoryToColor[allergens[3]?.category]}
+                alt={allergens[3]?.alt}
               />
             </div>
           </div>
@@ -146,8 +228,12 @@ export default function AllergyCard({
           <div className="flex items-start gap-2 mb-2">
             {alertIcon}
             <div>
-              <div className="font-medium text-gray-800">{title}</div>
-              <p className="text-gray-600 text-sm mt-1">{description}</p>
+              <div className="font-medium text-gray-800">
+                {title || "Allergy Summary"}
+              </div>
+              <p className="text-gray-600 text-sm mt-1">
+                {description || "Current allergy information for your area"}
+              </p>
             </div>
           </div>
         </div>
