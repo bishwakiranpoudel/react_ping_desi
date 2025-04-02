@@ -89,7 +89,7 @@ export default function WeatherCard({
               {title}
             </span>
           </div>
-          <p className="text-gray-600 text-smfont-afacad">{description}</p>
+          <p className="text-gray-600 text-sm font-afacad">{description}</p>
         </div>
       </div>
     </div>
