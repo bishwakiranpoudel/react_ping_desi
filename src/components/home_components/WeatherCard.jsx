@@ -1,15 +1,74 @@
 import { CloudRain } from "lucide-react";
+import { useState, useEffect } from "react";
+import { handlePostRequest } from "../../hooks/api";
+import { toast } from "react-toastify";
 
 export default function WeatherCard({
-  dayTemp = 24,
-  nightTemp = 11,
+  backgroundImg = "/images/cloudy-background.png",
+  weatherIcon = <CloudRain className="h-5 w-5 text-indigo-400" />,
   dayIcon = "/images/sun-icon.png",
   nightIcon = "/images/moon-icon.png",
-  backgroundImg = "/images/cloudy-background.png",
-  title = "Grab your chai & maybe an umbrella!",
-  description = "There's a teeny tiny chance the skies might cry a little today. Keep one eye on the clouds... just in case!",
-  weatherIcon = <CloudRain className="h-5 w-5 text-indigo-400" />,
 }) {
+  const [weatherData, setWeatherData] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(true);
+
+  const requestData = {
+    lat: "30.2672",
+    lang: "-97.7431",
+    geohash: "9v6m",
+  };
+
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        const response = await handlePostRequest(
+          "/news/wetherReport",
+          requestData,
+          {},
+          false
+        );
+        console.log(response, "Weather Response");
+        if (response && response.data) {
+          setWeatherData(response);
+        }
+      } catch (error) {
+        toast.error(
+          "" + (error.response?.data?.message ?? error.data?.message ?? error),
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          }
+        );
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+
+    fetchWeather();
+  }, []);
+
+  // Extract data from the response
+  const maxtemp = weatherData?.data?.maxtemp || 0;
+  const mintemp = weatherData?.data?.mintemp || 0;
+  const trending = weatherData?.data?.trending || "Weather forecast";
+  const algtrending =
+    weatherData?.data?.algtrending ||
+    "Weather details unavailable at the moment.";
+  const dayiconphrase = weatherData?.data?.dayiconphrase || "Day";
+  const nighticonphrase = weatherData?.data?.nighticonphrase || "Night";
+
+  if (isProcessing) {
+    return (
+      <div className="max-w-md mx-auto">
+        <div className="rounded-2xl border overflow-hidden shadow-sm bg-gray-100 p-4">
+          <p className="text-center">Loading weather data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-md mx-auto">
       <div className="rounded-2xl border overflow-hidden shadow-sm bg-gray-100">
@@ -33,6 +92,7 @@ export default function WeatherCard({
           {/* Content overlay */}
           <div className="relative z-10 flex justify-between items-center w-full">
             {/* Day Section */}
+
             <div class="flex items-center">
               <div class="h-full flex-shrink-0">
                 <img
@@ -46,7 +106,7 @@ export default function WeatherCard({
                 <div class="text-gray-800 font-medium font-afacad">At Day</div>
                 <div class="flex items-center gap-2">
                   <span class="text-2xl font-bold font-fraunces">
-                    {dayTemp}°
+                    {maxtemp}°
                   </span>
                   <span class="text-sm text-gray-600 font-afacad">Highest</span>
                 </div>
@@ -64,7 +124,7 @@ export default function WeatherCard({
                 </div>
                 <div class="flex items-center gap-2">
                   <span class="text-2xl font-bold font-fraunces">
-                    {nightTemp}°
+                    {mintemp}°
                   </span>
                   <span class="text-sm text-gray-600 font-afacad">Lowest</span>
                 </div>
@@ -86,10 +146,10 @@ export default function WeatherCard({
           <div className="flex items-center gap-2 mb-2">
             {weatherIcon}
             <span className="font-medium text-gray-800 font-afacad">
-              {title}
+              {trending}
             </span>
           </div>
-          <p className="text-gray-600 text-sm font-afacad">{description}</p>
+          <p className="text-gray-600 text-sm font-afacad">{algtrending}</p>
         </div>
       </div>
     </div>
