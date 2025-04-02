@@ -93,22 +93,26 @@ export default function WeatherCard({
           <div className="relative z-10 flex justify-between items-center w-full">
             {/* Day Section */}
 
-            <div class="flex items-center">
-              <div class="h-full flex-shrink-0">
+            <div className="flex items-center">
+              <div className="h-full flex-shrink-0">
                 <img
                   src={dayIcon}
                   alt="Day icon"
-                  class="h-full object-contain rounded-full"
+                  className="h-full object-contain rounded-full"
                 />
               </div>
 
-              <div class="ml-4 flex flex-col justify-center">
-                <div class="text-gray-800 font-medium font-afacad">At Day</div>
-                <div class="flex items-center gap-2">
-                  <span class="text-2xl font-bold font-fraunces">
+              <div className="ml-4 flex flex-col justify-center">
+                <div className="text-gray-800 font-medium font-afacad">
+                  At Day
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold font-fraunces">
                     {maxtemp}°
                   </span>
-                  <span class="text-sm text-gray-600 font-afacad">Highest</span>
+                  <span className="text-sm text-gray-600 font-afacad">
+                    Highest
+                  </span>
                 </div>
               </div>
             </div>
@@ -117,24 +121,26 @@ export default function WeatherCard({
             <div className="h-16 w-px bg-gray-300"></div>
 
             {/* Night Section */}
-            <div class="flex items-center">
-              <div class="ml-4 flex flex-col justify-center">
-                <div class="text-gray-800 font-medium font-afacad">
+            <div className="flex items-center">
+              <div className="ml-4 flex flex-col justify-center">
+                <div className="text-gray-800 font-medium font-afacad">
                   At Night
                 </div>
-                <div class="flex items-center gap-2">
-                  <span class="text-2xl font-bold font-fraunces">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl font-bold font-fraunces">
                     {mintemp}°
                   </span>
-                  <span class="text-sm text-gray-600 font-afacad">Lowest</span>
+                  <span className="text-sm text-gray-600 font-afacad">
+                    Lowest
+                  </span>
                 </div>
               </div>
 
-              <div class="h-full flex-shrink-0">
+              <div className="h-full flex-shrink-0">
                 <img
                   src={nightIcon}
                   alt="Night icon"
-                  class="h-full object-contain rounded-full"
+                  className="h-full object-contain rounded-full"
                 />
               </div>
             </div>
