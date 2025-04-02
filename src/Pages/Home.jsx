@@ -3,9 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
 import { handlePostRequest } from "../hooks/api";
-import {
-  Menu,
-} from "react-feather"; // Using react-feather instead of lucide-react
+import { Menu } from "react-feather"; // Using react-feather instead of lucide-react
 import { useIsMobile } from "../hooks/use-mobile";
 import { TabbedContent } from "../components/home_components/tabbed-content";
 import HoroscopeCard from "../components/home_components/HoroscopeCard";
@@ -22,7 +20,7 @@ import HappeningCard from "../components/home_components/HappeningCard";
 
 import {
   fetchMasterCities,
-  retrieveMasterCity
+  retrieveMasterCity,
 } from "../services/locationServices";
 import { fetchCommunityEvents } from "../services/events";
 import { convertDateToObject } from "../lib/utils";
@@ -56,18 +54,18 @@ export default function HomePage() {
 
   // Last element ref callback for intersection observer
   const lastPostElementRef = useCallback(
-    node => {
+    (node) => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver(
-        entries => {
+        (entries) => {
           if (entries[0].isIntersecting && hasMore) {
             fetchMorePosts();
           }
         },
         {
-          rootMargin: "100px"
+          rootMargin: "100px",
         }
       );
 
@@ -99,7 +97,7 @@ export default function HomePage() {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true
+          closeOnClick: true,
         });
         setHasMore(false);
       } else {
@@ -116,7 +114,7 @@ export default function HomePage() {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true
+        closeOnClick: true,
       });
       setHasMore(false);
     } finally {
@@ -147,14 +145,14 @@ export default function HomePage() {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true
+          closeOnClick: true,
         });
         setHasMore(false);
       } else {
         const newPosts = response.posts || [];
         if (newPosts.length > 0) {
-          setPostings(prevPosts => [...prevPosts, ...newPosts]);
-          setOffset(prevOffset => prevOffset + POSTS_PER_PAGE);
+          setPostings((prevPosts) => [...prevPosts, ...newPosts]);
+          setOffset((prevOffset) => prevOffset + POSTS_PER_PAGE);
           setHasMore(newPosts.length >= POSTS_PER_PAGE);
         } else {
           setHasMore(false);
@@ -168,7 +166,7 @@ export default function HomePage() {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true
+        closeOnClick: true,
       });
       setHasMore(false);
     } finally {
@@ -208,34 +206,30 @@ export default function HomePage() {
 
   // Add this new useEffect for scroll handling in the mobile view
 
-  useEffect(
-    () => {
-      if (!isMobile) return;
+  useEffect(() => {
+    if (!isMobile) return;
 
-      const handleScroll = () => {
-        const currentScrollPos = window.pageYOffset;
+    const handleScroll = () => {
+      const currentScrollPos = window.pageYOffset;
 
-        // Determine if we should show or hide based on scroll direction
-        // Also, don't hide navbar when at the top of the page
-        const visible =
-          prevScrollPos > currentScrollPos || currentScrollPos < 10;
+      // Determine if we should show or hide based on scroll direction
+      // Also, don't hide navbar when at the top of the page
+      const visible = prevScrollPos > currentScrollPos || currentScrollPos < 10;
 
-        setPrevScrollPos(currentScrollPos);
-        setIsNavbarVisible(visible);
-      };
+      setPrevScrollPos(currentScrollPos);
+      setIsNavbarVisible(visible);
+    };
 
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    },
-    [prevScrollPos, isMobile]
-  );
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [prevScrollPos, isMobile]);
 
   /* ---------------------- Retrieving All Master Cities --------------------*/
   const [masterCities, setMasterCities] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState({
     state: "",
-    city: ""
+    city: "",
   });
   const [communityEvents, setCommunityEvents] = useState([]);
   useEffect(() => {
@@ -255,7 +249,7 @@ export default function HomePage() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true
+            closeOnClick: true,
           }
         );
       } finally {
@@ -272,7 +266,7 @@ export default function HomePage() {
         setIsProcessing(true);
         const eventsResponse = await fetchCommunityEvents({
           state: "Texas",
-          city: "Austin"
+          city: "Austin",
         });
         console.log("eeve", eventsResponse.data);
         setCommunityEvents(eventsResponse.data);
@@ -283,7 +277,7 @@ export default function HomePage() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true
+            closeOnClick: true,
           }
         );
       } finally {
@@ -299,7 +293,7 @@ export default function HomePage() {
       latitude: 0.0,
       longitude: 0.0,
       city: selectedLocation.city,
-      state: selectedLocation.state
+      state: selectedLocation.state,
     };
     console.log("pay", payload);
     try {
@@ -317,7 +311,7 @@ export default function HomePage() {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true
+          closeOnClick: true,
         }
       );
     } finally {
@@ -369,7 +363,7 @@ export default function HomePage() {
         </header>
 
         {/* Mobile Main Content */}
-        <main className="pt-20 pb-20">
+        <main className="pt-6 pb-20">
           <div className="p-4">
             {/* First Card - Initially visible with close button */}
             {isFirstCardVisible && (
@@ -539,7 +533,7 @@ export default function HomePage() {
                       name: "Community",
                       icon: "👨‍👩‍👧‍👦",
                       bgColor: "bg-blue-100",
-                      textColor: "text-blue-800"
+                      textColor: "text-blue-800",
                     }}
                     title="Our Gender Reveal Party"
                     description="Join us as we reveal the exciting news and celebrate with family and friends!"
@@ -560,7 +554,7 @@ export default function HomePage() {
                       name: "Entertainment",
                       icon: "🎭",
                       bgColor: "bg-purple-100",
-                      textColor: "text-purple-800"
+                      textColor: "text-purple-800",
                     }}
                     title="Storytelling Night"
                     description="Join us for an evening of traditional Desi stories and folklore with community members."
@@ -651,7 +645,7 @@ export default function HomePage() {
             top: 0,
             overflowY: "auto",
             background:
-              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)"
+              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)",
           }}
         >
           <div className="flex flex-col h-full">
@@ -789,18 +783,16 @@ export default function HomePage() {
             {/* Loading indicator */}
             {loading && <LoadingSpinner />}
             {/* End of content message */}
-            {!loading &&
-              !hasMore &&
-              postings.length > 0 && (
-                <div className="text-center py-4 text-gray-500">
-                  You've reached the end of the content
-                </div>
-              )}
+            {!loading && !hasMore && postings.length > 0 && (
+              <div className="text-center py-4 text-gray-500">
+                You've reached the end of the content
+              </div>
+            )}
             <h1 className="text-xl lg:text-2xl font-bold mb-4 mt-3 font-fraunces">
               Happening Near You
             </h1>
             {communityEvents &&
-              communityEvents.map(event => (
+              communityEvents.map((event) => (
                 <HappeningCard
                   image="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
                   imageAlt="Gender Reveal Party"
@@ -808,7 +800,7 @@ export default function HomePage() {
                     name: "Community",
                     icon: "👨‍👩‍👧‍👦",
                     bgColor: "bg-blue-100",
-                    textColor: "text-blue-800"
+                    textColor: "text-blue-800",
                   }}
                   title={event.name}
                   description={event.description}
