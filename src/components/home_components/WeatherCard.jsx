@@ -56,8 +56,6 @@ export default function WeatherCard({
   const algtrending =
     weatherData?.data?.algtrending ||
     "Weather details unavailable at the moment.";
-  const dayiconphrase = weatherData?.data?.dayiconphrase || "Day";
-  const nighticonphrase = weatherData?.data?.nighticonphrase || "Night";
 
   if (isProcessing) {
     return (
