@@ -477,11 +477,11 @@ export default function HomePage() {
               {/* Social Post */}
               <div className="overflow-x-auto ">
                 <div className="flex space-x-4">
-                  {postings?.map((post, index) => (
+                  {postings?.slice(0, 5).map((post, index) => (
                     <div
                       key={post.id || post._id || index}
                       ref={
-                        index === postings.length - 1
+                        index === Math.min(postings.length, 5) - 1
                           ? lastPostElementRef
                           : null
                       }
@@ -749,10 +749,14 @@ export default function HomePage() {
             </h1>
 
             {/* Social Posts with Infinite Scroll */}
-            {postings?.map((post, index) => (
+            {postings?.slice(0, 5).map((post, index) => (
               <div
                 key={post.id || post._id || index}
-                ref={index === postings.length - 1 ? lastPostElementRef : null}
+                ref={
+                  index === Math.min(postings.length, 5) - 1
+                    ? lastPostElementRef
+                    : null
+                }
               >
                 <SocialPostCard
                   post={post}
