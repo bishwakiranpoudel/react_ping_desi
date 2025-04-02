@@ -316,14 +316,7 @@ export default function HomePage() {
     return (
       <div className="min-h-screen bg-gray-50 font-afacad">
         {/* Mobile Header */}
-        <header
-          className="fixed top-0 left-0 right-0  z-30 border-b"
-          style={{
-            boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-            background:
-              "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)",
-          }}
-        >
+        <header className="top-0 left-0 right-0  z-30 border-b ">
           <div className="flex items-center p-4">
             <button
               onClick={() => setIsMobileSidebarOpen(true)}
@@ -332,24 +325,29 @@ export default function HomePage() {
               <Menu className="h-6 w-6" />
             </button>
 
-            <div className="flex items-center">
-              <img
-                src="/images/ping-desi-logo.png"
-                alt="Ping Desi logo"
-                width={20}
-                height={20}
-                className="object-contain mr-2"
-              />
+            <div className="p-4">
+              <div className="flex items-center">
+                <img
+                  src="/images/ping-desi-logo.png"
+                  alt="Ping Desi logo"
+                  width={20}
+                  height={20}
+                  className="object-contain mr-2"
+                />
 
-              <div>
-                <div className="font-semibold text-[#7B189F]">Ping Desi</div>
+                <div>
+                  <div className="font-semibold text-[#7B189F]">Ping Desi</div>
+                  <div className="text-sm text-gray-700">
+                    Los Angeles, Cesar Chavez Avenue
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </header>
 
         {/* Mobile Main Content */}
-        <main className="pt-[72px] pb-20">
+        <main className="pt-20 pb-20">
           <div className="p-4">
             {/* First Card - Initially visible with close button */}
             {isFirstCardVisible && (
@@ -487,6 +485,7 @@ export default function HomePage() {
                           ? lastPostElementRef
                           : null
                       }
+                      className="min-w-full"
                     >
                       <SocialPostCard post={post} isMobile={isMobile} />
                     </div>
