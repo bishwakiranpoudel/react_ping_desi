@@ -10,12 +10,6 @@ import {
   FileText,
   User,
   MoreHorizontal,
-  ChevronDown,
-  ChevronRight,
-  Heart,
-  MessageCircle,
-  ThumbsDown,
-  X,
   Menu,
   MapPin,
 } from "react-feather"; // Using react-feather instead of lucide-react
@@ -33,6 +27,12 @@ import HomePromotionCard from "../components/home_components/HomePromotionCard";
 import BottomNavbar from "../components/home_components/BottomNavBar";
 import MobileSidebar from "../components/home_components/MobileSidebar";
 
+import {
+  fetchMasterCities,
+  retrieveMasterCity,
+} from "../services/locationServices";
+import { fetchWeatherForecast } from "../services/forecast";
+
 export default function HomePage() {
   // State to track viewport height for proper sidebar sizing
   const [viewportHeight, setViewportHeight] = useState("100vh");
@@ -46,7 +46,6 @@ export default function HomePage() {
   const isMobile = useIsMobile();
 
   //Get location data
-  const { locationData, requestLocation } = useLocation();
 
   // Add these new state variables after the existing state declarations
   const [prevScrollPos, setPrevScrollPos] = useState(0);
@@ -132,6 +131,7 @@ export default function HomePage() {
   }, []);
 
   // Add this new useEffect for scroll handling in the mobile view
+
   useEffect(() => {
     if (!isMobile) return;
 
@@ -149,6 +149,77 @@ export default function HomePage() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [prevScrollPos, isMobile]);
+
+  /* ---------------------- Retrieving All Master Cities --------------------*/
+  const [masterCities, setMasterCities] = useState([]);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState({
+    state: "",
+    city: "",
+  });
+  useEffect(() => {
+    async function fetchMasterCity() {
+      try {
+        if (isProcessing) {
+          return;
+        }
+        setIsProcessing(true);
+        const citiesResponse = fetchMasterCities();
+
+        setMasterCities(citiesResponse.data);
+      } catch (error) {
+        /*
+        toast.error(
+          "" + (error.response?.data?.message ?? error.data?.message ?? error),
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true
+          }
+        );
+        */
+      } finally {
+        setIsProcessing(false);
+      }
+    }
+    fetchMasterCity();
+  }, []);
+
+  async function handleLocationChange() {
+    // Normally wont be 0.0 but we only want it to changed based on dropdown data
+    const payload = {
+      latitude: 0.0,
+      longitude: 0.0,
+      city: selectedLocation.city,
+      state: selectedLocation.state,
+    };
+    console.log("pay", payload);
+    try {
+      if (isProcessing) {
+        return;
+      }
+      setIsProcessing(true);
+      const cityResponse = await retrieveMasterCity(payload);
+      localStorage.setItem("geohash", cityResponse.geohash[0].geohash);
+      setMasterCities(cityResponse.geohash[0]);
+    } catch (error) {
+      /*
+        toast.error(
+          "" + (error.response?.data?.message ?? error.data?.message ?? error),
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true
+          }
+        );
+        */
+    } finally {
+      setIsProcessing(false);
+    }
+  }
+  /* ----------------------- Location Service end ----------------------_*/
 
   // Mobile layout
   if (isMobile) {
