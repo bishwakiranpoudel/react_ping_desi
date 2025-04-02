@@ -1,3 +1,3 @@
 export const envConfig={
-  apiUrl:'http://services.desi360.co/v1'
+  apiUrl:'https://services.desi360.co/v1'
 }
