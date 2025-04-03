@@ -413,7 +413,11 @@ function HomePage2() {
                     }
                     className="min-w-full"
                   >
-                    <SocialPostCard post={post} isMobile={isMobile} />
+                    <SocialPostCard
+                      post={post}
+                      isMobile={isMobile}
+                      images={post.photopath ? post.photopath.split(",") : []}
+                    />
                   </div>
                 ))}
               </div>
