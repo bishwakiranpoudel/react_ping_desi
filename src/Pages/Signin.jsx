@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSpinner } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import {  toast } from "react-toastify";
 import { handlePostRequest } from "../hooks/api";
 
 export default function SigninPage() {
@@ -50,7 +49,6 @@ export default function SigninPage() {
 
   return (
     <>
-      <ToastContainer />
       <div className="min-h-screen bg-[#F5F4F5] flex items-center justify-center p-4">
         <div className="bg-white shadow-lg p-4 sm:p-8 w-full max-w-xl rounded-lg">
           <div className="bg-[#FCFCFC] rounded-2xl p-6 sm:p-10">
