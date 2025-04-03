@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import { LocationProvider } from "./context/location-context";
 import SigninPage from "./Pages/Signin";
+import UserSignup from "./Pages/Signup";
 // Remove the CSS import that's causing the error
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
         <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/signin" element={<SigninPage />} />
-          <Route path="/signup" element={<HomePage />} />
+          <Route path="/signup" element={<UserSignup />} />
         </Routes>
       </Router>
     </LocationProvider>
