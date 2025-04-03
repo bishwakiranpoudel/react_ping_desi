@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSpinner } from "react-icons/fa";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { handlePostRequest } from "../hooks/api";
 
 const UserSignup = () => {
@@ -53,7 +53,7 @@ const UserSignup = () => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row h-screen">
+      <div className="flex flex-col md:flex-row h-screen font-afacad">
         {/* Left Side (Signup Form) */}
         <div className="flex flex-col justify-center items-center w-full md:w-1/2 bg-white p-4 sm:p-8">
           <div className="w-full max-w-md">
@@ -168,4 +168,3 @@ const UserSignup = () => {
 };
 
 export default UserSignup;
-
