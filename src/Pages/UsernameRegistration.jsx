@@ -13,7 +13,7 @@ const UsernameRegistration = () => {
     if (!username.trim()) {
       toast.error("Please enter a username", {
         position: "top-right",
-        autoClose: 3000
+        autoClose: 3000,
       });
       return;
     }
@@ -21,7 +21,7 @@ const UsernameRegistration = () => {
     if (!email.trim()) {
       toast.error("Please enter an email address", {
         position: "top-right",
-        autoClose: 3000
+        autoClose: 3000,
       });
       return;
     }
@@ -30,7 +30,7 @@ const UsernameRegistration = () => {
     if (!emailRegex.test(email)) {
       toast.error("Please enter a valid email address", {
         position: "top-right",
-        autoClose: 3000
+        autoClose: 3000,
       });
       return;
     }
@@ -38,7 +38,7 @@ const UsernameRegistration = () => {
     if (!isAgeConfirmed) {
       toast.error("Please confirm that you are 18 years or older", {
         position: "top-right",
-        autoClose: 3000
+        autoClose: 3000,
       });
       return;
     }
@@ -46,7 +46,7 @@ const UsernameRegistration = () => {
     setIsProcessing(true);
     let phoneNumber = localStorage.getItem("phoneNumber");
     try {
-      const payload = { username, email, phoneNumber, avatar_id: 8 };
+      const payload = { username, email, phoneNumber, avatar_id: 12 };
       const registrationResponse = await handlePostRequest(
         "/auth/register",
         payload,
@@ -62,7 +62,7 @@ const UsernameRegistration = () => {
         {
           position: "top-right",
           autoClose: 5000,
-          hideProgressBar: false
+          hideProgressBar: false,
         }
       );
     } finally {
@@ -83,7 +83,7 @@ const UsernameRegistration = () => {
                   className="h-6 w-6 mr-2"
                 />
               </div>
-              <div className="flex justify-center mb-4">
+              <div className="flex justify-start mb-4">
                 <img
                   src="/username.png"
                   alt="Username Logo"
@@ -103,14 +103,14 @@ const UsernameRegistration = () => {
               type="text"
               placeholder="Username *"
               value={username}
-              onChange={e => setUsername(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
               className="mb-4 block w-full rounded-md border py-3 px-3"
             />
             <input
               type="email"
               placeholder="Email *"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               className="mb-6 block w-full rounded-md border py-3 px-3"
             />
             <div className="mb-8 flex items-start">
@@ -118,7 +118,7 @@ const UsernameRegistration = () => {
                 id="age-confirm"
                 type="checkbox"
                 checked={isAgeConfirmed}
-                onChange={e => setIsAgeConfirmed(e.target.checked)}
+                onChange={(e) => setIsAgeConfirmed(e.target.checked)}
                 className="h-4 w-4 text-purple-600 border rounded"
               />
               <label
