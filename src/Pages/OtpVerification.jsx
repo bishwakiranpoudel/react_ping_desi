@@ -123,7 +123,7 @@ const OTPVerification = () => {
         toast.success("OTP Verified. Proceeding to Dashboard.", {
           position: "top-right"
         });
-        navigate("/welcome");
+        navigate("/home");
       } else {
         toast.success("OTP Verified. Proceeding to User Registration.", {
           position: "top-right"

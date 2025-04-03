@@ -7,9 +7,15 @@ import SigninPage from "./Pages/Signin";
 import UserSignup from "./Pages/Signup";
 import OTPVerification from "./Pages/OtpVerification";
 import UsernameRegistration from "./Pages/UsernameRegistration";
+import { useEffect } from "react";
 // Remove the CSS import that's causing the error
 
 function App() {
+  useEffect(() => {
+    if (window.location.pathname == "/") {
+      window.location.href = "/home";
+    }
+  }, []);
   return (
     <LocationProvider>
       <ToastContainer />
@@ -20,7 +26,6 @@ function App() {
           <Route path="/signup" element={<UserSignup />} />
           <Route path="/otpverification" element={<OTPVerification />} />
           <Route path="/username" element={<UsernameRegistration />} />
-
         </Routes>
       </Router>
     </LocationProvider>

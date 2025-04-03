@@ -55,7 +55,7 @@ const UsernameRegistration = () => {
       );
       toast.success(registrationResponse.message);
       localStorage.setItem("token", JSON.stringify(registrationResponse.token));
-      window.location.href = "/welcome";
+      window.location.href = "/home";
     } catch (error) {
       toast.error(
         error.response?.data?.message ?? error.data?.message ?? error,
