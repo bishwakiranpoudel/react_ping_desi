@@ -33,7 +33,6 @@ const UserSignup = () => {
         {},
         false
       );
-      alert(otpResponse.otp);
       localStorage.setItem("phoneNumber", phoneNumber);
       localStorage.setItem("otpMethod", otpMethod);
       navigate("/otpverification");
