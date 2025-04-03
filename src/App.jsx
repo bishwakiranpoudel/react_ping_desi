@@ -14,7 +14,7 @@ import { useEffect } from "react";
 
 function App() {
   useEffect(() => {
-    if (window.location.pathname == "/") {
+    if (window.location.pathname === "/") {
       window.location.href = "/home";
     }
   }, []);
@@ -31,8 +31,8 @@ function App() {
           <Route path="/username" element={<UsernameRegistration />} />
           {/* Add more routes as needed */}
           <Route path="*" element={<HomePage2 />} />
-          <ToastContainer />
         </Routes>
+        <ToastContainer />
       </Router>
     </LocationProvider>
   );
