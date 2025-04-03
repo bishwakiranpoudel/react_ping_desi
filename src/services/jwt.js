@@ -10,7 +10,7 @@ class TokenRefreshError extends Error {
   }
 }
 
-const isTokenValid = (token) => {
+const isTokenValid = token => {
   if (!token) return false;
 
   try {
@@ -24,11 +24,11 @@ const isTokenValid = (token) => {
   }
 };
 
-export const refreshToken = async (refreshToken) => {
+export const refreshToken = async refreshToken => {
   if (!isTokenValid(refreshToken)) {
     console.log("Refresh token is invalid");
     localStorage.clear();
-    window.location.href = "/home";
+    window.location.href = "/signin";
   }
   const apiUrl = getApiUrl();
   const tokenEndpoint = `${apiUrl}/auth/refresh-token`;
@@ -59,7 +59,7 @@ export const refreshToken = async (refreshToken) => {
   }
 };
 
-const getValidToken = async (currentTokens) => {
+const getValidToken = async currentTokens => {
   console.log("Checking token validity...");
   if (isTokenValid(currentTokens.access)) {
     console.log("TOKEN VALID returning current tokens");
