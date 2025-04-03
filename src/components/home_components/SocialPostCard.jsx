@@ -288,6 +288,64 @@ const SocialPostCard = ({
             </button>
           </div>
 
+          {/* Image Carousel */}
+
+          {images && images.length > 0 && (
+            <div className="relative flex-grow mb-4">
+              <div className="w-full h-full relative rounded-lg  bg-white overflow-hidden">
+                <div className="w-full h-full rounded-lg overflow-hidden ">
+                  <img
+                    src={images[currentImageIndex] || "/placeholder.svg"}
+                    alt="Post image"
+                    className="w-full h-[160px] object-cover"
+                    style={{}}
+                  />
+                </div>
+              </div>
+              {images.length > 1 && (
+                <>
+                  <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10">
+                    <button
+                      onClick={handlePrevImage}
+                      disabled={currentImageIndex === 0}
+                      className="disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none"
+                      aria-label="Previous image"
+                    >
+                      <img
+                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Frame%201171279062-vnAwUYEvftwRA2jmHffSdx5SwWvC3I.svg"
+                        alt="Previous"
+                        width="24"
+                        height="24"
+                      />
+                    </button>
+                  </div>
+                  <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-10">
+                    <button
+                      onClick={handleNextImage}
+                      disabled={currentImageIndex === images.length - 1}
+                      className="disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none"
+                      aria-label="Next image"
+                    >
+                      <img
+                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Frame%201171279061-n6vOnZLf3AKojY7n8t2UlShZOLgyyP.svg"
+                        alt="Next"
+                        width="24"
+                        height="24"
+                      />
+                    </button>
+                  </div>
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
+                    <PaginationDots
+                      totalDots={images.length}
+                      activeDot={currentImageIndex}
+                      onDotClick={setCurrentImageIndex}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
           {/* Category */}
           {post.scoopname && (
             <div className="mb-2">
