@@ -60,7 +60,7 @@ const AllergenItem = ({ icon, name, category, color, alt, isLeft = false }) => {
 const categoryToColor = {
   High: "#CA1C1E", // Red
   Moderate: "#E9B949", // Yellow
-  Low: "#4EA737", // Green
+  Low: "#4EA737" // Green
 };
 
 // Map allergen name to icon path
@@ -68,12 +68,12 @@ const allergenToIcon = {
   "Tree Pollen": "/images/tree.svg",
   "Ragweed Pollen": "/images/Ragweed.svg",
   Mold: "/images/Moss.svg",
-  "Grass Pollen": "/images/Grass.svg",
+  "Grass Pollen": "/images/Grass.svg"
 };
 
 export default function AllergyCard({
   backgroundImg = "/images/textured-bg.png",
-  alertIcon = <Flower className="h-5 w-5 text-gray-800 mt-0.5" />,
+  alertIcon = <Flower className="h-5 w-5 text-gray-800 mt-0.5" />
 }) {
   const [allergyData, setAllergyData] = useState(null);
   const [isProcessing, setIsProcessing] = useState(true);
@@ -81,7 +81,7 @@ export default function AllergyCard({
   const data = {
     lat: "30.2711286",
     lang: "-97.7436995",
-    geohash: "9v6m",
+    geohash: "9v6m"
   };
 
   useEffect(() => {
@@ -96,7 +96,6 @@ export default function AllergyCard({
           {},
           false
         );
-        console.log(response, "Allergy Summary Response");
 
         setAllergyData(response);
       } catch (error) {
@@ -105,7 +104,7 @@ export default function AllergyCard({
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true,
+          closeOnClick: true
         });
       } finally {
         setIsProcessing(false);
@@ -119,7 +118,6 @@ export default function AllergyCard({
   const allergysummary = allergyData?.data.allergysummary ?? "";
   const polleninfo = allergyData?.data.polleninfo ?? [];
   const [title, description] = allergysummary.split("\n");
-  console.log(polleninfo);
 
   // Create allergen items from API data
   const getAllergenItems = () => {
@@ -129,34 +127,34 @@ export default function AllergyCard({
           icon: "/images/tree-icon.png",
           name: "Tree",
           category: "Low",
-          alt: "Tree icon",
+          alt: "Tree icon"
         },
         {
           icon: "/images/ragweed-icon.png",
           name: "Ragweed",
           category: "Medium",
-          alt: "Ragweed icon",
+          alt: "Ragweed icon"
         },
         {
           icon: "/images/mold-icon.png",
           name: "Mold",
           category: "Low",
-          alt: "Mold icon",
+          alt: "Mold icon"
         },
         {
           icon: "/images/grass-icon.png",
           name: "Grass",
           category: "High",
-          alt: "Grass icon",
-        },
+          alt: "Grass icon"
+        }
       ];
     }
 
-    return polleninfo.map((item) => ({
+    return polleninfo.map(item => ({
       icon: allergenToIcon[item.Name] || "/placeholder.svg",
       name: item.Name.replace(" Pollen", ""),
       category: item.Category,
-      alt: `${item.Name} icon`,
+      alt: `${item.Name} icon`
     }));
   };
 
@@ -192,9 +190,9 @@ export default function AllergyCard({
                 className="absolute inset-0"
                 style={{
                   backdropFilter: "blur(2px)",
-                  backgroundColor: "rgba(255, 255, 255, 0.7)",
+                  backgroundColor: "rgba(255, 255, 255, 0.7)"
                 }}
-              ></div>
+              />
             </div>
           </div>
 
@@ -223,10 +221,10 @@ export default function AllergyCard({
             </div>
 
             {/* Vertical Divider */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-px h-[90%] bg-gray-300"></div>
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-px h-[90%] bg-gray-300" />
 
             {/* Horizontal Divider */}
-            <div className="col-span-2 h-px w-[80%] bg-gray-300 mx-auto my-2"></div>
+            <div className="col-span-2 h-px w-[80%] bg-gray-300 mx-auto my-2" />
 
             {/* Bottom row */}
             <div className="p-2 pr-7 flex ml-auto flex-col items-center justify-center">

@@ -20,3 +20,14 @@ export async function getScoops() {
 
   return response;
 }
+
+export async function addLike(payload) {
+  const endpoint = "/posting/addLikeInPosting";
+  const response = await handlePostRequest(endpoint, payload, undefined, false);
+
+  if (response?.error) {
+    throw new Error(response.error);
+  }
+
+  return response;
+}

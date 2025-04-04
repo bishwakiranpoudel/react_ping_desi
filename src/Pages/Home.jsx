@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
 import { Menu } from "react-feather"; // Using react-feather instead of lucide-react

@@ -108,7 +108,7 @@ const SocialPostCard = ({
 
     // Call the onLike callback with the selected reaction
     if (onLike) {
-      onLike(reaction);
+      onLike(post.id,reaction);
     }
 
     // Here you would make a POST request to your API with the reaction data
