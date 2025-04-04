@@ -18,6 +18,8 @@ import { fetchCommunityEvents } from "../services/events";
 import { convertDateToObject } from "../lib/utils";
 import { getPostings } from "../services/scoops";
 
+import NewsCard from "../components/home_components/NewsCard";
+
 function HomePage2() {
   // State to track visibility of the first card
   const [isFirstCardVisible, setIsFirstCardVisible] = useState(true);
@@ -261,93 +263,9 @@ function HomePage2() {
             </div>
             <div className="overflow-x-auto pb-2 ">
               <div className="flex space-x-4">
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden flex-shrink-0">
-                  <div className="relative h-32 w-full">
-                    <img
-                      src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                      alt="Farmers Market"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-3">
-                    <div className="flex items-center mb-1">
-                      <div className="h-5 w-5 bg-purple-600 rounded flex items-center justify-center mr-1.5">
-                        <span className="text-white text-xs">V</span>
-                      </div>
-                      <span className="text-xs text-gray-500">The Verge</span>
-                    </div>
-                    <h3 className="font-medium text-sm leading-tight">
-                      Local Farmers' Market Extends Weekly Hours
-                    </h3>
-                  </div>
-                </div>
+                <NewsCard isMobile="true" />
 
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden flex-shrink-0">
-                  <div className="relative h-32 w-full">
-                    <img
-                      src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                      alt="Festival Float"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-3">
-                    <div className="flex items-center mb-1">
-                      <div className="h-5 w-5 bg-black rounded flex items-center justify-center mr-1.5">
-                        <span className="text-white text-xs">T</span>
-                      </div>
-                      <span className="text-xs text-gray-500">
-                        The New York Times
-                      </span>
-                    </div>
-                    <h3 className="font-medium text-sm leading-tight">
-                      Road Closures Announced for Upcoming Festival
-                    </h3>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden flex-shrink-0">
-                  <div className="relative h-32 w-full">
-                    <img
-                      src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                      alt="Farmers Market"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-3">
-                    <div className="flex items-center mb-1">
-                      <div className="h-5 w-5 bg-purple-600 rounded flex items-center justify-center mr-1.5">
-                        <span className="text-white text-xs">V</span>
-                      </div>
-                      <span className="text-xs text-gray-500">The Verge</span>
-                    </div>
-                    <h3 className="font-medium text-sm leading-tight">
-                      Local Farmers' Market Extends Weekly Hours
-                    </h3>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden flex-shrink-0">
-                  <div className="relative h-32 w-full">
-                    <img
-                      src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                      alt="Festival Float"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-3">
-                    <div className="flex items-center mb-1">
-                      <div className="h-5 w-5 bg-black rounded flex items-center justify-center mr-1.5">
-                        <span className="text-white text-xs">T</span>
-                      </div>
-                      <span className="text-xs text-gray-500">
-                        The New York Times
-                      </span>
-                    </div>
-                    <h3 className="font-medium text-sm leading-tight">
-                      Road Closures Announced for Upcoming Festival
-                    </h3>
-                  </div>
-                </div>
+                <NewsCard isMobile="true" />
               </div>
             </div>
           </section>
