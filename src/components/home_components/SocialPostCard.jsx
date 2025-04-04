@@ -14,7 +14,7 @@ const SocialPostCard = ({
   const [isLiked, setIsLiked] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
   const [selectedReaction, setSelectedReaction] = useState(
-    post.userLikes[0] || null
+    (post.userLikes && post.userLikes[0]) || null
   );
   const [scoopData, setScoopData] = useState(null);
   const [allScoops, setAllScoops] = useState([]);
@@ -106,6 +106,9 @@ const SocialPostCard = ({
         error.message ??
         error;
 
+      if (!localStorage.getItem("token")) {
+        window.location.href = "/signin";
+      }
       toast.error("Error While Adding Like");
     }
   };
@@ -145,7 +148,7 @@ const SocialPostCard = ({
 
   const handleReactionSelect = async reaction => {
     setSelectedReaction(reaction);
-    if (isLiked && selectedReaction == reaction) {
+    if (isLiked && selectedReaction.emojiid == reaction.emojiid) {
       onRemoveLike(post.postingid);
       setSelectedReaction(null);
       setIsLiked(false);
