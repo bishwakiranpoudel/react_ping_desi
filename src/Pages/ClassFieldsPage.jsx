@@ -43,7 +43,7 @@ const CategoryTabs = () => {
 
         {/* Display content based on active tab */}
         {activeTab === "all" && (
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="mt-4 grid grid-cols-4 md:grid-cols-4 gap-4">
             <VehicleCard
               image="/path/to/vehicle/image.jpg"
               title="Vehicle Title"
@@ -64,7 +64,7 @@ const CategoryTabs = () => {
           </div>
         )}
         {activeTab === "house" && (
-          <div className="mt-4">
+          <div className="mt-4 grid grid-cols-4 md:grid-cols-4 gap-4">
             <h2>House Listings</h2>
             <PropertyCard
               image="/path/to/property/image.jpg"
@@ -78,7 +78,7 @@ const CategoryTabs = () => {
           </div>
         )}
         {activeTab === "auto" && (
-          <div className="mt-4">
+          <div className="mt-4 grid grid-cols-4 md:grid-cols-4 gap-4">
             <h2>Auto Listings</h2>
             <VehicleCard
               image="/path/to/vehicle/image.jpg"
@@ -90,26 +90,22 @@ const CategoryTabs = () => {
           </div>
         )}
         {activeTab === "sublease" && (
-          <div className="mt-4">
-            <h2>Sublease Listings</h2>
+          <div className="mt-4 grid grid-cols-4 md:grid-cols-4 gap-4">
             {/* Add sublease content here */}
           </div>
         )}
         {activeTab === "electronics" && (
-          <div className="mt-4">
-            <h2>Electronics Listings</h2>
+          <div className="mt-4 grid grid-cols-4 md:grid-cols-4 gap-4">
             {/* Add electronics content here */}
           </div>
         )}
         {activeTab === "appliances" && (
-          <div className="mt-4">
-            <h2>Appliances Listings</h2>
+          <div className="mt-4 grid grid-cols-4 md:grid-cols-4 gap-4">
             {/* Add appliances content here */}
           </div>
         )}
         {activeTab === "apparel" && (
-          <div className="mt-4">
-            <h2>Apparel Listings</h2>
+          <div className="mt-4 grid grid-cols-4 md:grid-cols-4 gap-4">
             {/* Add apparel content here */}
           </div>
         )}
