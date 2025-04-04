@@ -52,13 +52,10 @@ function LeftSidebar({ viewportHeight }) {
               height={20}
               className="object-contain mr-2"
             />
-
-            <div>
-              <div className="font-semibold text-[#7B189F]">Ping Desi</div>
-              <div className="text-sm text-gray-700">
-                <LocationDisplay />
-              </div>
-            </div>
+            <div className="font-semibold text-[#7B189F]">Ping Desi</div>
+          </div>
+          <div className="text-sm text-gray-700 pl-7">
+            <LocationDisplay />
           </div>
         </div>
 
