@@ -7,22 +7,16 @@ import PropertyListing from "../components/classfields_components/PropertyListin
 import VehicleListing from "../components/classfields_components/VechileListing";
 import ElectronicsListing from "../components/classfields_components/ElectronicListing";
 import ClothingListing from "../components/classfields_components/ClothingListing";
+import { useEffect } from "react";
+import { getListingCategories } from "../services/classified";
+import { toast } from "react-toastify";
 
 // Define the props for CategoryTabs
 const CategoryTabs = () => {
   const [activeTab, setActiveTab] = useState("all");
+  const [categoryData, setCategoryData] = useState([]);
 
-  const tabs = [
-    { value: "all", label: "All" },
-    { value: "house", label: "House" },
-    { value: "auto", label: "Auto" },
-    { value: "sublease", label: "Sublease" },
-    { value: "electronics", label: "Electronics" },
-    { value: "appliances", label: "Appliances" },
-    { value: "apparel", label: "Apparel" },
-  ];
-
-  const handleTabChange = (value) => {
+  const handleTabChange = value => {
     setActiveTab(value);
   };
 
@@ -32,14 +26,14 @@ const CategoryTabs = () => {
       price: "40,000",
       mileage: "15,000",
       location: "LA",
-      engine: "Electric",
+      engine: "Electric"
     },
     {
       title: "Ford Mustang",
       price: "55,000",
       mileage: "10,000",
       location: "NY",
-      engine: "V8",
+      engine: "V8"
     },
     {
       image: "/car1.jpg",
@@ -47,7 +41,7 @@ const CategoryTabs = () => {
       price: "40,000",
       mileage: "15,000",
       location: "LA",
-      engine: "Electric",
+      engine: "Electric"
     },
     {
       image: "/car2.jpg",
@@ -55,7 +49,7 @@ const CategoryTabs = () => {
       price: "55,000",
       mileage: "10,000",
       location: "NY",
-      engine: "V8",
+      engine: "V8"
     },
     {
       image: "/car1.jpg",
@@ -63,7 +57,7 @@ const CategoryTabs = () => {
       price: "40,000",
       mileage: "15,000",
       location: "LA",
-      engine: "Electric",
+      engine: "Electric"
     },
     {
       image: "/car2.jpg",
@@ -71,7 +65,7 @@ const CategoryTabs = () => {
       price: "55,000",
       mileage: "10,000",
       location: "NY",
-      engine: "V8",
+      engine: "V8"
     },
     {
       image: "/car1.jpg",
@@ -79,7 +73,7 @@ const CategoryTabs = () => {
       price: "40,000",
       mileage: "15,000",
       location: "LA",
-      engine: "Electric",
+      engine: "Electric"
     },
     {
       image: "/car2.jpg",
@@ -87,8 +81,8 @@ const CategoryTabs = () => {
       price: "55,000",
       mileage: "10,000",
       location: "NY",
-      engine: "V8",
-    },
+      engine: "V8"
+    }
   ];
 
   const clothingData = [
@@ -97,14 +91,14 @@ const CategoryTabs = () => {
       price: "29",
       size: "M",
       location: "Online",
-      type: "Men",
+      type: "Men"
     },
     {
       title: "Leather Jacket",
       price: "99",
       size: "L",
       location: "Store",
-      type: "Unisex",
+      type: "Unisex"
     },
     {
       image: "/shirt.jpg",
@@ -112,7 +106,7 @@ const CategoryTabs = () => {
       price: "29",
       size: "M",
       location: "Online",
-      type: "Men",
+      type: "Men"
     },
     {
       image: "/jacket.jpg",
@@ -120,7 +114,7 @@ const CategoryTabs = () => {
       price: "99",
       size: "L",
       location: "Store",
-      type: "Unisex",
+      type: "Unisex"
     },
     {
       image: "/shirt.jpg",
@@ -128,7 +122,7 @@ const CategoryTabs = () => {
       price: "29",
       size: "M",
       location: "Online",
-      type: "Men",
+      type: "Men"
     },
     {
       image: "/jacket.jpg",
@@ -136,7 +130,7 @@ const CategoryTabs = () => {
       price: "99",
       size: "L",
       location: "Store",
-      type: "Unisex",
+      type: "Unisex"
     },
     {
       image: "/shirt.jpg",
@@ -144,7 +138,7 @@ const CategoryTabs = () => {
       price: "29",
       size: "M",
       location: "Online",
-      type: "Men",
+      type: "Men"
     },
     {
       image: "/jacket.jpg",
@@ -152,8 +146,8 @@ const CategoryTabs = () => {
       price: "99",
       size: "L",
       location: "Store",
-      type: "Unisex",
-    },
+      type: "Unisex"
+    }
   ];
 
   const electronicsData = [
@@ -163,7 +157,7 @@ const CategoryTabs = () => {
       location: "New York",
       brand: "Apple",
       warranty: "1 Year",
-      condition: "New",
+      condition: "New"
     },
     {
       title: "Samsung Galaxy",
@@ -171,7 +165,7 @@ const CategoryTabs = () => {
       location: "Los Angeles",
       brand: "Samsung",
       warranty: "1 Year",
-      condition: "New",
+      condition: "New"
     },
     {
       image: "/laptop.jpg",
@@ -180,7 +174,7 @@ const CategoryTabs = () => {
       location: "New York",
       brand: "Apple",
       warranty: "1 Year",
-      condition: "New",
+      condition: "New"
     },
     {
       image: "/phone.jpg",
@@ -189,7 +183,7 @@ const CategoryTabs = () => {
       location: "Los Angeles",
       brand: "Samsung",
       warranty: "1 Year",
-      condition: "New",
+      condition: "New"
     },
     {
       image: "/laptop.jpg",
@@ -197,7 +191,7 @@ const CategoryTabs = () => {
       price: "999",
       location: "New York",
       brand: "Apple",
-      warranty: "1 Year",
+      warranty: "1 Year"
     },
     {
       image: "/phone.jpg",
@@ -205,7 +199,7 @@ const CategoryTabs = () => {
       price: "799",
       location: "Los Angeles",
       brand: "Samsung",
-      warranty: "1 Year",
+      warranty: "1 Year"
     },
     {
       image: "/laptop.jpg",
@@ -213,7 +207,7 @@ const CategoryTabs = () => {
       price: "999",
       location: "New York",
       brand: "Apple",
-      warranty: "1 Year",
+      warranty: "1 Year"
     },
     {
       image: "/phone.jpg",
@@ -221,8 +215,8 @@ const CategoryTabs = () => {
       price: "799",
       location: "Los Angeles",
       brand: "Samsung",
-      warranty: "1 Year",
-    },
+      warranty: "1 Year"
+    }
   ];
 
   const propertyData = [
@@ -233,7 +227,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -242,7 +236,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -251,7 +245,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -260,7 +254,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -269,7 +263,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -278,27 +272,54 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
-    },
+      distance: 1000
+    }
   ];
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await getListingCategories();
+        console.log("response", response);
+
+        const responseMap = [];
+        responseMap.push({ value: "all", label: "All" });
+        const tempResponseMap = response.data.map(data => {
+          return {
+            value: data.name,
+            label: data.name
+          };
+        });
+
+        responseMap.push(...tempResponseMap);
+        setCategoryData(responseMap);
+        console.log("response", responseMap);
+      } catch (error) {
+        console.error("Error occured while fetching categories", error);
+        toast.error("Error occured while fetching categories");
+      }
+    }
+    fetchCategories();
+  }, []);
 
   return (
     <MainLayout rs={false}>
       <div className="relative">
         <div className="flex flex-wrap justify-center md:justify-start mb-4">
-          {tabs.map((tab) => (
-            <button
-              key={tab.value}
-              className={`py-2 px-4 rounded-none ${
-                activeTab === tab.value
-                  ? "bg-gray-100 text-gray-900"
-                  : "bg-transparent text-gray-500"
-              } hover:bg-gray-100 hover:text-gray-900`}
-              onClick={() => handleTabChange(tab.value)}
-            >
-              {tab.label}
-            </button>
-          ))}
+          {categoryData &&
+            categoryData.map(tab => (
+              <button
+                key={tab.value}
+                className={`py-2 px-4 rounded-none ${
+                  activeTab === tab.value
+                    ? "bg-gray-100 text-gray-900"
+                    : "bg-transparent text-gray-500"
+                } hover:bg-gray-100 hover:text-gray-900`}
+                onClick={() => handleTabChange(tab.value)}
+              >
+                {tab.label}
+              </button>
+            ))}
         </div>
 
         {/* Display content based on active tab */}

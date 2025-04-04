@@ -1,8 +1,8 @@
 import { handleGetRequest, handlePostRequest } from "../hooks/api";
 
-// Service to handle location related requests. No need for error handling as it will be caught with outer component which calls this
+// get all categories used
 export const getListingCategories = async () => {
-  const endpoint = "classified/getListingCategories";
+  const endpoint = "/classified/getListingCategories";
   const categories = await handleGetRequest(endpoint, undefined);
   if (categories.error) {
     throw new Error(categories.error);
@@ -10,8 +10,9 @@ export const getListingCategories = async () => {
   return categories;
 };
 
-export const getAllCategoriesListings = async () => {
-  const endpoint = "classified/getListingProducts";
+// This is retrieved from all categories
+export const getInitialListings = async () => {
+  const endpoint = "/classified/getListingProducts";
   const geohash = localStorage.getItem("geohash") || "9v6m";
   const payload = { geohash: geohash, limit: 10, category: "all" };
   const listings = await handlePostRequest(endpoint, payload, undefined);
@@ -22,7 +23,7 @@ export const getAllCategoriesListings = async () => {
 };
 
 export const getListing = async id => {
-  const endpoint = "classified/getListingProduct/" + id;
+  const endpoint = "/classified/getListingProduct/" + id;
   const listing = await handleGetRequest(endpoint);
   if (listing.error) {
     throw new Error(listing.error);
@@ -31,7 +32,7 @@ export const getListing = async id => {
 };
 
 export const queryListings = async (userInput = {}) => {
-  const endpoint = "classified/getListingProducts";
+  const endpoint = "/classified/getListingProducts";
 
   // Start with geohash (always required)
   const payload = {
