@@ -91,7 +91,7 @@ export default function WeatherCard({
           <div className="relative z-10 flex justify-between items-center w-full">
             {/* Day Section */}
 
-            <div className="flex items-center">
+            <div className="flex items-center overflow-x-hidden">
               <div className="h-full flex-shrink-0">
                 <img
                   src={dayIcon}
@@ -105,10 +105,10 @@ export default function WeatherCard({
                   At Day
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-2xl font-bold font-fraunces">
+                  <span className="text-xl font-bold font-fraunces">
                     {maxtemp}°
                   </span>
-                  <span className="text-sm text-gray-600 font-afacad">
+                  <span className="text-sm text-gray-600 font-afacad ">
                     Highest
                   </span>
                 </div>
@@ -119,16 +119,16 @@ export default function WeatherCard({
             <div className="h-16 w-px bg-gray-300"></div>
 
             {/* Night Section */}
-            <div className="flex items-center">
+            <div className="flex items-center overflow-x-hidden">
               <div className="ml-4 flex flex-col justify-center">
                 <div className="text-gray-800 font-medium font-afacad">
                   At Night
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-2xl font-bold font-fraunces">
+                  <span className="text-xl font-bold font-fraunces">
                     {mintemp}°
                   </span>
-                  <span className="text-sm text-gray-600 font-afacad">
+                  <span className="text-sm text-gray-600 font-afacad ">
                     Lowest
                   </span>
                 </div>
