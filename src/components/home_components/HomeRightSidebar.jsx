@@ -1,6 +1,7 @@
 import WeatherCard from "./WeatherCard";
 import AllergyCard from "./AllergyCard";
 import HoroscopeCard from "./HoroscopeCard";
+import NewsCard from "./NewsCard";
 
 function HomeRightSidebar() {
   return (
@@ -32,43 +33,9 @@ function HomeRightSidebar() {
         <div className="w-[99%] mx-auto bg-white p-4 overflow-hidden font-afacad">
           <div className="space-y-5">
             {/* The Verge News */}
-            <div className="flex items-start">
-              <div className="h-8 w-8 bg-purple-600 rounded flex items-center justify-center mr-3 flex-shrink-0">
-                <span className="text-white text-xs">V</span>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500">The Verge</div>
-                <h4 className="font-medium">
-                  Local Farmers' Market Extends Weekly Hours
-                </h4>
-              </div>
-            </div>
+            <NewsCard />
 
-            {/* The New York Times News */}
-            <div className="flex items-start">
-              <div className="h-8 w-8 bg-black rounded flex items-center justify-center mr-3 flex-shrink-0">
-                <span className="text-white text-xs">T</span>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500">The New York Times</div>
-                <h4 className="font-medium">
-                  Road Closures Announced for Upcoming Festival
-                </h4>
-              </div>
-            </div>
-
-            {/* The Guardian News */}
-            <div className="flex items-start">
-              <div className="h-8 w-8 bg-blue-800 rounded flex items-center justify-center mr-3 flex-shrink-0">
-                <span className="text-white text-xs">G</span>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500">The Guardian</div>
-                <h4 className="font-medium">
-                  City Council Approves Affordable Housing Project
-                </h4>
-              </div>
-            </div>
+            <NewsCard />
           </div>
         </div>
       </div>
