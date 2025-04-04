@@ -1,183 +1,68 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { RefreshCw } from "lucide-react";
+import { useEffect } from "react";
 import { fetchHoroscope } from "../../services/horosocope";
 import { toast } from "react-toastify";
 
-// Zodiac signs data (names only, content will come from API)
+// Zodiac signs data
 const zodiacSigns = [
-  {
-    name: "Aries",
-  },
-  {
-    name: "Taurus",
-  },
-  {
-    name: "Gemini",
-  },
-  {
-    name: "Cancer",
-  },
-  {
-    name: "Leo",
-  },
-  {
-    name: "Virgo",
-  },
-  {
-    name: "Libra",
-  },
-  {
-    name: "Scorpio",
-  },
-  {
-    name: "Sagittarius",
-  },
-  {
-    name: "Capricorn",
-  },
-  {
-    name: "Aquarius",
-  },
-  {
-    name: "Pisces",
-  },
+  "Aries",
+  "Taurus",
+  "Gemini",
+  "Cancer",
+  "Leo",
+  "Virgo",
+  "Libra",
+  "Scorpio",
+  "Sagittarius",
+  "Capricorn",
+  "Aquarius",
+  "Pisces"
 ];
 
 export default function HoroscopeCard() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [activeTab, setActiveTab] = useState("sun");
+  // State for current zodiac sign index and active tab
+  const [currentIndex, setCurrentIndex] = useState(0); // Default to Aries
+  const [activeTab, setActiveTab] = useState("sun"); // Default to sun tab
   const [isChanging, setIsChanging] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [sunContent, setSunContent] = useState("");
-  const [sunWittyContent, setSunWittyContent] = useState("");
-  const [moonContent, setMoonContent] = useState("");
-  const [moonWittyContent, setMoonWittyContent] = useState("");
-  const [error, setError] = useState(null);
   const [horoscopeData, setHoroscopeData] = useState([]);
 
   // Get current zodiac sign
   const currentZodiac = zodiacSigns[currentIndex];
 
-  // Fetch horoscope data
-  useEffect(() => {
-    const fetchHoroscope = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        // Fetch sun horoscope
-        const sunResponse = await fetch(
-          `https://services.desi360.co/v1/horoscope/getSunHoroscope?sign=${currentZodiac.name}`
-        );
-
-        if (!sunResponse.ok) {
-          throw new Error(
-            `Failed to fetch sun horoscope: ${sunResponse.statusText}`
-          );
-        }
-
-        const sunData = await sunResponse.json();
-
-        // Fetch moon horoscope
-        const moonResponse = await fetch(
-          `https://services.desi360.co/v1/horoscope/getMoonHoroscope?sign=${currentZodiac.name}`
-        );
-
-        if (!moonResponse.ok) {
-          throw new Error(
-            `Failed to fetch moon horoscope: ${moonResponse.statusText}`
-          );
-        }
-
-        const moonData = await moonResponse.json();
-
-        // Process moon horoscope data
-        let generalHoroscope = "";
-        try {
-          if (moonData.horoscope?.horoscope_message) {
-            const parsedMessage = JSON.parse(
-              moonData.horoscope.horoscope_message
-            );
-            generalHoroscope =
-              parsedMessage[`${moonData.horoscope.sign} General Horoscope`] ||
-              "";
-          }
-        } catch (parseError) {
-          console.error("Error parsing moon horoscope:", parseError);
-          generalHoroscope = moonData.horoscope?.horoscope_message || "";
-        }
-
-        // Update state with fetched data
-        setSunContent(
-          sunData.horoscope?.horoscope_message ||
-            "Sun horoscope unavailable at the moment."
-        );
-        setSunWittyContent(
-          sunData.horoscope?.witty_message ||
-            "No witty insights available right now."
-        );
-        setMoonContent(
-          generalHoroscope || "Moon horoscope unavailable at the moment."
-        );
-        setMoonWittyContent(
-          moonData.horoscope?.witty_message ||
-            "No witty insights available right now."
-        );
-      } catch (error) {
-        console.error("Error fetching horoscope:", error);
-        setError(error.message);
-        toast.error(
-          "" +
-            (error.response?.data?.message ??
-              error.message ??
-              "Failed to fetch horoscope"),
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-          }
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchHoroscope();
-  }, [currentIndex, currentZodiac.name]);
-
   // Handle tab change (sun or moon)
-  const handleTabChange = (tab) => {
+  const handleTabChange = tab => {
     if (tab !== activeTab) {
       setActiveTab(tab);
     }
   };
 
   // Gettting Horoscope Data
-  useEffect(() => {
-    async function fetchHoroscopes() {
-      try {
-        const payload = {
-          mode: activeTab,
-          sign: zodiacSigns[currentIndex].name,
-        };
-        const horoscopeResponse = await fetchHoroscope(payload);
-        setHoroscopeData(horoscopeResponse.horoscope);
-      } catch (error) {
-        toast.error("Error while fetching the horoscope");
+  useEffect(
+    () => {
+      async function fetchHoroscopes() {
+        try {
+          const payload = {
+            mode: activeTab,
+            sign: zodiacSigns[currentIndex]
+          };
+          const horoscopeResponse = await fetchHoroscope(payload);
+          setHoroscopeData(horoscopeResponse.horoscope);
+        } catch (error) {
+          toast.error("Error while fetching the horoscope");
+        }
       }
-    }
-    fetchHoroscopes();
-  }, [activeTab, currentIndex]);
+      fetchHoroscopes();
+    },
+    [activeTab, currentIndex]
+  );
 
   // Handle zodiac change
   const handleChange = () => {
     if (isChanging) return;
     setIsChanging(true);
     setTimeout(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % zodiacSigns.length);
+      setCurrentIndex(prevIndex => (prevIndex + 1) % zodiacSigns.length);
       setIsChanging(false);
     }, 300);
   };
@@ -240,7 +125,7 @@ export default function HoroscopeCard() {
             <div className="flex items-center">
               {/* Zodiac icon */}
               <div className="w-12 h-12 rounded-full border-2 border-purple-500 flex items-center justify-center bg-white overflow-hidden">
-                <div className="text-2xl">{currentZodiac.name.charAt(0)}</div>
+                <div className="text-2xl">{currentZodiac.charAt(0)}</div>
               </div>
 
               {/* Zodiac name and switch option */}
@@ -256,7 +141,7 @@ export default function HoroscopeCard() {
                     {activeTab === "sun" ? "☀️" : "🌙"}
                   </span>
                   <span className="text-xl font-medium text-gray-800">
-                    {currentZodiac.name}
+                    {currentZodiac}
                   </span>
                 </div>
                 <button
@@ -272,18 +157,12 @@ export default function HoroscopeCard() {
 
             {/* Change button */}
             <button
-              className={`flex items-center ${
-                isLoading
-                  ? "text-gray-400 cursor-not-allowed"
-                  : "text-purple-500 hover:text-purple-700"
-              }`}
+              className="flex items-center text-purple-500 hover:text-purple-700"
               onClick={handleChange}
-              disabled={isChanging || isLoading}
+              disabled={isChanging}
             >
               <span className="mr-1">Change</span>
-              <RefreshCw
-                className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
-              />
+              <RefreshCw className="h-4 w-4" />
             </button>
           </div>
 
