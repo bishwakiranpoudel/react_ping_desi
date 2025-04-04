@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import PromotionCardLight from "../components/home_components/PromotionCardLight";
+import LocationDisplay from "../components/home_components/Locations";
 
 function LeftSidebar({ viewportHeight }) {
   // Get current location to determine active route
@@ -55,7 +56,7 @@ function LeftSidebar({ viewportHeight }) {
             <div>
               <div className="font-semibold text-[#7B189F]">Ping Desi</div>
               <div className="text-sm text-gray-700">
-                Los Angeles, Cesar Avenue
+                <LocationDisplay />
               </div>
             </div>
           </div>

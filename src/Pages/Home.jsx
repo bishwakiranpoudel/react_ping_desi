@@ -16,6 +16,7 @@ import HomePromotionCard from "../components/home_components/HomePromotionCard";
 import BottomNavbar from "../components/home_components/BottomNavBar";
 import MobileSidebar from "../components/home_components/MobileSidebar";
 import HappeningCard from "../components/home_components/HappeningCard";
+import LocationDisplay from "../components/home_components/Locations";
 
 import {
   fetchMasterCities,
@@ -642,7 +643,7 @@ export default function HomePage() {
                 <div>
                   <div className="font-semibold text-[#7B189F]">Ping Desi</div>
                   <div className="text-sm text-gray-700">
-                    Los Angeles, Cesar Avenue
+                    Angeles, Cesar Avenue
                   </div>
                 </div>
               </div>
