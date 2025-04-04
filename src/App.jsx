@@ -29,10 +29,10 @@ function App() {
           <Route path="/home" element={<HomePage2 />} />
           <Route path="/discover" element={<DiscoverPage />} />
           <Route path="/signin" element={<SigninPage />} />
-          <Route path="/signup" element={<UserSignup />} />
+
           <Route path="/otpverification" element={<OTPVerification />} />
           <Route path="/username" element={<UsernameRegistration />} />
-          <Route path="/c" element={<CategoryTabs />} />
+          <Route path="/classifieds" element={<CategoryTabs />} />
           {/* Add more routes as needed */}
         </Routes>
         <ToastContainer />
