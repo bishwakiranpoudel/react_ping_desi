@@ -8,7 +8,10 @@ import VehicleListing from "../components/classfields_components/VechileListing"
 import ElectronicsListing from "../components/classfields_components/ElectronicListing";
 import ClothingListing from "../components/classfields_components/ClothingListing";
 import { useEffect } from "react";
-import { getListingCategories } from "../services/classified";
+import {
+  getInitialListings,
+  getListingCategories
+} from "../services/classified";
 import { toast } from "react-toastify";
 
 // Define the props for CategoryTabs
@@ -276,11 +279,11 @@ const CategoryTabs = () => {
     }
   ];
 
+  /* ------------------ Get all categories ----------------------*/
   useEffect(() => {
     async function fetchCategories() {
       try {
         const response = await getListingCategories();
-        console.log("response", response);
 
         const responseMap = [];
         responseMap.push({ value: "all", label: "All" });
@@ -293,7 +296,6 @@ const CategoryTabs = () => {
 
         responseMap.push(...tempResponseMap);
         setCategoryData(responseMap);
-        console.log("response", responseMap);
       } catch (error) {
         console.error("Error occured while fetching categories", error);
         toast.error("Error occured while fetching categories");
@@ -301,6 +303,25 @@ const CategoryTabs = () => {
     }
     fetchCategories();
   }, []);
+  /* -------------------- Get Initial Load -----------------------_____*/
+
+  const [listingsData, setListingsData] = useState([]);
+  useEffect(
+    () => {
+      async function fetchInitialListings() {
+        try {
+          const response = await getInitialListings();
+          console.log(response.data.data);
+          setListingsData(response.data.data);
+        } catch (error) {
+          console.error("Error occured while fetching categories", error);
+          toast.error("Error occured while fetching categories");
+        }
+      }
+      fetchInitialListings();
+    },
+    [activeTab]
+  );
 
   return (
     <MainLayout rs={false}>
@@ -321,6 +342,20 @@ const CategoryTabs = () => {
               </button>
             ))}
         </div>
+
+        {listingsData &&
+          listingsData.map(data => {
+            if (data.category.title == "House") {
+              return (
+                <>
+                  <h1>{data.category.title}</h1>
+                  <PropertyListing
+                    propertyItems={data.category.products || []}
+                  />
+                </>
+              );
+            }
+          })}
 
         {/* Display content based on active tab */}
         {activeTab === "all" && (
