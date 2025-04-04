@@ -17,7 +17,7 @@ const zodiacSigns = [
   "Sagittarius",
   "Capricorn",
   "Aquarius",
-  "Pisces"
+  "Pisces",
 ];
 
 export default function HoroscopeCard() {
@@ -31,44 +31,41 @@ export default function HoroscopeCard() {
   const currentZodiac = zodiacSigns[currentIndex];
 
   // Handle tab change (sun or moon)
-  const handleTabChange = tab => {
+  const handleTabChange = (tab) => {
     if (tab !== activeTab) {
       setActiveTab(tab);
     }
   };
 
   // Gettting Horoscope Data
-  useEffect(
-    () => {
-      async function fetchHoroscopes() {
-        try {
-          const payload = {
-            mode: activeTab,
-            sign: zodiacSigns[currentIndex]
-          };
-          const horoscopeResponse = await fetchHoroscope(payload);
-          setHoroscopeData(horoscopeResponse.horoscope);
-        } catch (error) {
-          toast.error("Error while fetching the horoscope");
-        }
+  useEffect(() => {
+    async function fetchHoroscopes() {
+      try {
+        const payload = {
+          mode: activeTab,
+          sign: zodiacSigns[currentIndex],
+        };
+        const horoscopeResponse = await fetchHoroscope(payload);
+        setHoroscopeData(horoscopeResponse.horoscope);
+      } catch (error) {
+        toast.error("Error while fetching the horoscope");
       }
-      fetchHoroscopes();
-    },
-    [activeTab, currentIndex]
-  );
+    }
+    fetchHoroscopes();
+  }, [activeTab, currentIndex]);
 
   // Handle zodiac change
   const handleChange = () => {
     if (isChanging) return;
     setIsChanging(true);
     setTimeout(() => {
-      setCurrentIndex(prevIndex => (prevIndex + 1) % zodiacSigns.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % zodiacSigns.length);
       setIsChanging(false);
     }, 300);
   };
 
   return (
-    <div className="max-w-md mx-auto font-sans">
+    <div className="max-w-md mx-auto font-afacad">
       <div className="rounded-xl overflow-hidden shadow-md bg-white">
         {/* Header with tabs */}
         <div className="h-24 relative flex items-end overflow-hidden">
@@ -76,14 +73,14 @@ export default function HoroscopeCard() {
             <img
               src={
                 activeTab === "sun"
-                  ? "/zodiac-bg-beige.png"
-                  : "/zodiac-bg-blue.png"
+                  ? "/images/zodiac-sun.png"
+                  : "/images/zodiac-moon.png"
               }
               alt="Zodiac background"
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="flex w-full">
+          <div className="flex w-full h-full">
             {/* Sun Tab */}
             <button
               className={`flex-1 flex items-center justify-center pb-2 relative ${
@@ -93,8 +90,8 @@ export default function HoroscopeCard() {
               }`}
               onClick={() => handleTabChange("sun")}
             >
-              <span className="text-yellow-400 text-lg mr-2">☀️</span>
-              <span>Sun Sign</span>
+              <span className="text-yellow-400 text-5xl mr-2">☀️</span>
+
               {activeTab === "sun" && (
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-purple-600" />
               )}
@@ -109,8 +106,8 @@ export default function HoroscopeCard() {
               }`}
               onClick={() => handleTabChange("moon")}
             >
-              <span className="text-yellow-300 text-lg mr-2">🌙</span>
-              <span>Moon Sign</span>
+              <span className="text-yellow-300 text-5xl mr-2">🌙</span>
+
               {activeTab === "moon" && (
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-purple-600" />
               )}
@@ -124,8 +121,11 @@ export default function HoroscopeCard() {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               {/* Zodiac icon */}
-              <div className="w-12 h-12 rounded-full border-2 border-purple-500 flex items-center justify-center bg-white overflow-hidden">
-                <div className="text-2xl">{currentZodiac.charAt(0)}</div>
+              <div className="w-12 h-12 rounded-full border-2 border-purple-500 flex items-center justify-center bg-white overflow-hidden p-1">
+                <img
+                  src={`/images/${currentZodiac.toLowerCase()}.png`}
+                  alt="Zodiac Sign"
+                />
               </div>
 
               {/* Zodiac name and switch option */}
@@ -178,7 +178,7 @@ export default function HoroscopeCard() {
             </div>
 
             <div
-              className={`text-gray-600 transition-opacity duration-300 ${
+              className={`text-gray-600 transition-opacity duration-300 text-sm ${
                 isChanging ? "opacity-0" : "opacity-100"
               }`}
             >
