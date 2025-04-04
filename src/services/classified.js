@@ -30,24 +30,30 @@ export const getListing = async id => {
   return listing;
 };
 
-
 export const queryListings = async (userInput = {}) => {
   const endpoint = "classified/getListingProducts";
 
   // Start with geohash (always required)
   const payload = {
-    geohash: localStorage.getItem("geohash") || "9v6m",
+    geohash: localStorage.getItem("geohash") || "9v6m"
   };
 
-  // Conditionally add fields if they exist in userInput
   if (userInput.query) payload.query = userInput.query;
   if (userInput.category) payload.category = userInput.category;
   if (userInput.sort_by) payload.sort_by = userInput.sort_by;
   if (userInput.sort_order) payload.sort_order = userInput.sort_order;
-  if (userInput.page_size) payload.page_size = userInput.page_size;
-  if (userInput.page) payload.page = userInput.page;
-  if (userInput.min_price !== undefined) payload.min_price = userInput.min_price;
-  if (userInput.max_price !== undefined) payload.max_price = userInput.max_price;
+  if (userInput.page_size) {
+    payload.page_size = userInput.page_size;
+  } else {
+    payload.page_size = 10;
+  }
+  if (userInput.page) {
+    payload.page = userInput.page;
+  } else {
+    payload.page = 1;
+  }
+  if (userInput.min_price) payload.min_price = userInput.min_price;
+  if (userInput.max_price) payload.max_price = userInput.max_price;
   if (userInput.limit) payload.limit = userInput.limit;
 
   const listings = await handlePostRequest(endpoint, payload, undefined);
@@ -56,4 +62,3 @@ export const queryListings = async (userInput = {}) => {
   }
   return listings;
 };
-
