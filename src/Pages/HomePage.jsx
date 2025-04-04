@@ -19,6 +19,7 @@ import { convertDateToObject } from "../lib/utils";
 import { getPostings } from "../services/scoops";
 
 import NewsCard from "../components/home_components/NewsCard";
+import { getNews } from "../services/news";
 
 function HomePage2() {
   // State to track visibility of the first card
