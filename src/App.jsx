@@ -10,6 +10,8 @@ import UserSignup from "./Pages/Signup";
 import OTPVerification from "./Pages/OtpVerification";
 import UsernameRegistration from "./Pages/UsernameRegistration";
 import { useEffect } from "react";
+import CategoryTabs from "./Pages/ClassFieldsPage";
+
 // Remove the CSS import that's causing the error
 
 function App() {
@@ -30,8 +32,8 @@ function App() {
           <Route path="/signup" element={<UserSignup />} />
           <Route path="/otpverification" element={<OTPVerification />} />
           <Route path="/username" element={<UsernameRegistration />} />
+          <Route path="/c" element={<CategoryTabs />} />
           {/* Add more routes as needed */}
-          <Route path="*" element={<HomePage2 />} />
         </Routes>
         <ToastContainer />
       </Router>
