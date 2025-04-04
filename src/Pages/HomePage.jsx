@@ -1,8 +1,5 @@
-"use client";
-
 import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "react-toastify";
-import { handlePostRequest } from "../hooks/api";
 import { useIsMobile } from "../hooks/use-mobile";
 import { TabbedContent } from "../components/home_components/tabbed-content";
 import NotificationCard from "../components/home_components/NotificationCard";
@@ -15,10 +12,12 @@ import HomeRightSidebar from "../components/home_components/HomeRightSidebar";
 
 import {
   fetchMasterCities,
-  retrieveMasterCity,
+  retrieveMasterCity
 } from "../services/locationServices";
 import { fetchCommunityEvents } from "../services/events";
 import { convertDateToObject } from "../lib/utils";
+import { getPostings } from "../services/scoops";
+
 import NewsCard from "../components/home_components/NewsCard";
 
 function HomePage2() {
@@ -40,18 +39,18 @@ function HomePage2() {
 
   // Last element ref callback for intersection observer
   const lastPostElementRef = useCallback(
-    (node) => {
+    node => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver(
-        (entries) => {
+        entries => {
           if (entries[0].isIntersecting && hasMore) {
             fetchMorePosts();
           }
         },
         {
-          rootMargin: "100px",
+          rootMargin: "100px"
         }
       );
 
@@ -66,31 +65,13 @@ function HomePage2() {
     setError(null);
 
     const geohash = localStorage.getItem("geohash") || "9v6m";
-    const endpoint = "/posting/getAllPostings";
     const requestBody = { geohash, offset: 0 };
 
     try {
-      const response = await handlePostRequest(
-        endpoint,
-        requestBody,
-        {},
-        false
-      );
-
-      if (response?.error) {
-        setError(response.error);
-        toast.error(response.error, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-        });
-        setHasMore(false);
-      } else {
-        setPostings(response.posts || []);
-        setOffset(POSTS_PER_PAGE);
-        setHasMore((response.posts || []).length >= POSTS_PER_PAGE);
-      }
+      const response = await getPostings(requestBody);
+      setPostings(response.posts || []);
+      setOffset(POSTS_PER_PAGE);
+      setHasMore((response.posts || []).length >= POSTS_PER_PAGE);
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ?? error.data?.message ?? error;
@@ -100,7 +81,7 @@ function HomePage2() {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true,
+        closeOnClick: true
       });
       setHasMore(false);
     } finally {
@@ -118,31 +99,14 @@ function HomePage2() {
     const requestBody = { geohash, offset };
 
     try {
-      const response = await handlePostRequest(
-        endpoint,
-        requestBody,
-        {},
-        false
-      );
-
-      if (response?.error) {
-        setError(response.error);
-        toast.error(response.error, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-        });
-        setHasMore(false);
+      const response = await getPostings(requestBody);
+      const newPosts = response.posts || [];
+      if (newPosts.length > 0) {
+        setPostings(prevPosts => [...prevPosts, ...newPosts]);
+        setOffset(prevOffset => prevOffset + POSTS_PER_PAGE);
+        setHasMore(newPosts.length >= POSTS_PER_PAGE);
       } else {
-        const newPosts = response.posts || [];
-        if (newPosts.length > 0) {
-          setPostings((prevPosts) => [...prevPosts, ...newPosts]);
-          setOffset((prevOffset) => prevOffset + POSTS_PER_PAGE);
-          setHasMore(newPosts.length >= POSTS_PER_PAGE);
-        } else {
-          setHasMore(false);
-        }
+        setHasMore(false);
       }
     } catch (error) {
       const errorMessage =
@@ -152,7 +116,7 @@ function HomePage2() {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true,
+        closeOnClick: true
       });
       setHasMore(false);
     } finally {
@@ -177,7 +141,7 @@ function HomePage2() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState({
     state: "",
-    city: "",
+    city: ""
   });
   const [communityEvents, setCommunityEvents] = useState([]);
 
@@ -198,7 +162,7 @@ function HomePage2() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true,
+            closeOnClick: true
           }
         );
       } finally {
@@ -215,9 +179,8 @@ function HomePage2() {
         setIsProcessing(true);
         const eventsResponse = await fetchCommunityEvents({
           state: "Texas",
-          city: "Austin",
+          city: "Austin"
         });
-        console.log("eeve", eventsResponse.data);
         setCommunityEvents(eventsResponse.data);
       } catch (error) {
         toast.error(
@@ -226,7 +189,7 @@ function HomePage2() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true,
+            closeOnClick: true
           }
         );
       } finally {
@@ -242,7 +205,7 @@ function HomePage2() {
       latitude: 0.0,
       longitude: 0.0,
       city: selectedLocation.city,
-      state: selectedLocation.state,
+      state: selectedLocation.state
     };
     console.log("pay", payload);
     try {
@@ -260,7 +223,7 @@ function HomePage2() {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true,
+          closeOnClick: true
         }
       );
     } finally {
@@ -367,7 +330,7 @@ function HomePage2() {
                         name: "Community",
                         icon: "👨‍👩‍👧‍👦",
                         bgColor: "bg-blue-100",
-                        textColor: "text-blue-800",
+                        textColor: "text-blue-800"
                       }}
                       title={event.name}
                       description={event.description}
@@ -465,11 +428,13 @@ function HomePage2() {
         {/* Loading indicator */}
         {loading && <LoadingSpinner />}
         {/* End of content message */}
-        {!loading && !hasMore && postings.length > 0 && (
-          <div className="text-center py-4 text-gray-500">
-            You've reached the end of the content
-          </div>
-        )}
+        {!loading &&
+          !hasMore &&
+          postings.length > 0 && (
+            <div className="text-center py-4 text-gray-500">
+              You've reached the end of the content
+            </div>
+          )}
         <h1 className="text-xl lg:text-2xl font-bold mb-4 mt-3 font-fraunces">
           Happening Near You
         </h1>
@@ -484,7 +449,7 @@ function HomePage2() {
                 name: "Community",
                 icon: "👨‍👩‍👧‍👦",
                 bgColor: "bg-blue-100",
-                textColor: "text-blue-800",
+                textColor: "text-blue-800"
               }}
               title={event.name}
               description={event.description}
