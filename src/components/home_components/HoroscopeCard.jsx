@@ -1,104 +1,126 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { RefreshCw } from "lucide-react";
+import { toast } from "react-toastify";
 
-// Zodiac signs data
+// Zodiac signs data (names only, content will come from API)
 const zodiacSigns = [
-  {
-    name: "Aries",
-    sunContent:
-      "Aries, your energy is off the charts today! Channel that fire into something productive before you accidentally set your to-do list ablaze. A surprise conversation could lead to an exciting opportunity.",
-    moonContent:
-      "The moon in Aries has you feeling extra sensitive beneath that tough exterior. It's okay to admit you teared up at that commercial with the puppy—we won't tell anyone.",
-  },
-  {
-    name: "Taurus",
-    sunContent:
-      "Taurus, your stubborn streak is showing today. Before digging your heels in, ask yourself if that hill of mashed potatoes is really worth dying on. Treat yourself to something nice but skip the impulse shopping.",
-    moonContent:
-      "Your comfort-seeking radar is on high alert under this moon. That couch imprint with your name on it is calling, but don't get too comfortable—you have places to be!",
-  },
-  {
-    name: "Gemini",
-    sunContent:
-      "Gemini, your plan to Marie Kondo your life might hit a snag today. When emotions run high, your tidy agenda could resemble a toddler's art project. Embrace the chaos—sometimes the best stories come from a little mess!",
-    moonContent:
-      "Your mind is racing faster than your mouth can keep up, and that's saying something! Write down those midnight ideas before they vanish like your motivation to finish yesterday's projects.",
-  },
-  {
-    name: "Cancer",
-    sunContent:
-      "Cancer, your emotional armor is strong today, but don't pinch at everyone who comes close. That person who forgot to text back isn't plotting against you—they're just bad at phones.",
-    moonContent:
-      "The moon has you in your feelings even more than usual. That's like being the wettest water or the most Cancer Cancer. Channel it into creative outlets instead of passive-aggressive sighing.",
-  },
-  {
-    name: "Leo",
-    sunContent:
-      "Leo, not everyone can handle your spotlight energy today. Dim the high beams occasionally so others can share their stories too. Your hair looks fantastic, by the way—just like you knew it would.",
-    moonContent:
-      "Even lions need catnaps. This moon has you craving recognition but also rest. Find balance by accepting compliments graciously while wearing your comfiest pajamas.",
-  },
-  {
-    name: "Virgo",
-    sunContent:
-      "Virgo, your critical eye is extra sharp today. Before pointing out the typo in your friend's heartfelt message, count to ten. Or better yet, make a spreadsheet about it and keep it to yourself.",
-    moonContent:
-      "Your inner perfectionist is working overtime under this moon. Remember that 'good enough' is sometimes perfect, especially when it comes to making that bed you're just going to mess up again.",
-  },
-  {
-    name: "Libra",
-    sunContent:
-      "Libra, your indecision reaches new heights today. Yes, both outfits look amazing on you, and no, the universe won't collapse if you pick the 'wrong' lunch option. Just choose something before dinner time arrives.",
-    moonContent:
-      "Libra, today's cosmic cocktail suggests a splash of patience with a twist of hope! Work demands might cramp your style, and love life could feel like a soap opera rerun. Wallet's a bit tight, so skip the splurge. Watch for skin drama—maybe it's time to ditch that old lotion! ✨",
-  },
-  {
-    name: "Scorpio",
-    sunContent:
-      "Scorpio, not everything is a conspiracy against you today. That person who didn't wave back probably just didn't see you—no need to put them on your mental revenge list. Save that intensity for something worthwhile.",
-    moonContent:
-      "Your emotional depth is reaching Mariana Trench levels under this moon. Instead of stinging others with your tail when feelings arise, try actually talking about them. Revolutionary concept, we know.",
-  },
-  {
-    name: "Sagittarius",
-    sunContent:
-      "Sagittarius, your foot-in-mouth disease is flaring up today. Consider a five-second delay between thoughts and words. Your honesty is refreshing but maybe not when commenting on your boss's new haircut.",
-    moonContent:
-      "Your wanderlust is hitting hard under this moon, but your bank account is giving serious side-eye to those flight searches. Find adventure locally before your credit card stages an intervention.",
-  },
-  {
-    name: "Capricorn",
-    sunContent:
-      "Capricorn, the world won't end if you take a break from climbing that career mountain today. The view's pretty nice from where you are too. Try smiling at a stranger—it's free and won't impact your five-year plan.",
-    moonContent:
-      "Even the most ambitious goat needs rest. This moon has you questioning your work-life balance, which is a fancy way of saying 'all work and no play.' Schedule relaxation like you schedule meetings—with strict adherence.",
-  },
-  {
-    name: "Aquarius",
-    sunContent:
-      "Aquarius, your revolutionary ideas are extra sparkly today, but not everyone is ready for your vision of communal living where all shoes are shared. Read the room before proposing your utopian future.",
-    moonContent:
-      "Your detachment is showing under this moon. Yes, you're an intellectual air sign, but your friends might appreciate some emotional presence when they tell you their dog is sick, not theories about veterinary science.",
-  },
-  {
-    name: "Pisces",
-    sunContent:
-      "Pisces, reality is calling and would like you to return at least a few of its messages today. Daydreaming is your superpower, but maybe pay attention when crossing streets or operating heavy machinery.",
-    moonContent:
-      "The moon has your emotions flowing like a watercolor painting in the rain. Beautiful, but messy. Keep tissues handy and boundaries ready—not every feeling needs to be shared or acted upon.",
-  },
+  { name: "Aries" },
+  { name: "Taurus" },
+  { name: "Gemini" },
+  { name: "Cancer" },
+  { name: "Leo" },
+  { name: "Virgo" },
+  { name: "Libra" },
+  { name: "Scorpio" },
+  { name: "Sagittarius" },
+  { name: "Capricorn" },
+  { name: "Aquarius" },
+  { name: "Pisces" },
 ];
 
 export default function HoroscopeCard() {
-  // State for current zodiac sign index and active tab
-  const [currentIndex, setCurrentIndex] = useState(0); // Default to Aries
-  const [activeTab, setActiveTab] = useState("sun"); // Default to sun tab
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState("sun");
   const [isChanging, setIsChanging] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [sunContent, setSunContent] = useState("");
+  const [sunWittyContent, setSunWittyContent] = useState("");
+  const [moonContent, setMoonContent] = useState("");
+  const [moonWittyContent, setMoonWittyContent] = useState("");
+  const [error, setError] = useState(null);
 
   // Get current zodiac sign
   const currentZodiac = zodiacSigns[currentIndex];
+
+  // Fetch horoscope data
+  useEffect(() => {
+    const fetchHoroscope = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Fetch sun horoscope
+        const sunResponse = await fetch(
+          `https://services.desi360.co/v1/horoscope/getSunHoroscope?sign=${currentZodiac.name}`
+        );
+
+        if (!sunResponse.ok) {
+          throw new Error(
+            `Failed to fetch sun horoscope: ${sunResponse.statusText}`
+          );
+        }
+
+        const sunData = await sunResponse.json();
+
+        // Fetch moon horoscope
+        const moonResponse = await fetch(
+          `https://services.desi360.co/v1/horoscope/getMoonHoroscope?sign=${currentZodiac.name}`
+        );
+
+        if (!moonResponse.ok) {
+          throw new Error(
+            `Failed to fetch moon horoscope: ${moonResponse.statusText}`
+          );
+        }
+
+        const moonData = await moonResponse.json();
+
+        // Process moon horoscope data
+        let generalHoroscope = "";
+        try {
+          if (moonData.horoscope?.horoscope_message) {
+            const parsedMessage = JSON.parse(
+              moonData.horoscope.horoscope_message
+            );
+            generalHoroscope =
+              parsedMessage[`${moonData.horoscope.sign} General Horoscope`] ||
+              "";
+          }
+        } catch (parseError) {
+          console.error("Error parsing moon horoscope:", parseError);
+          generalHoroscope = moonData.horoscope?.horoscope_message || "";
+        }
+
+        // Update state with fetched data
+        setSunContent(
+          sunData.horoscope?.horoscope_message ||
+            "Sun horoscope unavailable at the moment."
+        );
+        setSunWittyContent(
+          sunData.horoscope?.witty_message ||
+            "No witty insights available right now."
+        );
+        setMoonContent(
+          generalHoroscope || "Moon horoscope unavailable at the moment."
+        );
+        setMoonWittyContent(
+          moonData.horoscope?.witty_message ||
+            "No witty insights available right now."
+        );
+      } catch (error) {
+        console.error("Error fetching horoscope:", error);
+        setError(error.message);
+        toast.error(
+          "" +
+            (error.response?.data?.message ??
+              error.message ??
+              "Failed to fetch horoscope"),
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          }
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchHoroscope();
+  }, [currentIndex, currentZodiac.name]);
 
   // Handle tab change (sun or moon)
   const handleTabChange = (tab) => {
@@ -109,7 +131,7 @@ export default function HoroscopeCard() {
 
   // Handle zodiac change
   const handleChange = () => {
-    if (isChanging) return;
+    if (isChanging || isLoading) return;
 
     setIsChanging(true);
     setTimeout(() => {
@@ -208,12 +230,18 @@ export default function HoroscopeCard() {
 
             {/* Change button */}
             <button
-              className="flex items-center text-purple-500 hover:text-purple-700"
+              className={`flex items-center ${
+                isLoading
+                  ? "text-gray-400 cursor-not-allowed"
+                  : "text-purple-500 hover:text-purple-700"
+              }`}
               onClick={handleChange}
-              disabled={isChanging}
+              disabled={isChanging || isLoading}
             >
               <span className="mr-1">Change</span>
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw
+                className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+              />
             </button>
           </div>
 
@@ -228,15 +256,37 @@ export default function HoroscopeCard() {
               </span>
             </div>
 
-            <div
-              className={`text-gray-600 transition-opacity duration-300 ${
-                isChanging ? "opacity-0" : "opacity-100"
-              }`}
-            >
-              {activeTab === "sun"
-                ? currentZodiac.sunContent
-                : currentZodiac.moonContent}
-            </div>
+            {isLoading ? (
+              <div className="py-4 text-center text-gray-500">
+                Loading horoscope...
+              </div>
+            ) : error ? (
+              <div className="py-4 text-center text-red-500">{error}</div>
+            ) : (
+              <div
+                className={`transition-opacity duration-300 ${
+                  isChanging ? "opacity-50" : "opacity-100"
+                }`}
+              >
+                {/* Main horoscope content */}
+                <div className="text-gray-700 mb-4">
+                  {activeTab === "sun" ? sunContent : moonContent}
+                </div>
+
+                {/* Witty content section */}
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="flex items-center mb-2">
+                    <span className="text-lg mr-2">💫</span>
+                    <span className="font-medium text-purple-600">
+                      Cosmic Whispers:
+                    </span>
+                  </div>
+                  <div className="text-gray-600 italic">
+                    {activeTab === "sun" ? sunWittyContent : moonWittyContent}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
