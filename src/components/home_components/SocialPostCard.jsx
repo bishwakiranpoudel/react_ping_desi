@@ -10,7 +10,6 @@ const SocialPostCard = ({
   onComment,
   className = ""
 }) => {
-  console.log("post", post);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
