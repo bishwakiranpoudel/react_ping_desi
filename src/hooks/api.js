@@ -98,14 +98,14 @@ export const handlePostRequest = async (
   multipart = false
 ) => {
   const API_URL = getApiUrl();
-  const token = handleGetToken();
+  let token = handleGetToken();
 
   // If headers are not provided, add Authorization header with token
   // If headers are provided, add Authorization header with token if it doesn't already exist
   // If headers is explicitly provided as an empty object, don't add Authorization header
   if (headers === undefined) {
     if (!isTokenValid(token)) {
-      const refreshedAccessToken = await getValidTokenRefresh();
+      token = await getValidTokenRefresh();
     }
     headers = { Authorization: `Bearer ${token}` };
   } else if (Object.keys(headers).length > 0) {

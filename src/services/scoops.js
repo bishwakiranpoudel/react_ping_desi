@@ -37,3 +37,16 @@ export async function addLike(payload) {
 
   return response;
 }
+
+export async function removeLike(payload) {
+  const endpoint = "/posting/removeLikeFromPosting";
+  const response = await handlePostRequest(endpoint, payload, undefined, false);
+
+  console.log("rsponsel", response);
+  if (response?.error) {
+    throw new Error(response.error);
+  }
+
+  return response;
+}
+

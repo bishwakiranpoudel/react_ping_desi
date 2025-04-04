@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { MoreHorizontal, Heart, MessageCircle, ThumbsDown } from "lucide-react";
 import { toast } from "react-toastify";
-import { addLike, getScoops } from "../../services/scoops.js";
+import { addLike, getScoops, removeLike } from "../../services/scoops.js";
 
 const SocialPostCard = ({
   post,
@@ -10,14 +10,17 @@ const SocialPostCard = ({
   onComment,
   className = ""
 }) => {
-  console.log("post",post)
+  console.log("post", post);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
-  const [selectedReaction, setSelectedReaction] = useState(post.userLikes[0]||[]);
+  const [selectedReaction, setSelectedReaction] = useState(
+    post.userLikes[0] || null
+  );
   const [scoopData, setScoopData] = useState(null);
   const [allScoops, setAllScoops] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [totalLikes, setTotalLikes] = useState(post.totalLikes);
   const likeButtonRef = useRef(null);
   const reactionsRef = useRef(null);
 
@@ -88,11 +91,15 @@ const SocialPostCard = ({
     setCurrentImageIndex(prev => (prev < images.length - 1 ? prev + 1 : prev));
   };
 
-  const onLike = async (postid, emojiid) => {
-    const payload = { postid: postid, emojiid: emojiid };
-    console.log("Pay", payload);
+  const onLike = async (postid, emoji) => {
+    const payload = { postid: postid, emojiid: emoji.emojiid };
     try {
       await addLike(payload);
+      setSelectedReaction(emoji);
+
+      if (!isLiked) {
+        setTotalLikes(prev => prev + 1);
+      }
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ??
@@ -101,6 +108,26 @@ const SocialPostCard = ({
         error;
 
       toast.error("Error While Adding Like");
+    }
+  };
+  const onRemoveLike = async postid => {
+    const payload = { postid: postid };
+    try {
+      await removeLike(payload);
+      setTotalLikes(prev => {
+        if (prev > 1) {
+          return prev - 1;
+        }
+        return 0;
+      });
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ??
+        error.data?.message ??
+        error.message ??
+        error;
+
+      toast.error("Error While Removing Like");
     }
   };
 
@@ -119,23 +146,26 @@ const SocialPostCard = ({
 
   const handleReactionSelect = async reaction => {
     setSelectedReaction(reaction);
+    if (isLiked && selectedReaction == reaction) {
+      onRemoveLike(post.postingid);
+      setSelectedReaction(null);
+      setIsLiked(false);
+      return;
+    }
+
+    await onLike(post.postingid, reaction);
     setIsLiked(true);
     setShowReactions(false);
-
-    if (onLike) {
-      await onLike(post.postingid, reaction.emojiid);
-    }
   };
 
   const handleLikeClick = () => {
     if (selectedReaction) {
-      // If already has a reaction, remove it
+      onRemoveLike(post.postingid);
       setSelectedReaction(null);
       setIsLiked(false);
     } else {
-      // Default like
       setIsLiked(prev => !prev);
-      if (onLike) onLike();
+      if (onLike) onLike(post.postingid, scoopData.emojis[0]);
     }
   };
 
@@ -399,13 +429,23 @@ const SocialPostCard = ({
                       {selectedReaction.emoji}
                     </span>
                   ) : (
-                    <Heart
-                      className={`h-5 w-5 ${
-                        isLiked ? "fill-red-500 text-red-500" : ""
-                      }`}
-                    />
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7 22H4C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V13C2 12.4696 2.21071 11.9609 2.58579 11.5858C2.96086 11.2107 3.46957 11 4 11H7M14 9V5C14 4.20435 13.6839 3.44129 13.1213 2.87868C12.5587 2.31607 11.7956 2 11 2L7 11V22H18.28C18.7623 22.0055 19.2304 21.8364 19.5979 21.524C19.9654 21.2116 20.2077 20.7769 20.28 20.3L21.66 11.3C21.7035 11.0134 21.6842 10.7207 21.6033 10.4423C21.5225 10.1638 21.3821 9.90629 21.1919 9.68751C21.0016 9.46873 20.7661 9.29393 20.5016 9.17522C20.2371 9.0565 19.9499 8.99672 19.66 9H14Z"
+                        stroke={isLiked ? "#FF0000" : "#000000"}
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   )}
-                  <span className="ml-1 text-sm">{post.totalLikes}</span>
+                  <span className="ml-1 text-sm">{totalLikes}</span>
                 </button>
 
                 {showReactions &&
@@ -566,20 +606,21 @@ const SocialPostCard = ({
               aria-label={isLiked ? "Unlike" : "Like"}
             >
               {selectedReaction ? (
-                <span className="text-xl mr-1">{selectedReaction.emoji}</span>
+                <span className="text-xl ">{selectedReaction.emoji}</span>
               ) : (
                 <svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
+                  width="30"
+                  height="30"
+                  viewBox="0 0 30 30"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    d="M12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 12.27 18.6 15.36 13.45 20.03L12 21.35Z"
-                    fill={isLiked ? "#FF0000" : "none"}
-                    stroke={isLiked ? "#FF0000" : "#000000"}
-                    strokeWidth="1.5"
+                    d="M7 22H4C3.46957 22 2.96086 21.7893 2.58579 21.4142C2.21071 21.0391 2 20.5304 2 20V13C2 12.4696 2.21071 11.9609 2.58579 11.5858C2.96086 11.2107 3.46957 11 4 11H7M14 9V5C14 4.20435 13.6839 3.44129 13.1213 2.87868C12.5587 2.31607 11.7956 2 11 2L7 11V22H18.28C18.7623 22.0055 19.2304 21.8364 19.5979 21.524C19.9654 21.2116 20.2077 20.7769 20.28 20.3L21.66 11.3C21.7035 11.0134 21.6842 10.7207 21.6033 10.4423C21.5225 10.1638 21.3821 9.90629 21.1919 9.68751C21.0016 9.46873 20.7661 9.29393 20.5016 9.17522C20.2371 9.0565 19.9499 8.99672 19.66 9H14Z"
+                    stroke={"#000000"}
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
                 </svg>
               )}
@@ -590,7 +631,7 @@ const SocialPostCard = ({
           </div>
 
           <div className="flex items-center">
-            <span className="text-sm font-medium mr-1">{post.totalLikes}</span>
+            <span className="text-sm font-medium mr-1">{totalLikes}</span>
             <img
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Frame%201000014772-A60n4ByPCLjN4CrTB0VOCyvtZbXDvp.png"
               alt="Like"
