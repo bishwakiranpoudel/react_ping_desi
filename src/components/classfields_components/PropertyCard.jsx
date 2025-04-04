@@ -1,6 +1,5 @@
 import React from "react";
 
-// Define the props for PropertyCard
 const PropertyCard = ({
   image,
   address,
@@ -19,67 +18,54 @@ const PropertyCard = ({
 }) => {
   return (
     <div
-      className={`rounded-xl overflow-hidden bg-white h-full flex flex-col shadow-sm ${className}`}
+      className={`col-span-1 flex justify-center items-center w-[244px] h-[280px] rounded-xl bg-white shadow-sm ${className}`}
     >
-      <div className="relative">
-        <img
-          src={image || "/placeholder.svg?height=400&width=600"}
-          alt={imageAlt || address}
-          className="w-full aspect-[4/3] object-cover"
-        />
-        <div className="absolute top-3 right-3">
-          <div
-            className={`bg-white/90 text-black font-medium py-1 px-2 rounded-lg flex items-center gap-1 ${badgeClassName}`}
-          >
+      <div className="w-[244px] h-[280px] flex flex-col">
+        <div className="relative w-[244px] h-[180px]">
+          <img
+            src={image || "/placeholder.svg?height=400&width=600"}
+            alt={imageAlt || address}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute top-3 right-3 bg-white/90 text-black font-medium py-1 px-2 rounded-lg flex items-center gap-1">
             <img
-              src="/images/square-foot-icon.png"
+              src="/images/square-foot-icon.svg"
               alt="Square Foot"
               className="w-4 h-4 mr-1"
             />
             {sqft} sq.ft.
           </div>
         </div>
-      </div>
-      <div className="p-3 flex flex-col flex-1">
-        <h3
-          className={`font-medium text-base mb-2 line-clamp-1 text-gray-900 ${addressClassName}`}
-        >
-          {address}
-        </h3>
-        <div
-          className={`flex items-center gap-4 text-sm text-gray-500 mb-2 ${detailsClassName}`}
-        >
-          <div className="flex items-center gap-1">
-            <img
-              src="/images/bed-icon.png"
-              alt="Bed"
-              className="w-4 h-4 mr-1"
-            />
-            <span>{beds} bed</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <img
-              src="/images/bath-icon.png"
-              alt="Bath"
-              className="w-4 h-4 mr-1"
-            />
-            <span>{baths} bath</span>
-          </div>
-        </div>
-        <div className="mt-auto flex items-center justify-between">
-          <div className={`font-bold text-gray-900 text-lg ${priceClassName}`}>
-            <span className="text-sm align-top">$</span>
-            {price}
-          </div>
-          <div
-            className={`flex items-center text-xs text-gray-500 ${distanceClassName}`}
+        <div className="p-3 h-[100px] flex flex-col">
+          <h3
+            className={`font-medium text-base mb-1 line-clamp-1 text-gray-900 ${addressClassName}`}
           >
-            <img
-              src="/images/location-icon.png"
-              alt="Location"
-              className="w-4 h-4 mr-1"
-            />
-            {distance}
+            {address}
+          </h3>
+          <div
+            className={`flex items-center gap-2 text-sm text-gray-500 mb-1 ${detailsClassName}`}
+          >
+            <div className="flex items-center gap-1">
+              <img src="/images/bed-icon.svg" alt="Bed" className="w-4 h-4" />
+              <span>{beds} bed</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <img src="/images/bath-icon.svg" alt="Bath" className="w-4 h-4" />
+              <span>{baths} bath</span>
+            </div>
+          </div>
+          <div className="mt-auto flex items-center justify-between">
+            <div
+              className={`font-bold text-gray-900 text-lg ${priceClassName}`}
+            >
+              <span className="text-sm align-top">$</span>
+              {price}
+            </div>
+            <div
+              className={`flex items-center text-xs text-gray-500 ${distanceClassName}`}
+            >
+              {distance}
+            </div>
           </div>
         </div>
       </div>
