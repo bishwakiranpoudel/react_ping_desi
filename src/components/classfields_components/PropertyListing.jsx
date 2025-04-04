@@ -1,7 +1,7 @@
 import React from "react";
 import PropertyCard from "./PropertyCard";
 
-const PropertyListing = ({ propertyItems }) => {
+const PropertyListing = ({ propertyItems = [] }) => {
   const firstRow = propertyItems.slice(0, Math.ceil(propertyItems.length / 2));
   const secondRow = propertyItems.slice(Math.ceil(propertyItems.length / 2));
 
