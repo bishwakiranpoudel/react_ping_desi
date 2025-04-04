@@ -14,7 +14,7 @@ const SocialPostCard = ({
   const [isLiked, setIsLiked] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
   const [selectedReaction, setSelectedReaction] = useState(
-    post.userLikes[0] || null
+    post.userLikes && post.userLikes[0] || null
   );
   const [scoopData, setScoopData] = useState(null);
   const [allScoops, setAllScoops] = useState([]);
