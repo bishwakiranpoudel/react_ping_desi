@@ -11,6 +11,7 @@ import OTPVerification from "./Pages/OtpVerification";
 import UsernameRegistration from "./Pages/UsernameRegistration";
 import { useEffect } from "react";
 import CategoryTabs from "./Pages/ClassFieldsPage";
+import ProfilePage from "./Pages/ProfilePage";
 
 // Remove the CSS import that's causing the error
 
@@ -33,6 +34,7 @@ function App() {
           <Route path="/otpverification" element={<OTPVerification />} />
           <Route path="/username" element={<UsernameRegistration />} />
           <Route path="/classifieds" element={<CategoryTabs />} />
+          <Route path="/profile" element={<ProfilePage />} />
           {/* Add more routes as needed */}
         </Routes>
         <ToastContainer />

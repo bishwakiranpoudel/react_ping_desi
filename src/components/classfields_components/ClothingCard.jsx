@@ -35,7 +35,7 @@ const ClothingCard = ({
           >
             {title}
           </h3>
-          <div className="text-gray-600 text-lg">{size}</div>
+          <div className="text-gray-600 text-md">{size}</div>
           <div className="mt-auto flex items-center justify-between">
             <div
               className={`font-bold text-gray-900 text-lg ${priceClassName}`}

@@ -38,7 +38,6 @@ const CategoryTabs = () => {
       engine: "V8",
     },
     {
-      image: "/car1.jpg",
       title: "Tesla Model 3",
       price: "40,000",
       mileage: "15,000",
@@ -46,7 +45,6 @@ const CategoryTabs = () => {
       engine: "Electric",
     },
     {
-      image: "/car2.jpg",
       title: "Ford Mustang",
       price: "55,000",
       mileage: "10,000",
@@ -54,7 +52,6 @@ const CategoryTabs = () => {
       engine: "V8",
     },
     {
-      image: "/car1.jpg",
       title: "Tesla Model 3",
       price: "40,000",
       mileage: "15,000",
@@ -62,7 +59,6 @@ const CategoryTabs = () => {
       engine: "Electric",
     },
     {
-      image: "/car2.jpg",
       title: "Ford Mustang",
       price: "55,000",
       mileage: "10,000",
@@ -70,7 +66,6 @@ const CategoryTabs = () => {
       engine: "V8",
     },
     {
-      image: "/car1.jpg",
       title: "Tesla Model 3",
       price: "40,000",
       mileage: "15,000",
@@ -78,7 +73,34 @@ const CategoryTabs = () => {
       engine: "Electric",
     },
     {
-      image: "/car2.jpg",
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
       title: "Ford Mustang",
       price: "55,000",
       mileage: "10,000",
@@ -103,7 +125,6 @@ const CategoryTabs = () => {
       type: "Unisex",
     },
     {
-      image: "/shirt.jpg",
       title: "Casual Shirt",
       price: "29",
       size: "M",
@@ -111,7 +132,6 @@ const CategoryTabs = () => {
       type: "Men",
     },
     {
-      image: "/jacket.jpg",
       title: "Leather Jacket",
       price: "99",
       size: "L",
@@ -119,7 +139,6 @@ const CategoryTabs = () => {
       type: "Unisex",
     },
     {
-      image: "/shirt.jpg",
       title: "Casual Shirt",
       price: "29",
       size: "M",
@@ -127,7 +146,6 @@ const CategoryTabs = () => {
       type: "Men",
     },
     {
-      image: "/jacket.jpg",
       title: "Leather Jacket",
       price: "99",
       size: "L",
@@ -135,7 +153,6 @@ const CategoryTabs = () => {
       type: "Unisex",
     },
     {
-      image: "/shirt.jpg",
       title: "Casual Shirt",
       price: "29",
       size: "M",
@@ -143,7 +160,34 @@ const CategoryTabs = () => {
       type: "Men",
     },
     {
-      image: "/jacket.jpg",
+      title: "Leather Jacket",
+      price: "99",
+      size: "L",
+      location: "Store",
+      type: "Unisex",
+    },
+    {
+      title: "Casual Shirt",
+      price: "29",
+      size: "M",
+      location: "Online",
+      type: "Men",
+    },
+    {
+      title: "Leather Jacket",
+      price: "99",
+      size: "L",
+      location: "Store",
+      type: "Unisex",
+    },
+    {
+      title: "Casual Shirt",
+      price: "29",
+      size: "M",
+      location: "Online",
+      type: "Men",
+    },
+    {
       title: "Leather Jacket",
       price: "99",
       size: "L",
@@ -170,7 +214,6 @@ const CategoryTabs = () => {
       condition: "New",
     },
     {
-      image: "/laptop.jpg",
       title: "MacBook Air",
       price: "999",
       location: "New York",
@@ -179,7 +222,6 @@ const CategoryTabs = () => {
       condition: "New",
     },
     {
-      image: "/phone.jpg",
       title: "Samsung Galaxy",
       price: "799",
       location: "Los Angeles",
@@ -188,7 +230,6 @@ const CategoryTabs = () => {
       condition: "New",
     },
     {
-      image: "/laptop.jpg",
       title: "MacBook Air",
       price: "999",
       location: "New York",
@@ -196,7 +237,6 @@ const CategoryTabs = () => {
       warranty: "1 Year",
     },
     {
-      image: "/phone.jpg",
       title: "Samsung Galaxy",
       price: "799",
       location: "Los Angeles",
@@ -204,7 +244,6 @@ const CategoryTabs = () => {
       warranty: "1 Year",
     },
     {
-      image: "/laptop.jpg",
       title: "MacBook Air",
       price: "999",
       location: "New York",
@@ -212,7 +251,34 @@ const CategoryTabs = () => {
       warranty: "1 Year",
     },
     {
-      image: "/phone.jpg",
+      title: "Samsung Galaxy",
+      price: "799",
+      location: "Los Angeles",
+      brand: "Samsung",
+      warranty: "1 Year",
+    },
+    {
+      title: "MacBook Air",
+      price: "999",
+      location: "New York",
+      brand: "Apple",
+      warranty: "1 Year",
+    },
+    {
+      title: "Samsung Galaxy",
+      price: "799",
+      location: "Los Angeles",
+      brand: "Samsung",
+      warranty: "1 Year",
+    },
+    {
+      title: "MacBook Air",
+      price: "999",
+      location: "New York",
+      brand: "Apple",
+      warranty: "1 Year",
+    },
+    {
       title: "Samsung Galaxy",
       price: "799",
       location: "Los Angeles",
@@ -222,6 +288,61 @@ const CategoryTabs = () => {
   ];
 
   const propertyData = [
+    {
+      title: "Luxury Villa",
+      price: "500,000",
+      address: "Miami",
+      beds: 4,
+      baths: 3,
+      sqft: 2500,
+      distance: 1000,
+    },
+    {
+      title: "Luxury Villa",
+      price: "500,000",
+      address: "Miami",
+      beds: 4,
+      baths: 3,
+      sqft: 2500,
+      distance: 1000,
+    },
+    {
+      title: "Luxury Villa",
+      price: "500,000",
+      address: "Miami",
+      beds: 4,
+      baths: 3,
+      sqft: 2500,
+      distance: 1000,
+    },
+    {
+      title: "Luxury Villa",
+      price: "500,000",
+      address: "Miami",
+      beds: 4,
+      baths: 3,
+      sqft: 2500,
+      distance: 1000,
+    },
+    {
+      title: "Luxury Villa",
+      price: "500,000",
+      address: "Miami",
+      beds: 4,
+      baths: 3,
+      sqft: 2500,
+      distance: 1000,
+    },
+    {
+      title: "Luxury Villa",
+      price: "500,000",
+      address: "Miami",
+      beds: 4,
+      baths: 3,
+      sqft: 2500,
+      distance: 1000,
+    },
+
     {
       title: "Luxury Villa",
       price: "500,000",
@@ -320,7 +441,7 @@ const CategoryTabs = () => {
 
   return (
     <MainLayout rs={false}>
-      <div className="relative">
+      <div className="relative font-afacad">
         {/* Updated Tabs Section */}
         <div className="flex flex-wrap justify-center md:justify-start mb-2 border-b border-gray-300 relative">
           {categoryData?.map((tab) => (
@@ -348,7 +469,7 @@ const CategoryTabs = () => {
           </button>
         </div>
 
-        {listingsData?.map(
+        {/* {listingsData?.map(
           (data) =>
             data.category.title === "House" && (
               <>
@@ -356,70 +477,81 @@ const CategoryTabs = () => {
                 <PropertyListing propertyItems={data.category.products || []} />
               </>
             )
-        )}
+        )} */}
 
         {/* Display content based on active tab */}
         {activeTab === "all" && (
           <>
             <div className="mb-6">
-              <h2 className="text-xl font-bold">Properties</h2>
-              <PropertyListing propertyItems={propertyData} />
+              <h2 className="text-xl font-bold font-fraunces">Dream Nest</h2>
+              <PropertyListing propertyItems={propertyData} isDouble={false} />
+            </div>
+
+            <div className="mb-6">
+              <h2 className="text-xl font-bold font-fraunces">Drive Deals</h2>
+              <VehicleListing vehicleItems={vehicleData} isDouble={false} />
             </div>
             <div className="mb-6">
-              <h2 className="text-xl font-bold">Vehicles</h2>
-              <VehicleListing vehicleItems={vehicleData} />
+              <h2 className="text-xl font-bold font-fraunces">
+                Sublease for you
+              </h2>
+              <PropertyListing propertyItems={propertyData} isDouble={false} />
             </div>
             <div className="mb-6">
-              <h2 className="text-xl font-bold">Sublease</h2>
-              <PropertyListing propertyItems={propertyData} />
+              <h2 className="text-xl font-bold font-fraunces">Electronics</h2>
+              <ElectronicsListing
+                electronicsItems={electronicsData}
+                isDouble={false}
+              />
             </div>
             <div className="mb-6">
-              <h2 className="text-xl font-bold">Electronics</h2>
-              <ElectronicsListing electronicsItems={electronicsData} />
+              <h2 className="text-xl font-bold font-fraunces">Appliances</h2>
+              <ElectronicsListing
+                electronicsItems={electronicsData}
+                isDouble={false}
+              />
             </div>
             <div className="mb-6">
-              <h2 className="text-xl font-bold">Appliances</h2>
-              <ElectronicsListing electronicsItems={electronicsData} />
-            </div>
-            <div className="mb-6">
-              <h2 className="text-xl font-bold">Apparel</h2>
-              <ClothingListing clothingItems={clothingData} />
+              <h2 className="text-xl font-bold font-fraunces">Apparel</h2>
+              <ClothingListing clothingItems={clothingData} isDouble={false} />
             </div>
           </>
         )}
         {activeTab === "house" && (
           <>
-            <h2 className="text-xl font-bold">Properties</h2>
+            <h2 className="text-xl font-bold font-fraunces">Dream Nests</h2>
             <PropertyListing propertyItems={propertyData} />
           </>
         )}
         {activeTab === "auto" && (
           <>
-            <h2 className="text-xl font-bold">Vehicles</h2>
+            <h2 className="text-xl font-bold font-fraunces">Drive Deals</h2>
             <VehicleListing vehicleItems={vehicleData} />
           </>
         )}
         {activeTab === "sublease" && (
           <>
-            <h2 className="text-xl font-bold">Sublease</h2>
+            <h2 className="text-xl font-bold font-fraunces">
+              Sublease for you
+            </h2>
             <PropertyListing propertyItems={propertyData} />
           </>
         )}
         {activeTab === "electronics" && (
           <>
-            <h2 className="text-xl font-bold">Electronics</h2>
+            <h2 className="text-xl font-bold font-fraunces">Electronics</h2>
             <ElectronicsListing electronicsItems={electronicsData} />
           </>
         )}
         {activeTab === "appliances" && (
           <>
-            <h2 className="text-xl font-bold">Appliences</h2>
+            <h2 className="text-xl font-bold font-fraunces">Appliences</h2>
             <ElectronicsListing electronicsItems={electronicsData} />
           </>
         )}
         {activeTab === "apparel" && (
           <>
-            <h2 className="text-xl font-bold">Apparel</h2>
+            <h2 className="text-xl font-bold font-fraunces">Apparel</h2>
             <ClothingListing clothingItems={clothingData} />
           </>
         )}
