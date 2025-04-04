@@ -1,22 +1,22 @@
-import {getValidToken} from '../services/jwt';
-import axios from 'axios'
-import {envConfig} from '../config/env';
+import { getValidToken, isTokenValid } from "../services/jwt";
+import axios from "axios";
+import { envConfig } from "../config/env";
 
-const handleAxiosError = (error) => {
+const handleAxiosError = error => {
   if (axios.isAxiosError(error)) {
     return {
       message:
         error.response?.data?.message ||
         error.message ||
         "An unexpected error occurred",
-      status: error.response?.status,
+      status: error.response?.status
     };
   }
   return { message: "An unexpected error occurred" };
 };
 
 export const getApiUrl = () => {
-  return envConfig.apiUrl
+  return envConfig.apiUrl;
 };
 
 export const handleGetToken = () => {
@@ -32,9 +32,9 @@ export const handleGetRequest = async (endpoint, headers) => {
   try {
     const response = await axios.get(`${API_URL}${endpoint}`, {
       headers: headers,
-      validateStatus: (status) => {
+      validateStatus: status => {
         return status < 500;
-      },
+      }
     });
 
     if (response.status >= 400) {
@@ -43,7 +43,7 @@ export const handleGetRequest = async (endpoint, headers) => {
           const refreshedAccessToken = await getValidTokenRefresh();
           headers = {
             ...headers,
-            Authorization: `Bearer ${refreshedAccessToken}`,
+            Authorization: `Bearer ${refreshedAccessToken}`
           };
           return await handleGetRequest(endpoint, headers);
         } catch (refreshTokenError) {
@@ -72,7 +72,7 @@ export const handleGetRequest = async (endpoint, headers) => {
           const refreshedAccessToken = await getValidTokenRefresh();
           headers = {
             ...headers,
-            Authorization: `Bearer ${refreshedAccessToken}`,
+            Authorization: `Bearer ${refreshedAccessToken}`
           };
           return await handleGetRequest(endpoint, headers);
         } catch (refreshTokenError) {
@@ -84,7 +84,7 @@ export const handleGetRequest = async (endpoint, headers) => {
         error:
           error.response?.data?.message ||
           error.message ||
-          "Failed to connect to the server. Please check your connection.",
+          "Failed to connect to the server. Please check your connection."
       };
     }
     return { error: "An unexpected error occurred" };
@@ -98,12 +98,19 @@ export const handlePostRequest = async (
   multipart = false
 ) => {
   const API_URL = getApiUrl();
-  const token = handleGetToken();
-  
+  let token = handleGetToken();
+
   // If headers are not provided, add Authorization header with token
   // If headers are provided, add Authorization header with token if it doesn't already exist
   // If headers is explicitly provided as an empty object, don't add Authorization header
   if (headers === undefined) {
+    if (!isTokenValid(token)) {
+      try {
+        token = await getValidTokenRefresh();
+      } catch (error) {
+        //pass
+      }
+    }
     headers = { Authorization: `Bearer ${token}` };
   } else if (Object.keys(headers).length > 0) {
     headers = { ...headers, Authorization: `Bearer ${token}` };
@@ -111,30 +118,27 @@ export const handlePostRequest = async (
   if (multipart) {
     headers = {
       ...headers,
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "multipart/form-data"
     };
   }
   try {
     const response = await axios.post(`${API_URL}${endpoint}`, data, {
-      headers: headers,
-      validateStatus: (status) => {
-        return status < 500;
-      },
+      headers: headers
     });
-    if (response.status >= 400) {
-      throw response;
-    }
+
     return response.data;
   } catch (error) {
+    console.log("errl", error.response);
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
+        console.log("error erroehe");
         try {
           const refreshedAccessToken = await getValidTokenRefresh();
 
           // update authorization header with newly refreshed token
           headers = {
             ...headers,
-            Authorization: `Bearer ${refreshedAccessToken}`,
+            Authorization: `Bearer ${refreshedAccessToken}`
           };
 
           return await handlePostRequest(endpoint, data, headers);
@@ -152,17 +156,8 @@ export const handlePostRequest = async (
         error.response?.status === 400
       ) {
         return {
-          error: error.response.data.email?.[0] || "An error occurred",
+          error: error.response.data.email?.[0] || "An error occurred"
         };
-      } else if (
-        endpoint === "/api/server/minecraft/" &&
-        error.response?.status === 400
-      ) {
-        const errorMessage =
-          error.response.data.name?.[0] ||
-          error.response.data.message ||
-          "An error occurred while creating the server";
-        return { error: errorMessage };
       }
     }
     console.error(`Error making POST ${endpoint}: `, error);
@@ -176,8 +171,8 @@ export const handlePatchRequest = async (endpoint, data) => {
   try {
     const response = await axios.patch(`${API_URL}${endpoint}`, data, {
       headers: {
-        Authorization: `Bearer ${token}`,
-      },
+        Authorization: `Bearer ${token}`
+      }
     });
     return response.data;
   } catch (error) {

@@ -2,8 +2,27 @@ import WeatherCard from "./WeatherCard";
 import AllergyCard from "./AllergyCard";
 import HoroscopeCard from "./HoroscopeCard";
 import NewsCard from "./NewsCard";
+import { useEffect } from "react";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { getNews } from "../../services/news";
 
 function HomeRightSidebar() {
+  const [newsData, setNewsData] = useState([]);
+  useEffect(() => {
+    async function fetchNews() {
+      try {
+        const news = await getNews();
+        const onePerCategory = news.map(item => item.news[0]); // get first news from each
+        console.log("news", onePerCategory);
+        setNewsData(onePerCategory);
+      } catch (error) {
+        toast.error("Error while fetching News");
+      }
+    }
+    fetchNews();
+  }, []);
+
   return (
     <div className="p-5 flex flex-col">
       {/* Header section */}
@@ -33,9 +52,10 @@ function HomeRightSidebar() {
         <div className="w-[99%] mx-auto bg-white p-4 overflow-hidden font-afacad">
           <div className="space-y-5">
             {/* The Verge News */}
-            <NewsCard />
+            {newsData.map((item, index) => (
+              <NewsCard key={index} item={item} />
+            ))}
 
-            <NewsCard />
           </div>
         </div>
       </div>

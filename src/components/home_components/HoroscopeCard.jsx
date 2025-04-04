@@ -2,22 +2,47 @@
 
 import { useState, useEffect } from "react";
 import { RefreshCw } from "lucide-react";
+import { fetchHoroscope } from "../../services/horosocope";
 import { toast } from "react-toastify";
 
 // Zodiac signs data (names only, content will come from API)
 const zodiacSigns = [
-  { name: "Aries" },
-  { name: "Taurus" },
-  { name: "Gemini" },
-  { name: "Cancer" },
-  { name: "Leo" },
-  { name: "Virgo" },
-  { name: "Libra" },
-  { name: "Scorpio" },
-  { name: "Sagittarius" },
-  { name: "Capricorn" },
-  { name: "Aquarius" },
-  { name: "Pisces" },
+  {
+    name: "Aries",
+  },
+  {
+    name: "Taurus",
+  },
+  {
+    name: "Gemini",
+  },
+  {
+    name: "Cancer",
+  },
+  {
+    name: "Leo",
+  },
+  {
+    name: "Virgo",
+  },
+  {
+    name: "Libra",
+  },
+  {
+    name: "Scorpio",
+  },
+  {
+    name: "Sagittarius",
+  },
+  {
+    name: "Capricorn",
+  },
+  {
+    name: "Aquarius",
+  },
+  {
+    name: "Pisces",
+  },
 ];
 
 export default function HoroscopeCard() {
@@ -30,6 +55,7 @@ export default function HoroscopeCard() {
   const [moonContent, setMoonContent] = useState("");
   const [moonWittyContent, setMoonWittyContent] = useState("");
   const [error, setError] = useState(null);
+  const [horoscopeData, setHoroscopeData] = useState([]);
 
   // Get current zodiac sign
   const currentZodiac = zodiacSigns[currentIndex];
@@ -129,10 +155,26 @@ export default function HoroscopeCard() {
     }
   };
 
+  // Gettting Horoscope Data
+  useEffect(() => {
+    async function fetchHoroscopes() {
+      try {
+        const payload = {
+          mode: activeTab,
+          sign: zodiacSigns[currentIndex].name,
+        };
+        const horoscopeResponse = await fetchHoroscope(payload);
+        setHoroscopeData(horoscopeResponse.horoscope);
+      } catch (error) {
+        toast.error("Error while fetching the horoscope");
+      }
+    }
+    fetchHoroscopes();
+  }, [activeTab, currentIndex]);
+
   // Handle zodiac change
   const handleChange = () => {
-    if (isChanging || isLoading) return;
-
+    if (isChanging) return;
     setIsChanging(true);
     setTimeout(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % zodiacSigns.length);
@@ -169,7 +211,7 @@ export default function HoroscopeCard() {
               <span className="text-yellow-400 text-lg mr-2">☀️</span>
               <span>Sun Sign</span>
               {activeTab === "sun" && (
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-purple-600"></div>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-purple-600" />
               )}
             </button>
 
@@ -185,7 +227,7 @@ export default function HoroscopeCard() {
               <span className="text-yellow-300 text-lg mr-2">🌙</span>
               <span>Moon Sign</span>
               {activeTab === "moon" && (
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-purple-600"></div>
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-purple-600" />
               )}
             </button>
           </div>
@@ -256,37 +298,13 @@ export default function HoroscopeCard() {
               </span>
             </div>
 
-            {isLoading ? (
-              <div className="py-4 text-center text-gray-500">
-                Loading horoscope...
-              </div>
-            ) : error ? (
-              <div className="py-4 text-center text-red-500">{error}</div>
-            ) : (
-              <div
-                className={`transition-opacity duration-300 ${
-                  isChanging ? "opacity-50" : "opacity-100"
-                }`}
-              >
-                {/* Main horoscope content */}
-                <div className="text-gray-700 mb-4">
-                  {activeTab === "sun" ? sunContent : moonContent}
-                </div>
-
-                {/* Witty content section */}
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <div className="flex items-center mb-2">
-                    <span className="text-lg mr-2">💫</span>
-                    <span className="font-medium text-purple-600">
-                      Cosmic Whispers:
-                    </span>
-                  </div>
-                  <div className="text-gray-600 italic">
-                    {activeTab === "sun" ? sunWittyContent : moonWittyContent}
-                  </div>
-                </div>
-              </div>
-            )}
+            <div
+              className={`text-gray-600 transition-opacity duration-300 ${
+                isChanging ? "opacity-0" : "opacity-100"
+              }`}
+            >
+              {horoscopeData && horoscopeData.witty_message}
+            </div>
           </div>
         </div>
       </div>
