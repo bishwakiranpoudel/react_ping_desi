@@ -25,6 +25,7 @@ export async function addLike(payload) {
   const endpoint = "/posting/addLikeInPosting";
   const response = await handlePostRequest(endpoint, payload, undefined, false);
 
+  console.log("rsponsel", response);
   if (response?.error) {
     throw new Error(response.error);
   }

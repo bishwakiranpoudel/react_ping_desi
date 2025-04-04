@@ -179,7 +179,6 @@ function HomePage2() {
           state: "Texas",
           city: "Austin"
         });
-        console.log("eeve", eventsResponse.data);
         setCommunityEvents(eventsResponse.data);
       } catch (error) {
         toast.error(

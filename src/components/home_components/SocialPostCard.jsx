@@ -1,13 +1,12 @@
 import { useState, useRef, useEffect } from "react";
 import { MoreHorizontal, Heart, MessageCircle, ThumbsDown } from "lucide-react";
 import { toast } from "react-toastify";
-import { getScoops } from "../../services/scoops.js";
+import { addLike, getScoops } from "../../services/scoops.js";
 
 const SocialPostCard = ({
   post,
   isMobile = false,
   images = [],
-  onLike,
   onComment,
   className = ""
 }) => {
@@ -88,6 +87,22 @@ const SocialPostCard = ({
     setCurrentImageIndex(prev => (prev < images.length - 1 ? prev + 1 : prev));
   };
 
+  const onLike = async (postid, emojiid) => {
+    const payload = { postid: postid, emojiid: emojiid };
+    console.log("Pay", payload);
+    try {
+      await addLike(payload);
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ??
+        error.data?.message ??
+        error.message ??
+        error;
+
+      toast.error("Error While Adding Like");
+    }
+  };
+
   const handleLikeHover = () => {
     setShowReactions(true);
   };
@@ -101,23 +116,14 @@ const SocialPostCard = ({
     }, 300);
   };
 
-  const handleReactionSelect = reaction => {
+  const handleReactionSelect = async reaction => {
     setSelectedReaction(reaction);
     setIsLiked(true);
     setShowReactions(false);
 
-    // Call the onLike callback with the selected reaction
     if (onLike) {
-      onLike(post.id,reaction);
+      await onLike(post.postingid, reaction.emojiid);
     }
-
-    // Here you would make a POST request to your API with the reaction data
-    // Example:
-    // fetch('your-api-endpoint', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ postId: post.id, reaction: reaction })
-    // });
   };
 
   const handleLikeClick = () => {
