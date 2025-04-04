@@ -10,10 +10,11 @@ const SocialPostCard = ({
   onComment,
   className = ""
 }) => {
+  console.log("post",post)
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
-  const [selectedReaction, setSelectedReaction] = useState(null);
+  const [selectedReaction, setSelectedReaction] = useState(post.userLikes[0]||[]);
   const [scoopData, setScoopData] = useState(null);
   const [allScoops, setAllScoops] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);

@@ -2,7 +2,12 @@ import { handlePostRequest } from "../hooks/api";
 
 export async function getPostings(requestBody) {
   const endpoint = "/posting/getAllPostings";
-  const response = await handlePostRequest(endpoint, requestBody, {}, false);
+  const response = await handlePostRequest(
+    endpoint,
+    requestBody,
+    undefined,
+    false
+  );
   if (response?.error) {
     throw new Error(response.error);
   }

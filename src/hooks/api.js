@@ -1,4 +1,4 @@
-import { getValidToken } from "../services/jwt";
+import { getValidToken, isTokenValid } from "../services/jwt";
 import axios from "axios";
 import { envConfig } from "../config/env";
 
@@ -104,6 +104,9 @@ export const handlePostRequest = async (
   // If headers are provided, add Authorization header with token if it doesn't already exist
   // If headers is explicitly provided as an empty object, don't add Authorization header
   if (headers === undefined) {
+    if (!isTokenValid(token)) {
+      const refreshedAccessToken = await getValidTokenRefresh();
+    }
     headers = { Authorization: `Bearer ${token}` };
   } else if (Object.keys(headers).length > 0) {
     headers = { ...headers, Authorization: `Bearer ${token}` };
@@ -121,7 +124,7 @@ export const handlePostRequest = async (
 
     return response.data;
   } catch (error) {
-    console.log("errl",error.response)
+    console.log("errl", error.response);
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         console.log("error erroehe");
