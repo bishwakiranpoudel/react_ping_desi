@@ -7,7 +7,7 @@ import MobileHeader from "../Pages/MobileHeader";
 import BottomNavbar from "./home_components/BottomNavBar";
 import MobileSidebar from "./home_components/MobileSidebar";
 
-function MainLayout({ children, rightSidebar }) {
+function MainLayout({ children, rightSidebar, rs = true }) {
   // State to track viewport height for proper sidebar sizing
   const [viewportHeight, setViewportHeight] = useState("100vh");
   // State for mobile sidebar
@@ -84,13 +84,19 @@ function MainLayout({ children, rightSidebar }) {
         <LeftSidebar viewportHeight={viewportHeight} />
 
         {/* Middle Content Area */}
-        <main className="col-span-8 lg:col-span-6 xl:col-span-6 overflow-y-auto border-gray-200">
-          <div className="p-4 lg:p-6 max-w-5xl mx-auto">{children}</div>
+        <main
+          className={`${
+            rs
+              ? "col-span-6 xl:col-span-6"
+              : "col-span-8 lg:col-span-10 xl:col-span-10"
+          } overflow-y-auto border-gray-200`}
+        >
+          <div className="p-4 lg:p-6 max-w-full">{children}</div>
         </main>
 
         {/* Right Sidebar - optional, can be different for each screen */}
-        {rightSidebar ? (
-          <aside className="col-span-0 lg:col-span-4 xl:col-span-4 hidden lg:block border-l-2 border-gray-100 overflow-y-auto h-fit">
+        {rs && rightSidebar ? (
+          <aside className="col-span-4 xl:col-span-4 hidden lg:block border-l-2 border-gray-100 overflow-y-auto h-fit">
             {rightSidebar}
           </aside>
         ) : null}
