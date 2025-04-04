@@ -49,12 +49,12 @@ export default function LocationDisplay() {
             data.address.road ||
             data.address.street ||
             data.address.pedestrian ||
+            data.address.state ||
             "Unknown Street";
 
           setLocationText(`${city}, ${street}`);
         } catch (err) {
           setError("Error fetching location details");
-          console.error("Error fetching location:", err);
         }
       },
       (err) => {

@@ -8,6 +8,7 @@ import {
   MoreHorizontal,
 } from "react-feather"; // Assuming you're using react-feather for icons
 import PromotionCardLight from "./PromotionCardLight"; // Import from the correct path
+import LocationDisplay from "./Locations"; // Import from the correct path
 
 const MobileSidebar = ({ isMobileSidebarOpen, onClose }) => {
   return (
@@ -31,7 +32,7 @@ const MobileSidebar = ({ isMobileSidebarOpen, onClose }) => {
             <div>
               <div className="font-semibold text-[#7B189F]">Ping Desi</div>
               <div className="text-sm text-gray-700">
-                Los Angeles, Cesar Chavez Avenue
+                <LocationDisplay />
               </div>
             </div>
           </div>

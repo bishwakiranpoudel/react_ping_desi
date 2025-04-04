@@ -1,6 +1,7 @@
 "use client";
 
 import { Menu } from "react-feather";
+import LocationDisplay from "../components/home_components/Locations";
 
 function MobileHeader({ onMenuClick }) {
   return (
@@ -23,7 +24,7 @@ function MobileHeader({ onMenuClick }) {
             <div>
               <div className="font-semibold text-[#7B189F]">Ping Desi</div>
               <div className="text-sm text-gray-700">
-                Los Angeles, Cesar Chavez Avenue
+                <LocationDisplay />
               </div>
             </div>
           </div>
