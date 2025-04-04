@@ -11,7 +11,7 @@ function MobileHeader({ onMenuClick }) {
           <Menu className="h-6 w-6" />
         </button>
 
-        <div className="p-4">
+        <div className="p-4 border-b">
           <div className="flex items-center">
             <img
               src="/images/ping-desi-logo.png"
@@ -20,13 +20,10 @@ function MobileHeader({ onMenuClick }) {
               height={20}
               className="object-contain mr-2"
             />
-
-            <div>
-              <div className="font-semibold text-[#7B189F]">Ping Desi</div>
-              <div className="text-sm text-gray-700">
-                <LocationDisplay />
-              </div>
-            </div>
+            <div className="font-semibold text-[#7B189F]">Ping Desi</div>
+          </div>
+          <div className="text-sm text-gray-700 pl-7">
+            <LocationDisplay />
           </div>
         </div>
       </div>
