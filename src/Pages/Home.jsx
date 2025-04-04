@@ -643,7 +643,7 @@ export default function HomePage() {
                 <div>
                   <div className="font-semibold text-[#7B189F]">Ping Desi</div>
                   <div className="text-sm text-gray-700">
-                    Angeles, Cesar Avenue
+                    <LocationDisplay />
                   </div>
                 </div>
               </div>
