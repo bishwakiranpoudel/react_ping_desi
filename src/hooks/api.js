@@ -105,7 +105,11 @@ export const handlePostRequest = async (
   // If headers is explicitly provided as an empty object, don't add Authorization header
   if (headers === undefined) {
     if (!isTokenValid(token)) {
-      token = await getValidTokenRefresh();
+      try {
+        token = await getValidTokenRefresh();
+      } catch (error) {
+        //pass
+      }
     }
     headers = { Authorization: `Bearer ${token}` };
   } else if (Object.keys(headers).length > 0) {
