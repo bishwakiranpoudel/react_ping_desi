@@ -107,6 +107,174 @@ const CategoryTabs = () => {
       location: "NY",
       engine: "V8",
     },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
+    {
+      title: "Tesla Model 3",
+      price: "40,000",
+      mileage: "15,000",
+      location: "LA",
+      engine: "Electric",
+    },
+    {
+      title: "Ford Mustang",
+      price: "55,000",
+      mileage: "10,000",
+      location: "NY",
+      engine: "V8",
+    },
   ];
 
   const clothingData = [
@@ -443,29 +611,49 @@ const CategoryTabs = () => {
     <MainLayout rs={false}>
       <div className="relative font-afacad">
         {/* Updated Tabs Section */}
-        <div className="flex flex-wrap justify-center md:justify-start mb-2 border-b border-gray-300 relative">
-          {categoryData?.map((tab) => (
-            <button
-              key={tab.label.toLowerCase()}
-              className={`py-0 px-4 text-sm font-medium transition-all duration-300 border-b-2 ${
-                activeTab === tab.label.toLowerCase()
-                  ? "border-gray-900 text-gray-900"
-                  : "border-transparent text-gray-500 hover:border-gray-400 hover:text-gray-700"
-              }`}
-              onClick={() => handleTabChange(tab.label.toLowerCase())}
-            >
-              <div className="flex flex-col items-center">
-                <img
-                  src={`/images/${tab.label.toLowerCase()}.png`}
-                  className="w-5 mb-1"
-                  alt="Zodiac Sign"
-                />
-                {tab.label}
-              </div>
-            </button>
-          ))}
-          <button className="absolute right-0 py-1.5 px-3 bg-black text-white rounded-lg top-1/2 -translate-y-1/2">
+        <div className="flex flex-wrap justify-center md:justify-start mb-2 border-b border-gray-300 relative md:overflow-x-hidden">
+          <div
+            className="flex overflow-x-auto md:overflow-x-hidden"
+            style={{
+              scrollbarWidth: "none" /* Firefox */,
+              msOverflowStyle: "none" /* IE and Edge */,
+            }}
+          >
+            {categoryData?.map((tab) => (
+              <button
+                key={tab.label.toLowerCase()}
+                className={`py-0 px-4 text-sm font-medium transition-all duration-300 border-b-2 ${
+                  activeTab === tab.label.toLowerCase()
+                    ? "border-gray-900 text-gray-900"
+                    : "border-transparent text-gray-500 hover:border-gray-400 hover:text-gray-700"
+                }`}
+                onClick={() => handleTabChange(tab.label.toLowerCase())}
+              >
+                <div className="flex flex-col items-center">
+                  <img
+                    src={`/images/${tab.label.toLowerCase()}.png`}
+                    className="w-5 mb-1"
+                    alt="Zodiac Sign"
+                  />
+                  {tab.label}
+                </div>
+              </button>
+            ))}
+          </div>
+          {/* Button for larger screens */}
+          <button className="hidden md:block absolute right-0 py-1.5 px-3 bg-black text-white rounded-lg top-1/2 -translate-y-1/2">
             + Create Classfields
+          </button>
+          {/* Floating button for smaller screens */}
+          <button
+            className="fixed md:hidden py-1.5 px-3 bg-black text-white rounded-full"
+            style={{
+              bottom: "4.5rem",
+              right: "2rem",
+              zIndex: 9999 /* Highest z-index */,
+            }}
+          >
+            +
           </button>
         </div>
 

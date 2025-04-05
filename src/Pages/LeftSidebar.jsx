@@ -39,6 +39,15 @@ function LeftSidebar({ viewportHeight }) {
         overflowY: "auto",
         background:
           "linear-gradient(to bottom, #ffe9f3, #ffe1e9, #ffc8ce, #ffd7e6)",
+
+        overflowX: "auto",
+
+        WebkitOverflowScrolling: "touch",
+        msOverflowStyle: "none",
+        scrollbarWidth: "none",
+        "&::-webkit-scrollbar": {
+          display: "none",
+        },
       }}
     >
       <div className="flex flex-col h-full">

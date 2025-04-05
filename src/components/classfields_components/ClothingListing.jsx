@@ -24,7 +24,13 @@ const ClothingListing = ({ clothingItems, isDouble = true }) => {
     return (
       <div className="space-y-6">
         {/* Wrap both rows inside a single vertically scrollable container */}
-        <div className="flex flex-col gap-6 overflow-y-auto scrollbar-hide p-2">
+        <div
+          className="flex flex-col gap-6 overflow-y-auto scrollbar-hide p-2"
+          style={{
+            scrollbarWidth: "none" /* Firefox */,
+            msOverflowStyle: "none" /* IE and Edge */,
+          }}
+        >
           {/* First row */}
           <div className="flex gap-4">
             {firstRow.map((item, index) => (

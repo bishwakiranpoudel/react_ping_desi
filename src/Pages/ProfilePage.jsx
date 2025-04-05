@@ -64,40 +64,30 @@ function ProfilePage() {
   const [formData, setFormData] = useState({ ...userData });
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
+  const [imagePickerOpen, setImagePickerOpen] = useState(false);
 
   // Debug counter to force re-renders
   const [debugCounter, setDebugCounter] = useState(0);
 
-  useEffect(() => {
-    console.log(
-      "ProfilePage rendered, isEditing:",
-      isEditing,
-      "debugCounter:",
-      debugCounter
-    );
-  }, [isEditing, debugCounter]);
+  useEffect(() => {}, [isEditing, debugCounter]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    console.log("Input changed:", name, value);
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSave = () => {
-    console.log("Save clicked");
     setIsEditing(false);
     setDebugCounter((prev) => prev + 1);
   };
 
   const handleDiscard = () => {
-    console.log("Discard clicked");
     setFormData({ ...userData });
     setIsEditing(false);
     setDebugCounter((prev) => prev + 1);
   };
 
   const handleEditClick = () => {
-    console.log("Edit button clicked");
     setIsEditing(true);
     setDebugCounter((prev) => prev + 1);
   };
@@ -107,6 +97,21 @@ function ProfilePage() {
     if (isMobile) {
       setSidebarOpen(false);
     }
+  };
+
+  const handleAvatarClick = () => {
+    if (isEditing) {
+      setImagePickerOpen(true);
+    }
+  };
+
+  const closeImagePicker = () => {
+    setImagePickerOpen(false);
+  };
+
+  const handleImageSelected = (newImage) => {
+    setFormData((prev) => ({ ...prev, profileImage: newImage }));
+    closeImagePicker();
   };
 
   // Sidebar content
@@ -143,7 +148,7 @@ function ProfilePage() {
       </div>
 
       <div
-        className="flex items-center p-2 m-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-100"
+        className="flex items-center p-2 m-1 rounded cursor-pointer hover:bg-gray-100 bg-red-500 text-white"
         onClick={() => console.log("Logout clicked")}
       >
         <LogOut size={20} />
@@ -211,24 +216,42 @@ function ProfilePage() {
           {activeTab === "profile" && (
             <>
               <div className="border border-gray-300 rounded p-4 mb-4">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center mb-4">
+                  <div className="mr-4">
+                    <div
+                      className="relative w-20 h-20 rounded-full overflow-hidden cursor-pointer"
+                      onClick={handleAvatarClick}
+                    >
+                      <img
+                        src={formData.profileImage}
+                        alt="User Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                      <div
+                        className="absolute inset-0 rounded-full border-2 border-purple-600"
+                        aria-hidden="true"
+                      ></div>
+                    </div>
+                  </div>
                   <div>
-                    <h2 className="m-0 mb-1 text-2xl">{userData.name}</h2>
+                    <h2 className="m-0 mb-1 text-2xl">{formData.name}</h2>
                     <p className="m-0 text-gray-600">
-                      Lives in {userData.location}
+                      Lives in {formData.location}
                     </p>
                     <div className="flex items-center mt-1">
                       <div className="w-1 h-4 bg-purple-600 mr-2"></div>
-                      <span>{userData.username}</span>
+                      <span>{formData.username}</span>
                     </div>
                   </div>
+                </div>
 
-                  {/* EDIT PROFILE BUTTON - DIRECT INLINE HANDLER */}
+                {/* EDIT PROFILE BUTTON - DIRECT INLINE HANDLER */}
+                {/* Edit/Save Buttons */}
+                <div className="flex justify-end gap-2">
                   {!isEditing ? (
                     <button
                       className="bg-purple-600 text-white border-none rounded p-2 text-base cursor-pointer flex items-center gap-2"
                       onClick={() => {
-                        console.log("Edit button clicked directly");
                         setIsEditing(true);
                         setDebugCounter((prev) => prev + 1);
                       }}
@@ -237,7 +260,7 @@ function ProfilePage() {
                       Edit Profile
                     </button>
                   ) : (
-                    <div className="flex gap-2">
+                    <>
                       <button
                         className="bg-white border border-gray-300 rounded p-2 cursor-pointer"
                         onClick={handleDiscard}
@@ -250,15 +273,14 @@ function ProfilePage() {
                       >
                         Save
                       </button>
-                    </div>
+                    </>
                   )}
                 </div>
               </div>
-
               <div className="border border-gray-300 rounded p-4">
                 <h3 className="mt-0 text-xl">Basic Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
+                <div className="flex flex-wrap gap-4">
+                  <div className="w-full md:w-1/2">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Name
                     </label>
@@ -275,7 +297,7 @@ function ProfilePage() {
                       </div>
                     )}
                   </div>
-                  <div>
+                  <div className="w-full md:w-1/2">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Flat Number
                     </label>
@@ -292,7 +314,7 @@ function ProfilePage() {
                       </div>
                     )}
                   </div>
-                  <div>
+                  <div className="w-full md:w-1/2">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Email
                     </label>
@@ -309,7 +331,7 @@ function ProfilePage() {
                       </div>
                     )}
                   </div>
-                  <div>
+                  <div className="w-full md:w-1/2">
                     <label className="block text-gray-700 text-sm font-bold mb-2">
                       Phone
                     </label>
@@ -343,10 +365,10 @@ function ProfilePage() {
                     <p className="text-gray-600">{event.date}</p>
                   </div>
                   <div className="flex gap-2">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <button className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
                       View
                     </button>
-                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                    <button className="text-red-500  font-bold py-2 px-4 rounded">
                       Delete
                     </button>
                   </div>
@@ -361,14 +383,14 @@ function ProfilePage() {
                 {classifieds.map((item) => (
                   <div
                     key={item.id}
-                    className="border border-gray-200 rounded shadow-md overflow-hidden"
+                    className="border border-gray-200 rounded shadow-md overflow-hidden flex flex-col"
                   >
                     <img
                       src={item.image}
                       alt={item.title}
                       className="w-full h-48 object-cover"
                     />
-                    <div className="p-4">
+                    <div className="p-4 flex flex-col">
                       <h3 className="text-lg font-semibold">{item.title}</h3>
                       <p className="text-gray-600">Type: {item.type}</p>
                       <p className="text-gray-600">
@@ -378,10 +400,10 @@ function ProfilePage() {
                         ${item.price}
                       </p>
                       <div className="flex justify-end mt-4">
-                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <button className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">
                           Edit
                         </button>
-                        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2">
+                        <button className="text-red-500 font-bold py-2 px-4 rounded ml-2">
                           Delete
                         </button>
                       </div>
@@ -393,7 +415,79 @@ function ProfilePage() {
           )}
         </div>
       </div>
+      {imagePickerOpen && (
+        <ImagePickerDialog
+          onClose={closeImagePicker}
+          onImageSelected={handleImageSelected}
+        />
+      )}
     </MainLayout>
+  );
+}
+
+function ImagePickerDialog({ onClose, onImageSelected }) {
+  const handleUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onImageSelected(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  return (
+    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center">
+      <div className="bg-white p-8 rounded shadow-lg">
+        <h2 className="text-lg font-semibold mb-4">Choose Profile Picture</h2>
+        <div className="flex flex-col gap-4">
+          <button
+            onClick={() => document.getElementById("image-upload").click()}
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+          >
+            Upload from Computer
+          </button>
+          <input
+            type="file"
+            id="image-upload"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleUpload}
+          />
+          <button
+            onClick={() => {
+              // Access the device camera
+              navigator.mediaDevices
+                .getUserMedia({ video: true })
+                .then((stream) => {
+                  const videoTrack = stream.getVideoTracks()[0];
+                  const imageCapture = new ImageCapture(videoTrack);
+
+                  return imageCapture.takePhoto();
+                })
+                .then((blob) => {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    onImageSelected(reader.result);
+                  };
+                  reader.readAsDataURL(blob);
+                })
+                .catch((error) => console.error("Camera access error:", error));
+            }}
+            className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700"
+          >
+            Take Photo
+          </button>
+          <button
+            onClick={onClose}
+            className="bg-gray-300 py-2 px-4 rounded hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
