@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Camera,
   Image,
@@ -14,46 +14,48 @@ import Button from "./Button";
 import Popover from "./Popover";
 import { classNames } from "../../utils/classNames";
 import ImagePickerModal from "./ImagePickerModal";
+import { toast } from "react-toastify";
+import { postScoops } from "../../services/scoops";
 
 const categories = [
   {
-    id: "restaurants",
+    id: "1",
     name: "Restaurants",
     icon: <span style={{ fontSize: "1.5rem" }}>🍽️</span>,
     description: "Discover, dine, and review.",
   },
   {
-    id: "jobs",
+    id: "2",
     name: "Jobs",
     icon: <span style={{ fontSize: "1.5rem" }}>💼</span>,
     description: "Opportunities, referrals, and connections.",
   },
   {
-    id: "professionals",
+    id: "3",
     name: "Professionals",
     icon: <span style={{ fontSize: "1.5rem" }}>👨‍💼</span>,
     description: "Insights, reviews, and updates.",
   },
   {
-    id: "kids",
+    id: "4",
     name: "Kids",
     icon: <span style={{ fontSize: "1.5rem" }}>🧸</span>,
     description: "Fun, learning, and growth.",
   },
   {
-    id: "travel",
+    id: "5",
     name: "Travel",
     icon: <span style={{ fontSize: "1.5rem" }}>🧭</span>,
     description: "Tips, adventures, and hidden gems.",
   },
   {
-    id: "events",
+    id: "6",
     name: "Events",
     icon: <span style={{ fontSize: "1.5rem" }}>📅</span>,
     description: "Updates, reviews, and highlights.",
   },
   {
-    id: "health",
+    id: "7",
     name: "Health",
     icon: <span style={{ fontSize: "1.5rem" }}>🏥</span>,
     description: "Wellness, fitness, and medical advice.",
@@ -84,12 +86,30 @@ function CreateScoopForm() {
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false);
   const [imagePickerMode, setImagePickerMode] = useState("upload");
   const [isHashtagPopoverOpen, setIsHashtagPopoverOpen] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [geohash, setGeohash] = useState("zsjs"); // Default geohash from image
 
   const availableHashtags = [
     ["InfoDrop", "Dine in", "Take out"],
     ["InfoDrop", "Review", "Deals"],
     ["DineIn", "TakeOut", "BYOB"],
   ];
+
+  // Get geolocation when component mounts
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          // In a real app, you would convert lat/long to geohash
+          // For now, we'll use the value from the image
+          setGeohash("9v6m");
+        },
+        (error) => {
+          console.error("Error getting geolocation:", error);
+        }
+      );
+    }
+  }, []);
 
   const toggleHashtag = (tag) => {
     if (selectedHashtags.includes(tag)) {
@@ -108,24 +128,84 @@ function CreateScoopForm() {
     setImage(imageUrl);
   };
 
-  const handlePost = () => {
-    // In a real app, this would send the post to the server
-    console.log("Posting:", {
-      content,
-      category: selectedCategory?.id,
-      hashtags: selectedHashtags,
-      image,
-    });
+  const handlePost = async () => {
+    try {
+      setIsProcessing(true);
 
-    // Reset form
-    setContent("");
-    setSelectedCategory(null);
-    setSelectedHashtags([]);
-    setImage(null);
+      if (!content.trim() && !image) {
+        toast.error("Please enter some content or add an image", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+        });
+        return;
+      }
+
+      if (!selectedCategory) {
+        toast.error("Please select a category", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+        });
+        return;
+      }
+
+      // Prepare the scoop data
+      const scoopData = {
+        contentinfo: content,
+        scoopid: selectedCategory?.id,
+        hoopids: selectedHashtags,
+        geohash,
+      };
+
+      console.log("Poting scoop:", scoopData);
+
+      // Send data using your postScoops service
+      const response = await postScoops(scoopData);
+
+      // Show success message
+      toast.success("Scoop has been posted successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+      });
+
+      // Reset form
+      setContent("");
+      setSelectedCategory(null);
+      setSelectedHashtags([]);
+      setImage(null);
+    } catch (error) {
+      toast.error(
+        "" + (error.response?.data?.message ?? error.data?.message ?? error),
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+        }
+      );
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleDoneHashtags = () => {
     setIsHashtagPopoverOpen(false);
+  };
+
+  // Add location handler
+  const handleAddLocation = () => {
+    // In a real app, you would open a location picker
+    // For now, we'll just set the geohash from the image
+    setGeohash("zsjs");
+    toast.info("Location added", {
+      position: "top-right",
+      autoClose: 3000,
+    });
   };
 
   const CategoryItem = ({ category, onClick }) => (
@@ -274,7 +354,10 @@ function CreateScoopForm() {
           >
             <Image size={20} />
           </button>
-          <button className="text-gray-500 hover:text-gray-800 transition-colors">
+          <button
+            onClick={handleAddLocation}
+            className="text-gray-500 hover:text-gray-800 transition-colors"
+          >
             <MapPin size={20} />
           </button>
           <button className="text-gray-500 hover:text-gray-800 transition-colors">
@@ -286,8 +369,10 @@ function CreateScoopForm() {
           <Button
             variant="primary"
             className="rounded-full px-6 bg-black text-white"
+            onClick={handlePost}
+            disabled={isProcessing}
           >
-            Post
+            {isProcessing ? "Posting..." : "Post"}
           </Button>
         )}
       </div>
@@ -296,6 +381,7 @@ function CreateScoopForm() {
         isOpen={isImagePickerOpen}
         onClose={() => setIsImagePickerOpen(false)}
         onImageSelected={handleImageSelected}
+        mode={imagePickerMode}
       />
     </div>
   );
