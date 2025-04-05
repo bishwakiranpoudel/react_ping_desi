@@ -9,58 +9,14 @@ import {
   ChevronDown,
   Hash,
   Check,
+  X,
 } from "lucide-react";
 import Button from "./Button";
 import Popover from "./Popover";
 import { classNames } from "../../utils/classNames";
 import ImagePickerModal from "./ImagePickerModal";
 import { toast } from "react-toastify";
-import { postScoops } from "../../services/scoops";
-
-const categories = [
-  {
-    id: "1",
-    name: "Restaurants",
-    icon: <span style={{ fontSize: "1.5rem" }}>🍽️</span>,
-    description: "Discover, dine, and review.",
-  },
-  {
-    id: "2",
-    name: "Jobs",
-    icon: <span style={{ fontSize: "1.5rem" }}>💼</span>,
-    description: "Opportunities, referrals, and connections.",
-  },
-  {
-    id: "3",
-    name: "Professionals",
-    icon: <span style={{ fontSize: "1.5rem" }}>👨‍💼</span>,
-    description: "Insights, reviews, and updates.",
-  },
-  {
-    id: "4",
-    name: "Kids",
-    icon: <span style={{ fontSize: "1.5rem" }}>🧸</span>,
-    description: "Fun, learning, and growth.",
-  },
-  {
-    id: "5",
-    name: "Travel",
-    icon: <span style={{ fontSize: "1.5rem" }}>🧭</span>,
-    description: "Tips, adventures, and hidden gems.",
-  },
-  {
-    id: "6",
-    name: "Events",
-    icon: <span style={{ fontSize: "1.5rem" }}>📅</span>,
-    description: "Updates, reviews, and highlights.",
-  },
-  {
-    id: "7",
-    name: "Health",
-    icon: <span style={{ fontSize: "1.5rem" }}>🏥</span>,
-    description: "Wellness, fitness, and medical advice.",
-  },
-];
+import { postScoops, getScoops, getHoops } from "../../services/scoops";
 
 function Hashtag({ tag, onClick, selected }) {
   return (
@@ -73,7 +29,7 @@ function Hashtag({ tag, onClick, selected }) {
           : "bg-gray-200 text-gray-700 hover:bg-gray-300"
       )}
     >
-      #{tag}
+      {tag}
     </button>
   );
 }
@@ -82,18 +38,65 @@ function CreateScoopForm() {
   const [content, setContent] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedHashtags, setSelectedHashtags] = useState([]);
-  const [image, setImage] = useState(null);
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false);
+  const [images, setImages] = useState([]); // Store multiple images
   const [imagePickerMode, setImagePickerMode] = useState("upload");
   const [isHashtagPopoverOpen, setIsHashtagPopoverOpen] = useState(false);
+  const [isCategoryPopoverOpen, setIsCategoryPopoverOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [geohash, setGeohash] = useState("zsjs"); // Default geohash from image
+  const [geohash, setGeohash] = useState("zsjs"); // Default geohash
 
-  const availableHashtags = [
-    ["InfoDrop", "Dine in", "Take out"],
-    ["InfoDrop", "Review", "Deals"],
-    ["DineIn", "TakeOut", "BYOB"],
-  ];
+  // State for API data
+  const [scoops, setScoops] = useState([]);
+  const [hoops, setHoops] = useState([]);
+  const [availableHoops, setAvailableHoops] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch scoops and hoops when component mounts
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+
+        // Fetch scoops and hoops in parallel
+        const [scoopsData, hoopsData] = await Promise.all([
+          getScoops(),
+          getHoops(),
+        ]);
+
+        setScoops(scoopsData);
+        setHoops(hoopsData);
+
+        // Group hoops for display
+        const groupedHoops = groupHoopsByCategory(hoopsData);
+        setAvailableHoops(groupedHoops);
+      } catch (error) {
+        toast.error(
+          "Failed to load categories and hashtags: " + error.message,
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          }
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Group hoops into arrays for display
+  const groupHoopsByCategory = (hoopsData) => {
+    // Create groups of 6 hoops each
+    const groups = [];
+    for (let i = 0; i < hoopsData.length; i += 6) {
+      groups.push(hoopsData.slice(i, i + 6));
+    }
+    return groups;
+  };
 
   // Get geolocation when component mounts
   useEffect(() => {
@@ -101,7 +104,7 @@ function CreateScoopForm() {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           // In a real app, you would convert lat/long to geohash
-          // For now, we'll use the value from the image
+          // For now, we'll use a default value
           setGeohash("9v6m");
         },
         (error) => {
@@ -111,11 +114,40 @@ function CreateScoopForm() {
     }
   }, []);
 
-  const toggleHashtag = (tag) => {
-    if (selectedHashtags.includes(tag)) {
-      setSelectedHashtags(selectedHashtags.filter((t) => t !== tag));
+  // Update available hoops when selected category changes
+  useEffect(() => {
+    if (selectedCategory && scoops.length > 0) {
+      // Find the selected scoop
+      const scoop = scoops.find(
+        (s) => s.scoopid.toString() === selectedCategory.id
+      );
+
+      if (scoop && scoop.hoops) {
+        // Group the hoops for this scoop
+        const scoopHoops = scoop.hoops.map((h) => h.hoopid);
+
+        // Filter all hoops to only include those for this scoop
+        const filteredHoops = hoops.filter((h) =>
+          scoopHoops.includes(h.hoopid)
+        );
+
+        // Group the filtered hoops
+        const groupedHoops = groupHoopsByCategory(filteredHoops);
+        setAvailableHoops(groupedHoops);
+
+        // Clear selected hashtags when category changes
+        setSelectedHashtags([]);
+      }
+    }
+  }, [selectedCategory, scoops, hoops]);
+
+  const toggleHashtag = (hoop) => {
+    if (selectedHashtags.some((h) => h.hoopid === hoop.hoopid)) {
+      setSelectedHashtags(
+        selectedHashtags.filter((h) => h.hoopid !== hoop.hoopid)
+      );
     } else {
-      setSelectedHashtags([...selectedHashtags, tag]);
+      setSelectedHashtags([...selectedHashtags, hoop]);
     }
   };
 
@@ -124,15 +156,29 @@ function CreateScoopForm() {
     setIsImagePickerOpen(true);
   };
 
+  // Handle multiple image selection
   const handleImageSelected = (imageUrl) => {
-    setImage(imageUrl);
+    if (Array.isArray(imageUrl)) {
+      // If we receive an array of images
+      setImages([...images, ...imageUrl]);
+    } else if (imageUrl) {
+      // If we receive a single image
+      setImages([...images, imageUrl]);
+    }
+  };
+
+  // Remove a specific image
+  const removeImage = (index) => {
+    const newImages = [...images];
+    newImages.splice(index, 1);
+    setImages(newImages);
   };
 
   const handlePost = async () => {
     try {
       setIsProcessing(true);
 
-      if (!content.trim() && !image) {
+      if (!content.trim() && images.length === 0) {
         toast.error("Please enter some content or add an image", {
           position: "top-right",
           autoClose: 5000,
@@ -155,12 +201,13 @@ function CreateScoopForm() {
       // Prepare the scoop data
       const scoopData = {
         contentinfo: content,
-        scoopid: selectedCategory?.id,
-        hoopids: selectedHashtags,
+        scoopid: selectedCategory.id,
+        hoopids: selectedHashtags.map((h) => h.hoopid),
         geohash,
+        photopath: images,
       };
 
-      console.log("Poting scoop:", scoopData);
+      console.log("Posting scoop:", scoopData);
 
       // Send data using your postScoops service
       const response = await postScoops(scoopData);
@@ -177,7 +224,7 @@ function CreateScoopForm() {
       setContent("");
       setSelectedCategory(null);
       setSelectedHashtags([]);
-      setImage(null);
+      setImages([]);
     } catch (error) {
       toast.error(
         "" + (error.response?.data?.message ?? error.data?.message ?? error),
@@ -200,12 +247,26 @@ function CreateScoopForm() {
   // Add location handler
   const handleAddLocation = () => {
     // In a real app, you would open a location picker
-    // For now, we'll just set the geohash from the image
-    setGeohash("zsjs");
+    // For now, we'll just set the geohash
+    setGeohash("9v6m");
     toast.info("Location added", {
       position: "top-right",
       autoClose: 3000,
     });
+  };
+
+  // Convert API data to category items for display
+  const getCategoryItems = () => {
+    if (!scoops || scoops.length === 0) {
+      return [];
+    }
+
+    return scoops.map((scoop) => ({
+      id: scoop.scoopid.toString(),
+      name: scoop.scoopname,
+      icon: <span style={{ fontSize: "1.5rem" }}>{scoop.emoji}</span>,
+      description: `${scoop.scoopname} scoop`,
+    }));
   };
 
   const CategoryItem = ({ category, onClick }) => (
@@ -224,51 +285,68 @@ function CreateScoopForm() {
   );
 
   const categoryPopoverContent = (
-    <div className="flex flex-col">
-      {categories.map((category) => (
-        <CategoryItem
-          key={category.id}
-          category={category}
-          onClick={() => {
-            setSelectedCategory(category);
-            document.body.click(); // Close the popover
-          }}
-        />
-      ))}
+    <div className="flex flex-col max-h-[400px] overflow-y-auto">
+      {isLoading ? (
+        <div className="p-4 text-center">Loading categories...</div>
+      ) : (
+        getCategoryItems().map((category) => (
+          <CategoryItem
+            key={category.id}
+            category={category}
+            onClick={() => {
+              setSelectedCategory(category);
+              setIsCategoryPopoverOpen(false);
+            }}
+          />
+        ))
+      )}
     </div>
   );
 
   const hashtagPopoverContent = (
-    <div className="p-4 flex flex-col gap-4">
-      {[availableHashtags[0], availableHashtags[1], availableHashtags[2]].map(
-        (group, index) => (
-          <div key={index} className="flex flex-wrap gap-2">
-            {group.map((tag) => (
-              <Hashtag
-                key={tag}
-                tag={tag}
-                selected={selectedHashtags.includes(tag)}
-                onClick={() => toggleHashtag(tag)}
-              />
-            ))}
-          </div>
-        )
+    <div className="p-4 flex flex-col gap-4 max-h-[400px] overflow-y-auto">
+      {isLoading ? (
+        <div className="text-center">Loading hashtags...</div>
+      ) : availableHoops.length === 0 ? (
+        <div className="text-center">Please select a category first</div>
+      ) : (
+        <>
+          {availableHoops.map((group, index) => (
+            <div key={index} className="flex flex-wrap gap-2">
+              {group.map((hoop) => (
+                <Hashtag
+                  key={hoop.hoopid}
+                  tag={hoop.hooptag}
+                  selected={selectedHashtags.some(
+                    (h) => h.hoopid === hoop.hoopid
+                  )}
+                  onClick={() => toggleHashtag(hoop)}
+                />
+              ))}
+            </div>
+          ))}
+          <Button
+            variant="ghost"
+            className="ml-auto flex items-center gap-1 text-primary text-sm"
+            onClick={handleDoneHashtags}
+          >
+            <Check size={16} />
+            <span>Done</span>
+          </Button>
+        </>
       )}
-      <Button
-        variant="ghost"
-        className="ml-auto flex items-center gap-1 text-primary text-sm"
-        onClick={handleDoneHashtags}
-      >
-        <Check size={16} />
-        <span>Done</span>
-      </Button>
     </div>
   );
 
   return (
     <div className="bg-white rounded-lg border p-4 mb-4">
       <div className="flex items-center gap-2 mb-4">
-        <Popover content={categoryPopoverContent} align="start">
+        <Popover
+          content={categoryPopoverContent}
+          align="start"
+          open={isCategoryPopoverOpen}
+          onOpenChange={setIsCategoryPopoverOpen}
+        >
           <Button
             variant="outline"
             className="rounded-full flex items-center gap-2 bg-gray-100 text-gray-700"
@@ -286,11 +364,18 @@ function CreateScoopForm() {
           content={hashtagPopoverContent}
           align="start"
           open={isHashtagPopoverOpen}
-          onOpenChange={setIsHashtagPopoverOpen}
+          onOpenChange={(open) => {
+            // Only allow opening if a category is selected
+            if (open && !selectedCategory) {
+              return;
+            }
+            setIsHashtagPopoverOpen(open);
+          }}
         >
           <Button
             variant="outline"
             className="rounded-full flex items-center gap-2 bg-gray-100 text-gray-700"
+            disabled={!selectedCategory}
           >
             <div className="w-6 h-6 rounded-full bg-gray-700 text-white flex items-center justify-center">
               <Hash size={14} />
@@ -310,31 +395,35 @@ function CreateScoopForm() {
         />
       </div>
 
-      {image && (
-        <div className="mb-4 relative">
-          <img
-            src={image || "/placeholder.svg"}
-            alt="Uploaded content"
-            className="w-full h-auto rounded-md"
-          />
-          <Button
-            variant="outline"
-            className="absolute top-2 right-2 bg-white/80 rounded-md"
-            onClick={() => setImage(null)}
-          >
-            Remove
-          </Button>
+      {/* Display multiple images */}
+      {images.length > 0 && (
+        <div className="mb-4 grid grid-cols-2 gap-2">
+          {images.map((img, index) => (
+            <div key={index} className="relative">
+              <img
+                src={img || "/placeholder.svg"}
+                alt={`Uploaded content ${index + 1}`}
+                className="w-full h-auto rounded-md object-cover aspect-square"
+              />
+              <button
+                className="absolute top-2 right-2 bg-white/80 rounded-full p-1 hover:bg-white"
+                onClick={() => removeImage(index)}
+              >
+                <X size={16} />
+              </button>
+            </div>
+          ))}
         </div>
       )}
 
       {selectedHashtags.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-4">
-          {selectedHashtags.map((tag) => (
+          {selectedHashtags.map((hoop) => (
             <Hashtag
-              key={tag}
-              tag={tag}
+              key={hoop.hoopid}
+              tag={hoop.hooptag}
               selected
-              onClick={() => toggleHashtag(tag)}
+              onClick={() => toggleHashtag(hoop)}
             />
           ))}
         </div>
@@ -365,7 +454,7 @@ function CreateScoopForm() {
           </button>
         </div>
 
-        {(content || image || selectedHashtags.length > 0) && (
+        {(content || images.length > 0 || selectedHashtags.length > 0) && (
           <Button
             variant="primary"
             className="rounded-full px-6 bg-black text-white"
@@ -382,6 +471,7 @@ function CreateScoopForm() {
         onClose={() => setIsImagePickerOpen(false)}
         onImageSelected={handleImageSelected}
         mode={imagePickerMode}
+        allowMultiple={true}
       />
     </div>
   );

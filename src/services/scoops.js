@@ -25,6 +25,16 @@ export async function getScoops() {
 
   return response;
 }
+export async function getHoops() {
+  const endpoint = "/scoop/getAllHoops";
+  const response = await handlePostRequest(endpoint, {}, {}, false);
+
+  if (response?.error) {
+    throw new Error(response.error);
+  }
+
+  return response;
+}
 export async function postScoops(payload) {
   const endpoint = "/posting/addPosting";
   const response = await handlePostRequest(endpoint, payload, undefined, true);
