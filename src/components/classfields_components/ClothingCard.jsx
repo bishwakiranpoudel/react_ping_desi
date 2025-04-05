@@ -1,7 +1,7 @@
 import React from "react";
 
 const ClothingCard = ({
-  image,
+  coverPhoto,
   title,
   price,
   type,
@@ -21,7 +21,7 @@ const ClothingCard = ({
       <div className="w-[244px] h-[280px] flex flex-col">
         <div className="relative w-[244px] h-[180px]">
           <img
-            src={image || "/placeholder.svg?height=400&width=600"}
+            src={coverPhoto || "/placeholder.svg?height=400&width=600"}
             alt={imageAlt || title}
             className="w-full h-full object-cover"
           />
