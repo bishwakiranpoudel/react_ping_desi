@@ -12,6 +12,7 @@ import UsernameRegistration from "./Pages/UsernameRegistration";
 import { useEffect } from "react";
 import CategoryTabs from "./Pages/ClassFieldsPage";
 import ProfilePage from "./Pages/ProfilePage";
+import ScoopsPage from "./Pages/ScoopsPage";
 
 // Remove the CSS import that's causing the error
 
@@ -36,6 +37,7 @@ function App() {
           <Route path="/classifieds" element={<CategoryTabs />} />
           <Route path="/profile" element={<ProfilePage />} />
           {/* Add more routes as needed */}
+          <Route path="/scoops" element={<ScoopsPage />} />
         </Routes>
         <ToastContainer />
       </Router>
