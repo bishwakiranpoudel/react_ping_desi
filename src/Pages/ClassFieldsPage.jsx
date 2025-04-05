@@ -10,7 +10,7 @@ import ClothingListing from "../components/classfields_components/ClothingListin
 import { useEffect } from "react";
 import {
   getInitialListings,
-  getListingCategories,
+  getListingCategories
 } from "../services/classified";
 import { toast } from "react-toastify";
 
@@ -19,7 +19,7 @@ const CategoryTabs = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [categoryData, setCategoryData] = useState([]);
 
-  const handleTabChange = (value) => {
+  const handleTabChange = value => {
     setActiveTab(value);
   };
   const vehicleData = [
@@ -28,85 +28,85 @@ const CategoryTabs = () => {
       price: "40,000",
       mileage: "15,000",
       location: "LA",
-      engine: "Electric",
+      engine: "Electric"
     },
     {
       title: "Ford Mustang",
       price: "55,000",
       mileage: "10,000",
       location: "NY",
-      engine: "V8",
+      engine: "V8"
     },
     {
       title: "Tesla Model 3",
       price: "40,000",
       mileage: "15,000",
       location: "LA",
-      engine: "Electric",
+      engine: "Electric"
     },
     {
       title: "Ford Mustang",
       price: "55,000",
       mileage: "10,000",
       location: "NY",
-      engine: "V8",
+      engine: "V8"
     },
     {
       title: "Tesla Model 3",
       price: "40,000",
       mileage: "15,000",
       location: "LA",
-      engine: "Electric",
+      engine: "Electric"
     },
     {
       title: "Ford Mustang",
       price: "55,000",
       mileage: "10,000",
       location: "NY",
-      engine: "V8",
+      engine: "V8"
     },
     {
       title: "Tesla Model 3",
       price: "40,000",
       mileage: "15,000",
       location: "LA",
-      engine: "Electric",
+      engine: "Electric"
     },
     {
       title: "Ford Mustang",
       price: "55,000",
       mileage: "10,000",
       location: "NY",
-      engine: "V8",
+      engine: "V8"
     },
     {
       title: "Tesla Model 3",
       price: "40,000",
       mileage: "15,000",
       location: "LA",
-      engine: "Electric",
+      engine: "Electric"
     },
     {
       title: "Ford Mustang",
       price: "55,000",
       mileage: "10,000",
       location: "NY",
-      engine: "V8",
+      engine: "V8"
     },
     {
       title: "Tesla Model 3",
       price: "40,000",
       mileage: "15,000",
       location: "LA",
-      engine: "Electric",
+      engine: "Electric"
     },
     {
       title: "Ford Mustang",
       price: "55,000",
       mileage: "10,000",
       location: "NY",
-      engine: "V8",
-    },
+      engine: "V8"
+    }
   ];
 
   const clothingData = [
@@ -115,85 +115,85 @@ const CategoryTabs = () => {
       price: "29",
       size: "M",
       location: "Online",
-      type: "Men",
+      type: "Men"
     },
     {
       title: "Leather Jacket",
       price: "99",
       size: "L",
       location: "Store",
-      type: "Unisex",
+      type: "Unisex"
     },
     {
       title: "Casual Shirt",
       price: "29",
       size: "M",
       location: "Online",
-      type: "Men",
+      type: "Men"
     },
     {
       title: "Leather Jacket",
       price: "99",
       size: "L",
       location: "Store",
-      type: "Unisex",
+      type: "Unisex"
     },
     {
       title: "Casual Shirt",
       price: "29",
       size: "M",
       location: "Online",
-      type: "Men",
+      type: "Men"
     },
     {
       title: "Leather Jacket",
       price: "99",
       size: "L",
       location: "Store",
-      type: "Unisex",
+      type: "Unisex"
     },
     {
       title: "Casual Shirt",
       price: "29",
       size: "M",
       location: "Online",
-      type: "Men",
+      type: "Men"
     },
     {
       title: "Leather Jacket",
       price: "99",
       size: "L",
       location: "Store",
-      type: "Unisex",
+      type: "Unisex"
     },
     {
       title: "Casual Shirt",
       price: "29",
       size: "M",
       location: "Online",
-      type: "Men",
+      type: "Men"
     },
     {
       title: "Leather Jacket",
       price: "99",
       size: "L",
       location: "Store",
-      type: "Unisex",
+      type: "Unisex"
     },
     {
       title: "Casual Shirt",
       price: "29",
       size: "M",
       location: "Online",
-      type: "Men",
+      type: "Men"
     },
     {
       title: "Leather Jacket",
       price: "99",
       size: "L",
       location: "Store",
-      type: "Unisex",
-    },
+      type: "Unisex"
+    }
   ];
 
   const electronicsData = [
@@ -203,7 +203,7 @@ const CategoryTabs = () => {
       location: "New York",
       brand: "Apple",
       warranty: "1 Year",
-      condition: "New",
+      condition: "New"
     },
     {
       title: "Samsung Galaxy",
@@ -211,7 +211,7 @@ const CategoryTabs = () => {
       location: "Los Angeles",
       brand: "Samsung",
       warranty: "1 Year",
-      condition: "New",
+      condition: "New"
     },
     {
       title: "MacBook Air",
@@ -219,7 +219,7 @@ const CategoryTabs = () => {
       location: "New York",
       brand: "Apple",
       warranty: "1 Year",
-      condition: "New",
+      condition: "New"
     },
     {
       title: "Samsung Galaxy",
@@ -227,64 +227,64 @@ const CategoryTabs = () => {
       location: "Los Angeles",
       brand: "Samsung",
       warranty: "1 Year",
-      condition: "New",
+      condition: "New"
     },
     {
       title: "MacBook Air",
       price: "999",
       location: "New York",
       brand: "Apple",
-      warranty: "1 Year",
+      warranty: "1 Year"
     },
     {
       title: "Samsung Galaxy",
       price: "799",
       location: "Los Angeles",
       brand: "Samsung",
-      warranty: "1 Year",
+      warranty: "1 Year"
     },
     {
       title: "MacBook Air",
       price: "999",
       location: "New York",
       brand: "Apple",
-      warranty: "1 Year",
+      warranty: "1 Year"
     },
     {
       title: "Samsung Galaxy",
       price: "799",
       location: "Los Angeles",
       brand: "Samsung",
-      warranty: "1 Year",
+      warranty: "1 Year"
     },
     {
       title: "MacBook Air",
       price: "999",
       location: "New York",
       brand: "Apple",
-      warranty: "1 Year",
+      warranty: "1 Year"
     },
     {
       title: "Samsung Galaxy",
       price: "799",
       location: "Los Angeles",
       brand: "Samsung",
-      warranty: "1 Year",
+      warranty: "1 Year"
     },
     {
       title: "MacBook Air",
       price: "999",
       location: "New York",
       brand: "Apple",
-      warranty: "1 Year",
+      warranty: "1 Year"
     },
     {
       title: "Samsung Galaxy",
       price: "799",
       location: "Los Angeles",
       brand: "Samsung",
-      warranty: "1 Year",
-    },
+      warranty: "1 Year"
+    }
   ];
 
   const propertyData = [
@@ -295,7 +295,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -304,7 +304,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -313,7 +313,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -322,7 +322,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -331,7 +331,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -340,7 +340,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
 
     {
@@ -350,7 +350,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -359,7 +359,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -368,7 +368,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -377,7 +377,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -386,7 +386,7 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
+      distance: 1000
     },
     {
       title: "Luxury Villa",
@@ -395,8 +395,8 @@ const CategoryTabs = () => {
       beds: 4,
       baths: 3,
       sqft: 2500,
-      distance: 1000,
-    },
+      distance: 1000
+    }
   ];
   /* ------------------ Get all categories ----------------------*/
   useEffect(() => {
@@ -406,10 +406,10 @@ const CategoryTabs = () => {
 
         const responseMap = [];
         responseMap.push({ value: "all", label: "All" });
-        const tempResponseMap = response.data.map((data) => {
+        const tempResponseMap = response.data.map(data => {
           return {
             value: data.name,
-            label: data.name,
+            label: data.name
           };
         });
 
@@ -425,34 +425,37 @@ const CategoryTabs = () => {
   /* -------------------- Get Initial Load -----------------------_____*/
 
   const [listingsData, setListingsData] = useState([]);
-  useEffect(() => {
-    async function fetchInitialListings() {
-      try {
-        const response = await getInitialListings();
-        console.log(response.data.data);
-        setListingsData(response.data.data);
-      } catch (error) {
-        console.error("Error occured while fetching categories", error);
-        toast.error("Error occured while fetching categories");
+  useEffect(
+    () => {
+      async function fetchInitialListings() {
+        try {
+          const response = await getInitialListings();
+          console.log(response.data.data);
+          setListingsData(response.data.data);
+        } catch (error) {
+          console.error("Error occured while fetching categories", error);
+          toast.error("Error occured while fetching categories");
+        }
       }
-    }
-    fetchInitialListings();
-  }, [activeTab]);
+      fetchInitialListings();
+    },
+    [activeTab]
+  );
 
   return (
     <MainLayout rs={false}>
       <div className="relative font-afacad">
         {/* Updated Tabs Section */}
         <div className="flex flex-wrap justify-center md:justify-start mb-2 border-b border-gray-300 relative">
-          {categoryData?.map((tab) => (
+          {categoryData?.map(tab => (
             <button
               key={tab.label.toLowerCase()}
               className={`py-0 px-4 text-sm font-medium transition-all duration-300 border-b-2 ${
-                activeTab === tab.label.toLowerCase()
+                activeTab === tab.label
                   ? "border-gray-900 text-gray-900"
                   : "border-transparent text-gray-500 hover:border-gray-400 hover:text-gray-700"
               }`}
-              onClick={() => handleTabChange(tab.label.toLowerCase())}
+              onClick={() => handleTabChange(tab.label)}
             >
               <div className="flex flex-col items-center">
                 <img
@@ -469,18 +472,138 @@ const CategoryTabs = () => {
           </button>
         </div>
 
-        {/* {listingsData?.map(
-          (data) =>
-            data.category.title === "House" && (
+        {listingsData?.map(data => {
+          if (
+            data.category.title === "House" &&
+            (activeTab == "All" || activeTab == "House")
+          ) {
+            return (
               <>
-                <h1>{data.category.title}</h1>
-                <PropertyListing propertyItems={data.category.products || []} />
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold font-fraunces">
+                    {data.category.title}
+                  </h2>
+                  <PropertyListing
+                    propertyItems={data.category.products || []}
+                    isDouble={false}
+                  />
+                </div>
               </>
-            )
-        )} */}
+            );
+          }
+          if (
+            data.category.title === "Auto" &&
+            (activeTab == "All" || activeTab == "Auto")
+          ) {
+            return (
+              <>
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold font-fraunces">
+                    {data.category.title}
+                  </h2>
+                  <VehicleListing
+                    isDouble={false}
+                    vehicleItems={data.category.products || []}
+                  />
+                </div>
+              </>
+            );
+          }
+          if (
+            data.category.title === "Sublease" &&
+            (activeTab == "All" || activeTab == "Sublease")
+          ) {
+            return (
+              <>
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold font-fraunces">
+                    {data.category.title}
+                  </h2>
+                  <PropertyListing
+                    isDouble={false}
+                    propertyItems={data.category.products || []}
+                  />
+                </div>
+              </>
+            );
+          }
+          if (
+            data.category.title === "Appliances" &&
+            (activeTab == "All" || activeTab == "Appliances")
+          ) {
+            return (
+              <>
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold font-fraunces">
+                    {data.category.title}
+                  </h2>
+                  <ElectronicsListing
+                    isDouble={false}
+                    electronicsItems={data.category.products || []}
+                  />
+                </div>
+              </>
+            );
+          }
+          if (
+            data.category.title === "Electronics" &&
+            (activeTab == "All" || activeTab == "Electronics")
+          ) {
+            return (
+              <>
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold font-fraunces">
+                    {data.category.title}
+                  </h2>
+                  <ElectronicsListing
+                    isDouble={false}
+                    electronicsItems={data.category.products || []}
+                  />
+                </div>
+              </>
+            );
+          }
+          if (
+            data.category.title === "Apparels" &&
+            (activeTab == "All" || activeTab == "Apparels")
+          ) {
+            return (
+              <>
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold font-fraunces">
+                    {data.category.title}
+                  </h2>
+                  <ClothingListing
+                    isDouble={false}
+                    clothingItems={data.category.products || []}
+                  />
+                </div>
+              </>
+            );
+          }
+          if (
+            data.category.title === "Roommate" &&
+            (activeTab == "All" || activeTab == "Roommate")
+          ) {
+            return (
+              <>
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold font-fraunces">
+                    {data.category.title}
+                  </h2>
+                  <ClothingListing
+                    isDouble={false}
+                    clothingItems={data.category.products || []}
+                  />
+                </div>
+              </>
+            );
+          }
+        })}
 
         {/* Display content based on active tab */}
-        {activeTab === "all" && (
+        {/*
+        {activeTab === "All" && (
           <>
             <div className="mb-6">
               <h2 className="text-xl font-bold font-fraunces">Dream Nest</h2>
@@ -555,6 +678,7 @@ const CategoryTabs = () => {
             <ClothingListing clothingItems={clothingData} />
           </>
         )}
+        */}
       </div>
     </MainLayout>
   );
