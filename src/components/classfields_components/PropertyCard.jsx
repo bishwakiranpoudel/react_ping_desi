@@ -5,10 +5,11 @@ const PropertyCard = ({
   coverPhoto,
   address,
   price,
-  beds,
-  baths,
+  details,
+  bedNo,
+  bathNo,
   distance,
-  sqft,
+  squareFoot,
   className = "",
   imageAlt = "",
   badgeClassName = "",
@@ -17,9 +18,14 @@ const PropertyCard = ({
   priceClassName = "",
   distanceClassName = ""
 }) => {
+  // Convert array to object
+  const detailsMap = details.reduce((acc, item) => {
+    acc[item.key] = item.value;
+    return acc;
+  }, {});
   return (
     <div
-      className={`col-span-1 flex justify-center items-center w-[244px] h-[280px] rounded-xl bg-white shadow-sm ${className}`}
+      className={`col-span-1 flex justify-center items-center w-[244px] h-[380px] rounded-xl bg-white shadow-sm ${className}`}
     >
       <div className="w-[244px] h-[280px] flex flex-col">
         <div className="relative w-[244px] h-[180px]">
@@ -28,20 +34,34 @@ const PropertyCard = ({
             alt={imageAlt || address}
             className="w-full h-full object-cover"
           />
+          <div className="absolute top-3 right-3 bg-white/90 text-black font-medium py-1 px-2 rounded-lg flex items-center gap-1">
+            <img
+              src="/images/square-foot-icon.svg"
+              alt="Square Foot"
+              className="w-4 h-4 mr-1"
+            />
+            {detailsMap.squareFoot} sq.ft.
+          </div>
         </div>
         <div className="p-3 h-[100px] flex flex-col">
           <h3
-            className={`font-medium text-base mb-1 line-clamp-1 text-gray-900 ${addressClassName}`}
+            className={`font-medium text-base mb-1 line-clamp text-gray-900 `}
           >
-            {address}
+            {title}
           </h3>
           <div
             className={`flex items-center gap-2 text-sm text-gray-500 mb-1 ${detailsClassName}`}
-          />
-
-              <span className="text-sm">{title}</span>
+          >
+            <div className="flex items-center gap-1">
+              <img src="/images/bed-icon.svg" alt="Bed" className="w-4 h-4" />
+              <span>{detailsMap.bedNo} bed</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <img src="/images/bath-icon.svg" alt="Bath" className="w-4 h-4" />
+              <span>{detailsMap.bathNo} bath</span>
+            </div>
+          </div>
           <div className="mt-auto flex items-center justify-between">
-
             <div
               className={`font-bold text-gray-900 text-lg ${priceClassName}`}
             >
@@ -50,7 +70,9 @@ const PropertyCard = ({
             </div>
             <div
               className={`flex items-center text-xs text-gray-500 ${distanceClassName}`}
-            />
+            >
+              {distance}
+            </div>
           </div>
         </div>
       </div>

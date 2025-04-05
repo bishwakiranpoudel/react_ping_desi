@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 
 // Define the props for CategoryTabs
 const CategoryTabs = () => {
-  const [activeTab, setActiveTab] = useState("all");
+  const [activeTab, setActiveTab] = useState("All");
   const [categoryData, setCategoryData] = useState([]);
 
   const handleTabChange = value => {
