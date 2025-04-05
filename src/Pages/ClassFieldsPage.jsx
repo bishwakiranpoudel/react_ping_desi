@@ -22,382 +22,37 @@ const CategoryTabs = () => {
   const handleTabChange = value => {
     setActiveTab(value);
   };
-  const vehicleData = [
-    {
-      title: "Tesla Model 3",
-      price: "40,000",
-      mileage: "15,000",
-      location: "LA",
-      engine: "Electric"
+  const categoryComponentMap = {
+    House: {
+      component: PropertyListing,
+      propName: "propertyItems"
     },
-    {
-      title: "Ford Mustang",
-      price: "55,000",
-      mileage: "10,000",
-      location: "NY",
-      engine: "V8"
+    Auto: {
+      component: VehicleListing,
+      propName: "vehicleItems"
     },
-    {
-      title: "Tesla Model 3",
-      price: "40,000",
-      mileage: "15,000",
-      location: "LA",
-      engine: "Electric"
+    Sublease: {
+      component: PropertyListing,
+      propName: "propertyItems"
     },
-    {
-      title: "Ford Mustang",
-      price: "55,000",
-      mileage: "10,000",
-      location: "NY",
-      engine: "V8"
+    Appliances: {
+      component: ElectronicsListing,
+      propName: "electronicsItems"
     },
-    {
-      title: "Tesla Model 3",
-      price: "40,000",
-      mileage: "15,000",
-      location: "LA",
-      engine: "Electric"
+    Electronics: {
+      component: ElectronicsListing,
+      propName: "electronicsItems"
     },
-    {
-      title: "Ford Mustang",
-      price: "55,000",
-      mileage: "10,000",
-      location: "NY",
-      engine: "V8"
+    Apparels: {
+      component: ClothingListing,
+      propName: "clothingItems"
     },
-    {
-      title: "Tesla Model 3",
-      price: "40,000",
-      mileage: "15,000",
-      location: "LA",
-      engine: "Electric"
-    },
-    {
-      title: "Ford Mustang",
-      price: "55,000",
-      mileage: "10,000",
-      location: "NY",
-      engine: "V8"
-    },
-    {
-      title: "Tesla Model 3",
-      price: "40,000",
-      mileage: "15,000",
-      location: "LA",
-      engine: "Electric"
-    },
-    {
-      title: "Ford Mustang",
-      price: "55,000",
-      mileage: "10,000",
-      location: "NY",
-      engine: "V8"
-    },
-    {
-      title: "Tesla Model 3",
-      price: "40,000",
-      mileage: "15,000",
-      location: "LA",
-      engine: "Electric"
-    },
-    {
-      title: "Ford Mustang",
-      price: "55,000",
-      mileage: "10,000",
-      location: "NY",
-      engine: "V8"
+    Roommate: {
+      component: ClothingListing,
+      propName: "clothingItems"
     }
-  ];
+  };
 
-  const clothingData = [
-    {
-      title: "Casual Shirt",
-      price: "29",
-      size: "M",
-      location: "Online",
-      type: "Men"
-    },
-    {
-      title: "Leather Jacket",
-      price: "99",
-      size: "L",
-      location: "Store",
-      type: "Unisex"
-    },
-    {
-      title: "Casual Shirt",
-      price: "29",
-      size: "M",
-      location: "Online",
-      type: "Men"
-    },
-    {
-      title: "Leather Jacket",
-      price: "99",
-      size: "L",
-      location: "Store",
-      type: "Unisex"
-    },
-    {
-      title: "Casual Shirt",
-      price: "29",
-      size: "M",
-      location: "Online",
-      type: "Men"
-    },
-    {
-      title: "Leather Jacket",
-      price: "99",
-      size: "L",
-      location: "Store",
-      type: "Unisex"
-    },
-    {
-      title: "Casual Shirt",
-      price: "29",
-      size: "M",
-      location: "Online",
-      type: "Men"
-    },
-    {
-      title: "Leather Jacket",
-      price: "99",
-      size: "L",
-      location: "Store",
-      type: "Unisex"
-    },
-    {
-      title: "Casual Shirt",
-      price: "29",
-      size: "M",
-      location: "Online",
-      type: "Men"
-    },
-    {
-      title: "Leather Jacket",
-      price: "99",
-      size: "L",
-      location: "Store",
-      type: "Unisex"
-    },
-    {
-      title: "Casual Shirt",
-      price: "29",
-      size: "M",
-      location: "Online",
-      type: "Men"
-    },
-    {
-      title: "Leather Jacket",
-      price: "99",
-      size: "L",
-      location: "Store",
-      type: "Unisex"
-    }
-  ];
-
-  const electronicsData = [
-    {
-      title: "MacBook Air",
-      price: "999",
-      location: "New York",
-      brand: "Apple",
-      warranty: "1 Year",
-      condition: "New"
-    },
-    {
-      title: "Samsung Galaxy",
-      price: "799",
-      location: "Los Angeles",
-      brand: "Samsung",
-      warranty: "1 Year",
-      condition: "New"
-    },
-    {
-      title: "MacBook Air",
-      price: "999",
-      location: "New York",
-      brand: "Apple",
-      warranty: "1 Year",
-      condition: "New"
-    },
-    {
-      title: "Samsung Galaxy",
-      price: "799",
-      location: "Los Angeles",
-      brand: "Samsung",
-      warranty: "1 Year",
-      condition: "New"
-    },
-    {
-      title: "MacBook Air",
-      price: "999",
-      location: "New York",
-      brand: "Apple",
-      warranty: "1 Year"
-    },
-    {
-      title: "Samsung Galaxy",
-      price: "799",
-      location: "Los Angeles",
-      brand: "Samsung",
-      warranty: "1 Year"
-    },
-    {
-      title: "MacBook Air",
-      price: "999",
-      location: "New York",
-      brand: "Apple",
-      warranty: "1 Year"
-    },
-    {
-      title: "Samsung Galaxy",
-      price: "799",
-      location: "Los Angeles",
-      brand: "Samsung",
-      warranty: "1 Year"
-    },
-    {
-      title: "MacBook Air",
-      price: "999",
-      location: "New York",
-      brand: "Apple",
-      warranty: "1 Year"
-    },
-    {
-      title: "Samsung Galaxy",
-      price: "799",
-      location: "Los Angeles",
-      brand: "Samsung",
-      warranty: "1 Year"
-    },
-    {
-      title: "MacBook Air",
-      price: "999",
-      location: "New York",
-      brand: "Apple",
-      warranty: "1 Year"
-    },
-    {
-      title: "Samsung Galaxy",
-      price: "799",
-      location: "Los Angeles",
-      brand: "Samsung",
-      warranty: "1 Year"
-    }
-  ];
-
-  const propertyData = [
-    {
-      title: "Luxury Villa",
-      price: "500,000",
-      address: "Miami",
-      beds: 4,
-      baths: 3,
-      sqft: 2500,
-      distance: 1000
-    },
-    {
-      title: "Luxury Villa",
-      price: "500,000",
-      address: "Miami",
-      beds: 4,
-      baths: 3,
-      sqft: 2500,
-      distance: 1000
-    },
-    {
-      title: "Luxury Villa",
-      price: "500,000",
-      address: "Miami",
-      beds: 4,
-      baths: 3,
-      sqft: 2500,
-      distance: 1000
-    },
-    {
-      title: "Luxury Villa",
-      price: "500,000",
-      address: "Miami",
-      beds: 4,
-      baths: 3,
-      sqft: 2500,
-      distance: 1000
-    },
-    {
-      title: "Luxury Villa",
-      price: "500,000",
-      address: "Miami",
-      beds: 4,
-      baths: 3,
-      sqft: 2500,
-      distance: 1000
-    },
-    {
-      title: "Luxury Villa",
-      price: "500,000",
-      address: "Miami",
-      beds: 4,
-      baths: 3,
-      sqft: 2500,
-      distance: 1000
-    },
-
-    {
-      title: "Luxury Villa",
-      price: "500,000",
-      address: "Miami",
-      beds: 4,
-      baths: 3,
-      sqft: 2500,
-      distance: 1000
-    },
-    {
-      title: "Luxury Villa",
-      price: "500,000",
-      address: "Miami",
-      beds: 4,
-      baths: 3,
-      sqft: 2500,
-      distance: 1000
-    },
-    {
-      title: "Luxury Villa",
-      price: "500,000",
-      address: "Miami",
-      beds: 4,
-      baths: 3,
-      sqft: 2500,
-      distance: 1000
-    },
-    {
-      title: "Luxury Villa",
-      price: "500,000",
-      address: "Miami",
-      beds: 4,
-      baths: 3,
-      sqft: 2500,
-      distance: 1000
-    },
-    {
-      title: "Luxury Villa",
-      price: "500,000",
-      address: "Miami",
-      beds: 4,
-      baths: 3,
-      sqft: 2500,
-      distance: 1000
-    },
-    {
-      title: "Luxury Villa",
-      price: "500,000",
-      address: "Miami",
-      beds: 4,
-      baths: 3,
-      sqft: 2500,
-      distance: 1000
-    }
-  ];
   /* ------------------ Get all categories ----------------------*/
   useEffect(() => {
     async function fetchCategories() {
@@ -473,132 +128,24 @@ const CategoryTabs = () => {
         </div>
 
         {listingsData?.map(data => {
-          if (
-            data.category.title === "House" &&
-            (activeTab == "All" || activeTab == "House")
-          ) {
-            return (
-              <>
-                <div className="mb-6">
-                  <h2 className="text-xl font-bold font-fraunces">
-                    {data.category.title}
-                  </h2>
-                  <PropertyListing
-                    propertyItems={data.category.products || []}
-                    isDouble={false}
-                  />
-                </div>
-              </>
-            );
-          }
-          if (
-            data.category.title === "Auto" &&
-            (activeTab == "All" || activeTab == "Auto")
-          ) {
-            return (
-              <>
-                <div className="mb-6">
-                  <h2 className="text-xl font-bold font-fraunces">
-                    {data.category.title}
-                  </h2>
-                  <VehicleListing
-                    isDouble={false}
-                    vehicleItems={data.category.products || []}
-                  />
-                </div>
-              </>
-            );
-          }
-          if (
-            data.category.title === "Sublease" &&
-            (activeTab == "All" || activeTab == "Sublease")
-          ) {
-            return (
-              <>
-                <div className="mb-6">
-                  <h2 className="text-xl font-bold font-fraunces">
-                    {data.category.title}
-                  </h2>
-                  <PropertyListing
-                    isDouble={false}
-                    propertyItems={data.category.products || []}
-                  />
-                </div>
-              </>
-            );
-          }
-          if (
-            data.category.title === "Appliances" &&
-            (activeTab == "All" || activeTab == "Appliances")
-          ) {
-            return (
-              <>
-                <div className="mb-6">
-                  <h2 className="text-xl font-bold font-fraunces">
-                    {data.category.title}
-                  </h2>
-                  <ElectronicsListing
-                    isDouble={false}
-                    electronicsItems={data.category.products || []}
-                  />
-                </div>
-              </>
-            );
-          }
-          if (
-            data.category.title === "Electronics" &&
-            (activeTab == "All" || activeTab == "Electronics")
-          ) {
-            return (
-              <>
-                <div className="mb-6">
-                  <h2 className="text-xl font-bold font-fraunces">
-                    {data.category.title}
-                  </h2>
-                  <ElectronicsListing
-                    isDouble={false}
-                    electronicsItems={data.category.products || []}
-                  />
-                </div>
-              </>
-            );
-          }
-          if (
-            data.category.title === "Apparels" &&
-            (activeTab == "All" || activeTab == "Apparels")
-          ) {
-            return (
-              <>
-                <div className="mb-6">
-                  <h2 className="text-xl font-bold font-fraunces">
-                    {data.category.title}
-                  </h2>
-                  <ClothingListing
-                    isDouble={false}
-                    clothingItems={data.category.products || []}
-                  />
-                </div>
-              </>
-            );
-          }
-          if (
-            data.category.title === "Roommate" &&
-            (activeTab == "All" || activeTab == "Roommate")
-          ) {
-            return (
-              <>
-                <div className="mb-6">
-                  <h2 className="text-xl font-bold font-fraunces">
-                    {data.category.title}
-                  </h2>
-                  <ClothingListing
-                    isDouble={false}
-                    clothingItems={data.category.products || []}
-                  />
-                </div>
-              </>
-            );
-          }
+          const title = data.category.title;
+          const config = categoryComponentMap[title];
+
+          if (!config || (activeTab !== "All" && activeTab !== title))
+            return null;
+
+          const Component = config.component;
+          const props = {
+            isDouble: false,
+            [config.propName]: data.category.products || []
+          };
+
+          return (
+            <div key={title} className="mb-6">
+              <h2 className="text-xl font-bold font-fraunces">{title}</h2>
+              <Component {...props} />
+            </div>
+          );
         })}
 
         {/* Display content based on active tab */}
