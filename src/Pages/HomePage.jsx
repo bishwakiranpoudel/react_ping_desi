@@ -12,7 +12,7 @@ import HomeRightSidebar from "../components/home_components/HomeRightSidebar";
 
 import {
   fetchMasterCities,
-  retrieveMasterCity
+  retrieveMasterCity,
 } from "../services/locationServices";
 import { fetchCommunityEvents } from "../services/events";
 import { convertDateToObject } from "../lib/utils";
@@ -40,18 +40,18 @@ function HomePage2() {
 
   // Last element ref callback for intersection observer
   const lastPostElementRef = useCallback(
-    node => {
+    (node) => {
       if (loading) return;
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver(
-        entries => {
+        (entries) => {
           if (entries[0].isIntersecting && hasMore) {
             fetchMorePosts();
           }
         },
         {
-          rootMargin: "100px"
+          rootMargin: "100px",
         }
       );
 
@@ -82,7 +82,7 @@ function HomePage2() {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true
+        closeOnClick: true,
       });
       setHasMore(false);
     } finally {
@@ -103,8 +103,8 @@ function HomePage2() {
       const response = await getPostings(requestBody);
       const newPosts = response.posts || [];
       if (newPosts.length > 0) {
-        setPostings(prevPosts => [...prevPosts, ...newPosts]);
-        setOffset(prevOffset => prevOffset + POSTS_PER_PAGE);
+        setPostings((prevPosts) => [...prevPosts, ...newPosts]);
+        setOffset((prevOffset) => prevOffset + POSTS_PER_PAGE);
         setHasMore(newPosts.length >= POSTS_PER_PAGE);
       } else {
         setHasMore(false);
@@ -117,7 +117,7 @@ function HomePage2() {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true
+        closeOnClick: true,
       });
       setHasMore(false);
     } finally {
@@ -142,7 +142,7 @@ function HomePage2() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState({
     state: "",
-    city: ""
+    city: "",
   });
   const [communityEvents, setCommunityEvents] = useState([]);
 
@@ -163,7 +163,7 @@ function HomePage2() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true
+            closeOnClick: true,
           }
         );
       } finally {
@@ -180,7 +180,7 @@ function HomePage2() {
         setIsProcessing(true);
         const eventsResponse = await fetchCommunityEvents({
           state: "Texas",
-          city: "Austin"
+          city: "Austin",
         });
         setCommunityEvents(eventsResponse.data);
       } catch (error) {
@@ -190,7 +190,7 @@ function HomePage2() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true
+            closeOnClick: true,
           }
         );
       } finally {
@@ -206,7 +206,7 @@ function HomePage2() {
       latitude: 0.0,
       longitude: 0.0,
       city: selectedLocation.city,
-      state: selectedLocation.state
+      state: selectedLocation.state,
     };
     console.log("pay", payload);
     try {
@@ -224,7 +224,7 @@ function HomePage2() {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true
+          closeOnClick: true,
         }
       );
     } finally {
@@ -331,7 +331,7 @@ function HomePage2() {
                         name: "Community",
                         icon: "👨‍👩‍👧‍👦",
                         bgColor: "bg-blue-100",
-                        textColor: "text-blue-800"
+                        textColor: "text-blue-800",
                       }}
                       title={event.name}
                       description={event.description}
@@ -346,51 +346,6 @@ function HomePage2() {
                       }
                     />
                   ))}
-              </div>
-            </div>
-          </section>
-
-          <section className="mb-6">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-xl font-semibold font-fraunces">
-                Just for You
-              </h2>
-              <a href="#" className="text-xs text-gray-600 flex items-center">
-                View all <span className="ml-1">→</span>
-              </a>
-            </div>
-            {/* Just for you cards*/}
-            <div className="relative">
-              <div className="bg-[#f5f0e8] rounded-lg shadow-sm overflow-hidden">
-                <div className="p-4 flex items-center">
-                  <div className="w-1/3">
-                    <img
-                      src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
-                      alt="VR Headset"
-                      className="w-full h-auto object-cover"
-                    />
-                  </div>
-                  <div className="w-2/3 pl-4">
-                    <div className="text-red-500 text-xs font-medium mb-1">
-                      LIMITED SALE
-                    </div>
-                    <h3 className="font-bold text-gray-800 text-sm leading-tight mb-4">
-                      EXPERIENCE THE SENSATION OF VIRTUAL REALITY.
-                    </h3>
-                    <div className="flex justify-end">
-                      <button className="text-xs bg-transparent text-gray-700 font-medium">
-                        View Deals
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-center py-2">
-                <div className="flex space-x-1">
-                  <div className="h-1.5 w-1.5 rounded-full bg-gray-300" />
-                  <div className="h-1.5 w-1.5 rounded-full bg-purple-600" />
-                  <div className="h-1.5 w-1.5 rounded-full bg-gray-300" />
-                </div>
               </div>
             </div>
           </section>
@@ -429,13 +384,11 @@ function HomePage2() {
         {/* Loading indicator */}
         {loading && <LoadingSpinner />}
         {/* End of content message */}
-        {!loading &&
-          !hasMore &&
-          postings.length > 0 && (
-            <div className="text-center py-4 text-gray-500">
-              You've reached the end of the content
-            </div>
-          )}
+        {!loading && !hasMore && postings.length > 0 && (
+          <div className="text-center py-4 text-gray-500">
+            You've reached the end of the content
+          </div>
+        )}
         <h1 className="text-xl lg:text-2xl font-bold mb-4 mt-3 font-fraunces">
           Happening Near You
         </h1>
@@ -450,7 +403,7 @@ function HomePage2() {
                 name: "Community",
                 icon: "👨‍👩‍👧‍👦",
                 bgColor: "bg-blue-100",
-                textColor: "text-blue-800"
+                textColor: "text-blue-800",
               }}
               title={event.name}
               description={event.description}

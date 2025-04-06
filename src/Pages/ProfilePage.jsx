@@ -60,21 +60,13 @@ function ProfilePage() {
 
     fetchProfileDetails();
   }, []);
+  const [imagePickerOpen, setImagePickerOpen] = useState(false);
 
   // Debug counter to force re-renders
   const [debugCounter, setDebugCounter] = useState(0);
 
-  useEffect(
-    () => {
-      console.log(
-        "ProfilePage rendered, isEditing:",
-        isEditing,
-        "debugCounter:",
-        debugCounter
-      );
-    },
-    [isEditing, debugCounter]
-  );
+
+  useEffect(() => {}, [isEditing, debugCounter]);
 
   const handleInputChange = e => {
     const { name, value } = e.target;
@@ -83,20 +75,17 @@ function ProfilePage() {
   };
 
   const handleSave = () => {
-    console.log("Save clicked");
     setIsEditing(false);
     setDebugCounter(prev => prev + 1);
   };
 
   const handleDiscard = () => {
-    console.log("Discard clicked");
     setFormData({ ...userData });
     setIsEditing(false);
     setDebugCounter(prev => prev + 1);
   };
 
   const handleEditClick = () => {
-    console.log("Edit button clicked");
     setIsEditing(true);
     setDebugCounter(prev => prev + 1);
   };
@@ -106,6 +95,21 @@ function ProfilePage() {
     if (isMobile) {
       setSidebarOpen(false);
     }
+  };
+
+  const handleAvatarClick = () => {
+    if (isEditing) {
+      setImagePickerOpen(true);
+    }
+  };
+
+  const closeImagePicker = () => {
+    setImagePickerOpen(false);
+  };
+
+  const handleImageSelected = (newImage) => {
+    setFormData((prev) => ({ ...prev, profileImage: newImage }));
+    closeImagePicker();
   };
 
   // Sidebar content
@@ -142,7 +146,7 @@ function ProfilePage() {
       </div>
 
       <div
-        className="flex items-center p-2 m-1 border border-gray-300 rounded cursor-pointer hover:bg-gray-100"
+        className="flex items-center p-2 m-1 rounded cursor-pointer hover:bg-gray-100 bg-red-500 text-white"
         onClick={() => console.log("Logout clicked")}
       >
         <LogOut size={20} />
@@ -349,6 +353,7 @@ function ProfilePage() {
                           View
                         </button>
                         <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+
                           Delete
                         </button>
                       </div>
@@ -398,7 +403,79 @@ function ProfilePage() {
             </div>
           )}
       </div>
+      {imagePickerOpen && (
+        <ImagePickerDialog
+          onClose={closeImagePicker}
+          onImageSelected={handleImageSelected}
+        />
+      )}
     </MainLayout>
+  );
+}
+
+function ImagePickerDialog({ onClose, onImageSelected }) {
+  const handleUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onImageSelected(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  return (
+    <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 z-50 flex justify-center items-center">
+      <div className="bg-white p-8 rounded shadow-lg">
+        <h2 className="text-lg font-semibold mb-4">Choose Profile Picture</h2>
+        <div className="flex flex-col gap-4">
+          <button
+            onClick={() => document.getElementById("image-upload").click()}
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+          >
+            Upload from Computer
+          </button>
+          <input
+            type="file"
+            id="image-upload"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleUpload}
+          />
+          <button
+            onClick={() => {
+              // Access the device camera
+              navigator.mediaDevices
+                .getUserMedia({ video: true })
+                .then((stream) => {
+                  const videoTrack = stream.getVideoTracks()[0];
+                  const imageCapture = new ImageCapture(videoTrack);
+
+                  return imageCapture.takePhoto();
+                })
+                .then((blob) => {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    onImageSelected(reader.result);
+                  };
+                  reader.readAsDataURL(blob);
+                })
+                .catch((error) => console.error("Camera access error:", error));
+            }}
+            className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700"
+          >
+            Take Photo
+          </button>
+          <button
+            onClick={onClose}
+            className="bg-gray-300 py-2 px-4 rounded hover:bg-gray-400"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 

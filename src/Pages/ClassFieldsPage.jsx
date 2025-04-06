@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-
+import { Plus } from "lucide-react";
+import { ClassifiedModal } from "../components/classfields_components/ClassifiedModal";
 import PropertyCard from "../components/classfields_components/PropertyCard";
 import VehicleCard from "../components/classfields_components/VechileCard";
 import MainLayout from "../components/MainLayout";
@@ -101,7 +102,15 @@ const CategoryTabs = () => {
     <MainLayout rs={false}>
       <div className="relative font-afacad">
         {/* Updated Tabs Section */}
-        <div className="flex flex-wrap justify-center md:justify-start mb-2 border-b border-gray-300 relative">
+
+        <div className="flex flex-wrap justify-center md:justify-start mb-2 border-b border-gray-300 relative md:overflow-x-hidden">
+          <div
+            className="flex overflow-x-auto md:overflow-x-hidden"
+            style={{
+              scrollbarWidth: "none" /* Firefox */,
+              msOverflowStyle: "none" /* IE and Edge */,
+            }}
+          >
           {categoryData?.map(tab => (
             <button
               key={tab.label.toLowerCase()}
@@ -112,18 +121,36 @@ const CategoryTabs = () => {
               }`}
               onClick={() => handleTabChange(tab.label)}
             >
-              <div className="flex flex-col items-center">
-                <img
-                  src={`/images/${tab.label.toLowerCase()}.png`}
-                  className="w-5 mb-1"
-                  alt="Zodiac Sign"
-                />
-                {tab.label}
-              </div>
-            </button>
-          ))}
-          <button className="absolute right-0 py-1.5 px-3 bg-black text-white rounded-lg top-1/2 -translate-y-1/2">
+            
+                <div className="flex flex-col items-center">
+                  <img
+                    src={`/images/${tab.label.toLowerCase()}.png`}
+                    className="w-5 mb-1"
+                    alt="Zodiac Sign"
+                  />
+                  {tab.label}
+                </div>
+              </button>
+            ))}
+          </div>
+          {/* Button for larger screens */}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="hidden md:block absolute right-0 py-1.5 px-3 bg-black text-white rounded-lg top-1/2 -translate-y-1/2"
+          >
             + Create Classfields
+          </button>
+          {/* Floating button for smaller screens */}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="fixed md:hidden py-1.5 px-3 bg-black text-white rounded-full"
+            style={{
+              bottom: "4.5rem",
+              right: "2rem",
+              zIndex: 9999 /* Highest z-index */,
+            }}
+          >
+            +
           </button>
         </div>
 
@@ -225,7 +252,10 @@ const CategoryTabs = () => {
             <ClothingListing clothingItems={clothingData} />
           </>
         )}
-        */}
+        <ClassifiedModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       </div>
     </MainLayout>
   );
