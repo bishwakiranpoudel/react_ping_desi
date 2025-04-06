@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-
+import { Plus } from "lucide-react";
+import { ClassifiedModal } from "../components/classfields_components/ClassifiedModal";
 import PropertyCard from "../components/classfields_components/PropertyCard";
 import VehicleCard from "../components/classfields_components/VechileCard";
 import MainLayout from "../components/MainLayout";
@@ -18,7 +19,7 @@ import { toast } from "react-toastify";
 const CategoryTabs = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [categoryData, setCategoryData] = useState([]);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleTabChange = (value) => {
     setActiveTab(value);
   };
@@ -641,11 +642,15 @@ const CategoryTabs = () => {
             ))}
           </div>
           {/* Button for larger screens */}
-          <button className="hidden md:block absolute right-0 py-1.5 px-3 bg-black text-white rounded-lg top-1/2 -translate-y-1/2">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="hidden md:block absolute right-0 py-1.5 px-3 bg-black text-white rounded-lg top-1/2 -translate-y-1/2"
+          >
             + Create Classfields
           </button>
           {/* Floating button for smaller screens */}
           <button
+            onClick={() => setIsModalOpen(true)}
             className="fixed md:hidden py-1.5 px-3 bg-black text-white rounded-full"
             style={{
               bottom: "4.5rem",
@@ -743,6 +748,10 @@ const CategoryTabs = () => {
             <ClothingListing clothingItems={clothingData} />
           </>
         )}
+        <ClassifiedModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
       </div>
     </MainLayout>
   );
