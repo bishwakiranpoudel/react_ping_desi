@@ -1,7 +1,8 @@
 import React from "react";
 
 const PropertyCard = ({
-  image,
+  title,
+  coverPhoto,
   address,
   price,
   beds,
