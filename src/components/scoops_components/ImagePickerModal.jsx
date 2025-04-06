@@ -6,7 +6,12 @@ import Button from "./Button";
 import Dialog from "./Dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./Tabs";
 
-function ImagePickerModal({ isOpen, onClose, onImageSelected }) {
+function ImagePickerModal({
+  isOpen,
+  onClose,
+  onImageSelected,
+  allowMultiple = false,
+}) {
   const [activeTab, setActiveTab] = useState("upload");
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -24,13 +29,19 @@ function ImagePickerModal({ isOpen, onClose, onImageSelected }) {
       setSelectedFile(file);
 
       // Create a preview URL
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewUrl(reader.result);
-      };
-      reader.readAsDataURL(file);
+      const previewUrl = URL.createObjectURL(file);
+      setPreviewUrl(previewUrl);
     }
   };
+
+  // Clean up object URLs to avoid memory leaks
+  useEffect(() => {
+    return () => {
+      if (previewUrl && previewUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   // Trigger file input click
   const triggerFileInput = () => {
@@ -67,7 +78,7 @@ function ImagePickerModal({ isOpen, onClose, onImageSelected }) {
     }
   };
 
-  // Take photo
+  // Take photo and convert to File object
   const takePhoto = () => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
@@ -82,12 +93,27 @@ function ImagePickerModal({ isOpen, onClose, onImageSelected }) {
       if (ctx) {
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Convert canvas to data URL
-        const imageUrl = canvas.toDataURL("image/jpeg");
-        setPreviewUrl(imageUrl);
+        // Convert canvas to blob (File)
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              // Create a File object from the blob
+              const file = new File([blob], "camera-capture.jpg", {
+                type: "image/jpeg",
+              });
+              setSelectedFile(file);
 
-        // Stop camera after taking photo
-        stopCamera();
+              // Create a preview URL
+              const previewUrl = URL.createObjectURL(file);
+              setPreviewUrl(previewUrl);
+
+              // Stop camera after taking photo
+              stopCamera();
+            }
+          },
+          "image/jpeg",
+          0.95
+        );
       }
     }
   };
@@ -107,16 +133,21 @@ function ImagePickerModal({ isOpen, onClose, onImageSelected }) {
     }
   };
 
-  // Confirm selection
+  // Confirm selection - pass the actual File object
   const confirmSelection = () => {
-    if (previewUrl) {
-      onImageSelected(previewUrl);
+    if (selectedFile) {
+      onImageSelected(selectedFile);
       onClose();
 
       // Clean up
       if (isCameraActive) {
         stopCamera();
       }
+
+      if (previewUrl && previewUrl.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
+
       setPreviewUrl(null);
       setSelectedFile(null);
     }
@@ -140,7 +171,7 @@ function ImagePickerModal({ isOpen, onClose, onImageSelected }) {
           {previewUrl ? (
             <div className="relative">
               <img
-                src={previewUrl}
+                src={previewUrl || "/placeholder.svg"}
                 alt="Preview"
                 className="mb-4 rounded-md w-full h-auto"
               />
@@ -148,6 +179,9 @@ function ImagePickerModal({ isOpen, onClose, onImageSelected }) {
                 variant="outline"
                 className="absolute top-2 right-2 bg-white/80 rounded-md"
                 onClick={() => {
+                  if (previewUrl && previewUrl.startsWith("blob:")) {
+                    URL.revokeObjectURL(previewUrl);
+                  }
                   setPreviewUrl(null);
                   setSelectedFile(null);
                 }}
@@ -163,8 +197,12 @@ function ImagePickerModal({ isOpen, onClose, onImageSelected }) {
                 onChange={handleFileChange}
                 className="hidden"
                 ref={fileInputRef}
+                multiple={allowMultiple}
               />
-              <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-md cursor-pointer">
+              <div
+                className="flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-md cursor-pointer"
+                onClick={triggerFileInput}
+              >
                 <Upload size={48} className="text-gray-400" />
                 <h3 className="mt-2 text-sm font-semibold text-gray-700">
                   Drag and drop an image here
@@ -173,7 +211,10 @@ function ImagePickerModal({ isOpen, onClose, onImageSelected }) {
                 <Button
                   variant="secondary"
                   className="mt-2"
-                  onClick={triggerFileInput}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    triggerFileInput();
+                  }}
                 >
                   Select file
                 </Button>
@@ -184,35 +225,43 @@ function ImagePickerModal({ isOpen, onClose, onImageSelected }) {
 
         <TabsContent value="camera" className="pt-4">
           <div className="relative">
-            <video
-              ref={videoRef}
-              autoPlay
-              muted
-              className="w-full rounded-md aspect-video"
-            ></video>
-            <canvas ref={canvasRef} className="hidden"></canvas>
+            {!previewUrl ? (
+              <>
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  playsInline
+                  muted
+                  className="w-full rounded-md aspect-video"
+                ></video>
+                <canvas ref={canvasRef} className="hidden"></canvas>
 
-            {!previewUrl && (
-              <Button
-                variant="secondary"
-                className="absolute bottom-2 left-1/2 -translate-x-1/2"
-                onClick={takePhoto}
-              >
-                Take Photo
-              </Button>
-            )}
-
-            {previewUrl && (
+                <Button
+                  variant="secondary"
+                  className="absolute bottom-2 left-1/2 -translate-x-1/2"
+                  onClick={takePhoto}
+                >
+                  Take Photo
+                </Button>
+              </>
+            ) : (
               <div className="relative">
                 <img
-                  src={previewUrl}
+                  src={previewUrl || "/placeholder.svg"}
                   alt="Preview"
                   className="mb-4 rounded-md w-full h-auto"
                 />
                 <Button
                   variant="outline"
                   className="absolute top-2 right-2 bg-white/80 rounded-md"
-                  onClick={() => setPreviewUrl(null)}
+                  onClick={() => {
+                    if (previewUrl && previewUrl.startsWith("blob:")) {
+                      URL.revokeObjectURL(previewUrl);
+                    }
+                    setPreviewUrl(null);
+                    setSelectedFile(null);
+                    startCamera();
+                  }}
                 >
                   Retake
                 </Button>
@@ -229,7 +278,7 @@ function ImagePickerModal({ isOpen, onClose, onImageSelected }) {
         <Button
           variant="primary"
           onClick={confirmSelection}
-          disabled={!previewUrl}
+          disabled={!selectedFile}
         >
           Confirm
         </Button>

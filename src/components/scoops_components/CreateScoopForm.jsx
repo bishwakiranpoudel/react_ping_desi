@@ -39,7 +39,7 @@ function CreateScoopForm() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedHashtags, setSelectedHashtags] = useState([]);
   const [isImagePickerOpen, setIsImagePickerOpen] = useState(false);
-  const [images, setImages] = useState([]); // Store multiple images
+  const [images, setImages] = useState([]); // Store multiple image files
   const [imagePickerMode, setImagePickerMode] = useState("upload");
   const [isHashtagPopoverOpen, setIsHashtagPopoverOpen] = useState(false);
   const [isCategoryPopoverOpen, setIsCategoryPopoverOpen] = useState(false);
@@ -157,13 +157,32 @@ function CreateScoopForm() {
   };
 
   // Handle multiple image selection
-  const handleImageSelected = (imageUrl) => {
-    if (Array.isArray(imageUrl)) {
-      // If we receive an array of images
-      setImages([...images, ...imageUrl]);
-    } else if (imageUrl) {
+  const handleImageSelected = (imageData) => {
+    if (Array.isArray(imageData)) {
+      // If we receive an array of images, limit to max 2 images total
+      const newImages = [...images];
+      for (const img of imageData) {
+        if (newImages.length < 2) {
+          newImages.push(img);
+        } else {
+          toast.warning("Maximum 2 images allowed", {
+            position: "top-right",
+            autoClose: 3000,
+          });
+          break;
+        }
+      }
+      setImages(newImages);
+    } else if (imageData) {
       // If we receive a single image
-      setImages([...images, imageUrl]);
+      if (images.length < 2) {
+        setImages([...images, imageData]);
+      } else {
+        toast.warning("Maximum 2 images allowed", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
     }
   };
 
@@ -198,19 +217,39 @@ function CreateScoopForm() {
         return;
       }
 
-      // Prepare the scoop data
-      const scoopData = {
-        contentinfo: content,
-        scoopid: selectedCategory.id,
-        hoopids: selectedHashtags.map((h) => h.hoopid),
-        geohash,
-        photopath: images,
-      };
+      // Create FormData to send files
+      const formData = new FormData();
 
-      console.log("Posting scoop:", scoopData);
+      // Add text data
+      formData.append("contentinfo", content);
+      formData.append("scoopid", selectedCategory.id);
+      formData.append("geohash", geohash);
 
-      // Send data using your postScoops service
-      const response = await postScoops(scoopData);
+      // Add hoopids as JSON string
+      formData.append(
+        "hoopids",
+        JSON.stringify(selectedHashtags.map((h) => h.hoopid))
+      );
+
+      // Add image files directly - maximum 2 files
+      images.forEach((imageFile, index) => {
+        if (index < 2) {
+          formData.append("photopath", imageFile);
+        }
+      });
+
+      console.log("Posting scoop with files", formData);
+      for (let [key, value] of formData.entries()) {
+        console.log(
+          key + ":",
+          value instanceof File
+            ? `File: ${value.name}, type: ${value.type}, size: ${value.size} bytes`
+            : value
+        );
+      }
+
+      // Send data using your postScoops service, modified to handle FormData
+      const response = await postScoops(formData);
 
       // Show success message
       toast.success("Scoop has been posted successfully", {
@@ -401,7 +440,7 @@ function CreateScoopForm() {
           {images.map((img, index) => (
             <div key={index} className="relative">
               <img
-                src={img || "/placeholder.svg"}
+                src={img instanceof File ? URL.createObjectURL(img) : img}
                 alt={`Uploaded content ${index + 1}`}
                 className="w-full h-auto rounded-md object-cover aspect-square"
               />
