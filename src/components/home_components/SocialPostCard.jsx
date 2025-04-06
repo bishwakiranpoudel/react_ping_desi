@@ -310,6 +310,8 @@ const SocialPostCard = ({
     }
   };
 
+  console.log(scoopData, post, images, "testing");
+
   // Function to calculate time ago from post creation date
   const getTimeAgo = (createdDate) => {
     if (!createdDate) return "";
@@ -769,9 +771,9 @@ const SocialPostCard = ({
       </div>
 
       {/* Hashtags */}
-      {post.hoops && post.hoops.length > 0 && (
+      {scoopData && scoopData.hoops && scoopData.hoops.length > 0 && (
         <div className="px-4 pb-3 flex flex-wrap gap-2">
-          {post.hoops.map((tag, index) => (
+          {scoopData.hoops.map((tag, index) => (
             <span
               key={index}
               className="bg-purple-50 text-purple-800 text-xs px-3 py-1 rounded-full"
