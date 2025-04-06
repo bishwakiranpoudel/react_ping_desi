@@ -3,7 +3,6 @@
     "react-app"
   ],
   "rules": {
-    "no-warning-rule": "warn",
     "no-unused-vars": "off",
     "react-hooks/exhaustive-deps": "off",
     "jsx-a11y/anchor-is-valid": "off",
