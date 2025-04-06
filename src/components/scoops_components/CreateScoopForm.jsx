@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   Camera,
   Image,
@@ -10,12 +10,15 @@ import {
   Hash,
   Check,
   X,
+  Loader2,
 } from "lucide-react";
 import Button from "./Button";
+import { getPostings } from "../../services/scoops";
 import Popover from "./Popover";
 import { classNames } from "../../utils/classNames";
 import ImagePickerModal from "./ImagePickerModal";
 import { toast } from "react-toastify";
+import SocialPostCard from "../home_components/SocialPostCard";
 import { postScoops, getScoops, getHoops } from "../../services/scoops";
 
 function Hashtag({ tag, onClick, selected }) {
@@ -51,6 +54,120 @@ function CreateScoopForm() {
   const [hoops, setHoops] = useState([]);
   const [availableHoops, setAvailableHoops] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  /***********************social media*****************/
+  const [postings, setPostings] = useState([]);
+  const [feedLoading, setFeedLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true); // For initial load
+  const [error, setError] = useState(null);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const observer = useRef();
+  const POSTS_PER_PAGE = 10;
+
+  // Last element ref callback for intersection observer
+  const lastPostElementRef = useCallback(
+    (node) => {
+      if (feedLoading) return;
+      if (observer.current) observer.current.disconnect();
+
+      observer.current = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && hasMore) {
+            fetchMorePosts();
+          }
+        },
+        {
+          rootMargin: "100px",
+        }
+      );
+
+      if (node) observer.current.observe(node);
+    },
+    [feedLoading, hasMore]
+  );
+
+  // Function to fetch initial posts
+  const fetchInitialPosts = async () => {
+    setInitialLoading(true);
+    setFeedLoading(true);
+    setError(null);
+
+    const geohash = localStorage.getItem("geohash") || "9v6m";
+    const requestBody = { geohash, offset: 0 };
+
+    try {
+      const response = await getPostings(requestBody);
+      setPostings(response.posts || []);
+      setOffset(POSTS_PER_PAGE);
+      setHasMore((response.posts || []).length >= POSTS_PER_PAGE);
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ??
+        error.data?.message ??
+        error.message ??
+        error;
+      setError(errorMessage);
+
+      toast.error("" + errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+      });
+      setHasMore(false);
+    } finally {
+      setFeedLoading(false);
+      setInitialLoading(false);
+    }
+  };
+
+  // Function to fetch more posts
+  const fetchMorePosts = async () => {
+    if (!hasMore || feedLoading) return;
+
+    setFeedLoading(true);
+    const geohash = localStorage.getItem("geohash") || "9v6m";
+    const requestBody = { geohash, offset };
+
+    try {
+      const response = await getPostings(requestBody);
+      const newPosts = response.posts || [];
+      if (newPosts.length > 0) {
+        setPostings((prevPosts) => [...prevPosts, ...newPosts]);
+        setOffset((prevOffset) => prevOffset + POSTS_PER_PAGE);
+        setHasMore(newPosts.length >= POSTS_PER_PAGE);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ?? error.data?.message ?? error;
+      setError(errorMessage);
+      toast.error("" + errorMessage, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+      });
+      setHasMore(false);
+    } finally {
+      setFeedLoading(false);
+    }
+  };
+
+  // Refresh feed after posting
+  const refreshFeed = () => {
+    setOffset(0);
+    setHasMore(true);
+    fetchInitialPosts();
+  };
+
+  useEffect(() => {
+    fetchInitialPosts();
+  }, []);
+
+  /***********************social media end*****************/
 
   // Fetch scoops and hoops when component mounts
   useEffect(() => {
@@ -239,7 +356,7 @@ function CreateScoopForm() {
       });
 
       console.log("Posting scoop with files", formData);
-      for (let [key, value] of formData.entries()) {
+      for (const [key, value] of formData.entries()) {
         console.log(
           key + ":",
           value instanceof File
@@ -264,6 +381,9 @@ function CreateScoopForm() {
       setSelectedCategory(null);
       setSelectedHashtags([]);
       setImages([]);
+
+      // Refresh the feed to show the new post
+      refreshFeed();
     } catch (error) {
       toast.error(
         "" + (error.response?.data?.message ?? error.data?.message ?? error),
@@ -378,141 +498,215 @@ function CreateScoopForm() {
   );
 
   return (
-    <div className="bg-white rounded-lg border p-4 mb-4">
-      <div className="flex items-center gap-2 mb-4">
-        <Popover
-          content={categoryPopoverContent}
-          align="start"
-          open={isCategoryPopoverOpen}
-          onOpenChange={setIsCategoryPopoverOpen}
-        >
-          <Button
-            variant="outline"
-            className="rounded-full flex items-center gap-2 bg-gray-100 text-gray-700"
+    <>
+      <div className="bg-white rounded-lg border p-4 mb-4">
+        <div className="flex items-center gap-2 mb-4">
+          <Popover
+            content={categoryPopoverContent}
+            align="start"
+            open={isCategoryPopoverOpen}
+            onOpenChange={setIsCategoryPopoverOpen}
           >
-            <div className="w-6 h-6 rounded-full bg-gray-700 text-white flex items-center justify-center">
-              <Hash size={14} />
-            </div>
-            <span>
-              {selectedCategory ? selectedCategory.name : "Select a scoop"}
-            </span>
-            <ChevronDown size={16} />
-          </Button>
-        </Popover>
-        <Popover
-          content={hashtagPopoverContent}
-          align="start"
-          open={isHashtagPopoverOpen}
-          onOpenChange={(open) => {
-            // Only allow opening if a category is selected
-            if (open && !selectedCategory) {
-              return;
-            }
-            setIsHashtagPopoverOpen(open);
-          }}
-        >
-          <Button
-            variant="outline"
-            className="rounded-full flex items-center gap-2 bg-gray-100 text-gray-700"
-            disabled={!selectedCategory}
+            <Button
+              variant="outline"
+              className="rounded-full flex items-center gap-2 bg-gray-100 text-gray-700"
+            >
+              <div className="w-6 h-6 rounded-full bg-gray-700 text-white flex items-center justify-center">
+                <Hash size={14} />
+              </div>
+              <span>
+                {selectedCategory ? selectedCategory.name : "Select a scoop"}
+              </span>
+              <ChevronDown size={16} />
+            </Button>
+          </Popover>
+          <Popover
+            content={hashtagPopoverContent}
+            align="start"
+            open={isHashtagPopoverOpen}
+            onOpenChange={(open) => {
+              // Only allow opening if a category is selected
+              if (open && !selectedCategory) {
+                return;
+              }
+              setIsHashtagPopoverOpen(open);
+            }}
           >
-            <div className="w-6 h-6 rounded-full bg-gray-700 text-white flex items-center justify-center">
-              <Hash size={14} />
-            </div>
-            <span>Add Hoop</span>
-            <ChevronDown size={16} />
-          </Button>
-        </Popover>
-      </div>
+            <Button
+              variant="outline"
+              className="rounded-full flex items-center gap-2 bg-gray-100 text-gray-700"
+              disabled={!selectedCategory}
+            >
+              <div className="w-6 h-6 rounded-full bg-gray-700 text-white flex items-center justify-center">
+                <Hash size={14} />
+              </div>
+              <span>Add Hoop</span>
+              <ChevronDown size={16} />
+            </Button>
+          </Popover>
+        </div>
 
-      <div className="mb-4">
-        <textarea
-          className="w-full p-2 min-h-[100px] border-none outline-none resize-none"
-          placeholder="What's in your mind?"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
+        <div className="mb-4">
+          <textarea
+            className="w-full p-2 min-h-[100px] border-none outline-none resize-none"
+            placeholder="What's in your mind?"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
+        </div>
+
+        {/* Display multiple images */}
+        {images.length > 0 && (
+          <div className="mb-4 grid grid-cols-2 gap-2">
+            {images.map((img, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={img instanceof File ? URL.createObjectURL(img) : img}
+                  alt={`Uploaded content ${index + 1}`}
+                  className="w-full h-auto rounded-md object-cover aspect-square"
+                />
+                <button
+                  className="absolute top-2 right-2 bg-white/80 rounded-full p-1 hover:bg-white"
+                  onClick={() => removeImage(index)}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {selectedHashtags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {selectedHashtags.map((hoop) => (
+              <Hashtag
+                key={hoop.hoopid}
+                tag={hoop.hooptag}
+                selected
+                onClick={() => toggleHashtag(hoop)}
+              />
+            ))}
+          </div>
+        )}
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => openImagePicker("camera")}
+              className="text-gray-500 hover:text-gray-800 transition-colors"
+            >
+              <Camera size={20} />
+            </button>
+            <button
+              onClick={() => openImagePicker("upload")}
+              className="text-gray-500 hover:text-gray-800 transition-colors"
+            >
+              <Image size={20} />
+            </button>
+            <button
+              onClick={handleAddLocation}
+              className="text-gray-500 hover:text-gray-800 transition-colors"
+            >
+              <MapPin size={20} />
+            </button>
+            <button className="text-gray-500 hover:text-gray-800 transition-colors">
+              <Link2 size={20} />
+            </button>
+          </div>
+
+          {(content || images.length > 0 || selectedHashtags.length > 0) && (
+            <Button
+              variant="primary"
+              className="rounded-full px-6 bg-black text-white"
+              onClick={handlePost}
+              disabled={isProcessing}
+            >
+              {isProcessing ? "Posting..." : "Post"}
+            </Button>
+          )}
+        </div>
+
+        <ImagePickerModal
+          isOpen={isImagePickerOpen}
+          onClose={() => setIsImagePickerOpen(false)}
+          onImageSelected={handleImageSelected}
+          mode={imagePickerMode}
+          allowMultiple={true}
         />
       </div>
 
-      {/* Display multiple images */}
-      {images.length > 0 && (
-        <div className="mb-4 grid grid-cols-2 gap-2">
-          {images.map((img, index) => (
-            <div key={index} className="relative">
-              <img
-                src={img instanceof File ? URL.createObjectURL(img) : img}
-                alt={`Uploaded content ${index + 1}`}
-                className="w-full h-auto rounded-md object-cover aspect-square"
-              />
-              <button
-                className="absolute top-2 right-2 bg-white/80 rounded-full p-1 hover:bg-white"
-                onClick={() => removeImage(index)}
+      {/* Social Feed Section */}
+      <div className="social-feed">
+        <h2 className="text-xl font-semibold mb-4">Recent Posts</h2>
+
+        {/* Initial loading state */}
+        {initialLoading && (
+          <div className="flex justify-center items-center py-8">
+            <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
+            <span className="ml-2 text-gray-500">Loading posts...</span>
+          </div>
+        )}
+
+        {/* Error state */}
+        {error && !initialLoading && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-4">
+            <p>Failed to load posts: {error}</p>
+            <button
+              className="mt-2 text-sm font-medium underline"
+              onClick={fetchInitialPosts}
+            >
+              Try again
+            </button>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!initialLoading && !error && postings.length === 0 && (
+          <div className="bg-gray-50 border border-gray-200 rounded-md p-8 text-center">
+            <p className="text-gray-500 mb-2">No posts found</p>
+            <p className="text-sm text-gray-400">
+              Be the first to create a post!
+            </p>
+          </div>
+        )}
+
+        {/* Posts list */}
+        {!initialLoading && postings.length > 0 && (
+          <div className="space-y-4">
+            {postings.map((post, index) => (
+              <div
+                key={post.id || post._id || index}
+                ref={index === postings.length - 1 ? lastPostElementRef : null}
+                className="transition-all duration-300 ease-in-out"
               >
-                <X size={16} />
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+                <SocialPostCard
+                  post={post}
+                  username={post.username}
+                  images={post.photopath ? post.photopath.split(",") : []}
+                />
+              </div>
+            ))}
 
-      {selectedHashtags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-4">
-          {selectedHashtags.map((hoop) => (
-            <Hashtag
-              key={hoop.hoopid}
-              tag={hoop.hooptag}
-              selected
-              onClick={() => toggleHashtag(hoop)}
-            />
-          ))}
-        </div>
-      )}
+            {/* Loading more indicator */}
+            {feedLoading && !initialLoading && (
+              <div className="flex justify-center items-center py-4">
+                <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                <span className="ml-2 text-sm text-gray-500">
+                  Loading more...
+                </span>
+              </div>
+            )}
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={() => openImagePicker("camera")}
-            className="text-gray-500 hover:text-gray-800 transition-colors"
-          >
-            <Camera size={20} />
-          </button>
-          <button
-            onClick={() => openImagePicker("upload")}
-            className="text-gray-500 hover:text-gray-800 transition-colors"
-          >
-            <Image size={20} />
-          </button>
-          <button
-            onClick={handleAddLocation}
-            className="text-gray-500 hover:text-gray-800 transition-colors"
-          >
-            <MapPin size={20} />
-          </button>
-          <button className="text-gray-500 hover:text-gray-800 transition-colors">
-            <Link2 size={20} />
-          </button>
-        </div>
-
-        {(content || images.length > 0 || selectedHashtags.length > 0) && (
-          <Button
-            variant="primary"
-            className="rounded-full px-6 bg-black text-white"
-            onClick={handlePost}
-            disabled={isProcessing}
-          >
-            {isProcessing ? "Posting..." : "Post"}
-          </Button>
+            {/* End of feed indicator */}
+            {!hasMore && !feedLoading && postings.length > 0 && (
+              <div className="text-center py-6 text-gray-500 text-sm border-t border-gray-100">
+                You've reached the end of the feed
+              </div>
+            )}
+          </div>
         )}
       </div>
-
-      <ImagePickerModal
-        isOpen={isImagePickerOpen}
-        onClose={() => setIsImagePickerOpen(false)}
-        onImageSelected={handleImageSelected}
-        mode={imagePickerMode}
-        allowMultiple={true}
-      />
-    </div>
+    </>
   );
 }
 
