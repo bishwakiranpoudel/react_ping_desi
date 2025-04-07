@@ -18,7 +18,6 @@ const NewsCard = ({
   isMobile = true // Set default value here
 }) => {
   if (isMobile) {
-    console.log("item",item)
     // Mobile View
     return (
       <section className="mb-6 font-afacad">
