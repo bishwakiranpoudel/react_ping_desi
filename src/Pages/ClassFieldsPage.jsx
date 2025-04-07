@@ -259,11 +259,12 @@ const CategoryTabs = () => {
             <ClothingListing clothingItems={clothingData} />
           </>
         )}
+
+          */}
         <ClassifiedModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />
-          */}
       </div>
     </MainLayout>
   );

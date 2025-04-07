@@ -10,7 +10,7 @@ import {
   Pencil,
   Menu,
   X,
-  Trash2,
+  Trash2
 } from "lucide-react";
 import { useIsMobile } from "../hooks/use-mobile";
 import MainLayout from "../components/MainLayout";
@@ -19,6 +19,8 @@ import ManageEvents from "../components/profile_components/ManageEvents";
 import ManageClassifieds from "../components/profile_components/ManageClassifieds";
 import ImagePickerDialog from "../components/profile_components/ImagePickerDialog";
 import SidebarContent from "../components/profile_components/SidebarContent";
+import { toast } from "react-toastify";
+import { GetProfile } from "../services/profile";
 
 // Mock data
 const userData = {
@@ -30,15 +32,15 @@ const userData = {
   address: "The Test street, Test road",
   flatNumber: "Flat 1234",
   city: "Austin",
-  profileImage: "/images/gemini.png", // Correct path to the image
+  profileImage: "/images/gemini.png" // Correct path to the image
 };
 
 const events = [
   {
     id: 1,
     title: "Our Gender Reveal Party",
-    date: "13th Nov, 11:00 AM",
-  },
+    date: "13th Nov, 11:00 AM"
+  }
 ];
 
 const classifieds = [
@@ -48,11 +50,11 @@ const classifieds = [
     title: "2563 W. Gray st.utica, Pennsylvania 5...",
     details: {
       beds: 3,
-      baths: 7,
+      baths: 7
     },
     price: 249500,
     condition: "Used",
-    image: "/placeholder.svg",
+    image: "/placeholder.svg"
   },
   {
     id: 2,
@@ -60,14 +62,14 @@ const classifieds = [
     title: "Play Station 5",
     price: 420,
     condition: "New",
-    image: "/placeholder.svg",
-  },
+    image: "/placeholder.svg"
+  }
 ];
 
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({ ...userData });
+  const [formData, setFormData] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
   const [imagePickerOpen, setImagePickerOpen] = useState(false);
@@ -75,30 +77,43 @@ function ProfilePage() {
   // Debug counter to force re-renders
   const [debugCounter, setDebugCounter] = useState(0);
 
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const profile = await GetProfile();
+        console.log("profile", profile);
+        setFormData(profile.data);
+      } catch (error) {
+        toast.error("Error while fetching profile");
+      }
+    }
+    fetchProfile();
+  }, []);
+
   useEffect(() => {}, [isEditing, debugCounter]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSave = () => {
     setIsEditing(false);
-    setDebugCounter((prev) => prev + 1);
+    setDebugCounter(prev => prev + 1);
   };
 
   const handleDiscard = () => {
     setFormData({ ...userData });
     setIsEditing(false);
-    setDebugCounter((prev) => prev + 1);
+    setDebugCounter(prev => prev + 1);
   };
 
   const handleEditClick = () => {
     setIsEditing(true);
-    setDebugCounter((prev) => prev + 1);
+    setDebugCounter(prev => prev + 1);
   };
 
-  const handleTabChange = (tab) => {
+  const handleTabChange = tab => {
     setActiveTab(tab);
     if (isMobile) {
       setSidebarOpen(false);
@@ -115,8 +130,8 @@ function ProfilePage() {
     setImagePickerOpen(false);
   };
 
-  const handleImageSelected = (newImage) => {
-    setFormData((prev) => ({ ...prev, profileImage: newImage }));
+  const handleImageSelected = newImage => {
+    setFormData(prev => ({ ...prev, profileImage: newImage }));
     closeImagePicker();
   };
 
@@ -135,41 +150,40 @@ function ProfilePage() {
             <h1 className="m-0 text-lg">
               {activeTab === "profile"
                 ? "Profile"
-                : activeTab === "classifieds"
-                ? "Classifieds"
-                : "Events"}
+                : activeTab === "classifieds" ? "Classifieds" : "Events"}
             </h1>
-            <div className="w-6"></div> {/* Spacer */}
+            <div className="w-6" /> {/* Spacer */}
           </div>
         )}
 
         {/* Mobile Sidebar */}
-        {isMobile && sidebarOpen && (
-          <div
-            className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-50 z-50 flex"
-            onClick={() => setSidebarOpen(false)}
-          >
+        {isMobile &&
+          sidebarOpen && (
             <div
-              className="w-4/5 max-w-sm bg-white h-full p-4 box-border"
-              onClick={(e) => e.stopPropagation()}
+              className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-50 z-50 flex"
+              onClick={() => setSidebarOpen(false)}
             >
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="m-0 text-xl">Menu</h2>
-                <button
-                  className="bg-none border-none cursor-pointer"
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <X size={24} />
-                </button>
+              <div
+                className="w-4/5 max-w-sm bg-white h-full p-4 box-border"
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="m-0 text-xl">Menu</h2>
+                  <button
+                    className="bg-none border-none cursor-pointer"
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
+                <SidebarContent
+                  handleTabChange={handleTabChange}
+                  activeTab={activeTab}
+                  setSidebarOpen={setSidebarOpen}
+                />
               </div>
-              <SidebarContent
-                handleTabChange={handleTabChange}
-                activeTab={activeTab}
-                setSidebarOpen={setSidebarOpen}
-              />
             </div>
-          </div>
-        )}
+          )}
 
         {/* Desktop Sidebar */}
         {!isMobile && (
@@ -184,18 +198,19 @@ function ProfilePage() {
 
         {/* Main Content */}
         <div className="flex-1 p-4 mt-0">
-          {activeTab === "profile" && (
-            <UserProfile
-              formData={formData}
-              isEditing={isEditing}
-              handleAvatarClick={handleAvatarClick}
-              handleInputChange={handleInputChange}
-              handleDiscard={handleDiscard}
-              handleSave={handleSave}
-              setIsEditing={setIsEditing}
-              setDebugCounter={setDebugCounter}
-            />
-          )}
+          {activeTab === "profile" &&
+            formData && (
+              <UserProfile
+                formData={formData}
+                isEditing={isEditing}
+                handleAvatarClick={handleAvatarClick}
+                handleInputChange={handleInputChange}
+                handleDiscard={handleDiscard}
+                handleSave={handleSave}
+                setIsEditing={setIsEditing}
+                setDebugCounter={setDebugCounter}
+              />
+            )}
           {activeTab === "events" && <ManageEvents events={events} />}
           {activeTab === "classifieds" && (
             <ManageClassifieds classifieds={classifieds} />

@@ -84,12 +84,12 @@ function UserProfile({
               <input
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
                 name="name"
-                value={formData.name}
+                value={formData.username}
                 onChange={handleInputChange}
               />
             ) : (
               <div className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
-                {formData.name}
+                {formData.username}
               </div>
             )}
           </div>
@@ -120,12 +120,12 @@ function UserProfile({
               <input
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
                 name="email"
-                value={formData.email}
+                value={formData.userloginname}
                 onChange={handleInputChange}
               />
             ) : (
               <div className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
-                {formData.email}
+                {formData.userloginname}
               </div>
             )}
           </div>
