@@ -21,19 +21,8 @@ import ImagePickerDialog from "../components/profile_components/ImagePickerDialo
 import SidebarContent from "../components/profile_components/SidebarContent";
 import { toast } from "react-toastify";
 import { GetProfile } from "../services/profile";
-
-// Mock data
-const userData = {
-  name: "Aarav Patel",
-  username: "@Aaravpatel123",
-  location: "Austin",
-  email: "aaravpatelemail@gmail.com",
-  phone: "+1 01234 1241",
-  address: "The Test street, Test road",
-  flatNumber: "Flat 1234",
-  city: "Austin",
-  profileImage: "/images/gemini.png" // Correct path to the image
-};
+import { queryListings } from "../services/classified";
+import { jwtDecode } from "jwt-decode";
 
 const events = [
   {
@@ -70,6 +59,8 @@ function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [classifiedData, setClassifiedData] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
   const [imagePickerOpen, setImagePickerOpen] = useState(false);
@@ -81,13 +72,32 @@ function ProfilePage() {
     async function fetchProfile() {
       try {
         const profile = await GetProfile();
-        console.log("profile", profile);
         setFormData(profile.data);
+        setUserData(profile.data);
       } catch (error) {
         toast.error("Error while fetching profile");
       }
     }
     fetchProfile();
+  }, []);
+
+  // Fetching listings based on user
+  useEffect(() => {
+    async function fetchListings() {
+      try {
+        const token = localStorage.getItem("token");
+        const parsedAccess = JSON.parse(token);
+        const decoded = jwtDecode(parsedAccess.access);
+        const user_id = decoded.userid;
+        const payload = { user_id: user_id };
+        const listings = await queryListings(payload);
+        setClassifiedData(listings.data);
+      } catch (error) {
+        console.error("error while fetching listisngs", error);
+        toast.error("Error while fetching your listings");
+      }
+    }
+    fetchListings();
   }, []);
 
   useEffect(() => {}, [isEditing, debugCounter]);
@@ -212,8 +222,8 @@ function ProfilePage() {
               />
             )}
           {activeTab === "events" && <ManageEvents events={events} />}
-          {activeTab === "classifieds" && (
-            <ManageClassifieds classifieds={classifieds} />
+          {activeTab === "classifieds" && classifiedData && (
+            <ManageClassifieds classifieds={classifiedData} />
           )}
         </div>
       </div>
