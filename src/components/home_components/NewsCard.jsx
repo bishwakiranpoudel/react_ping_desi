@@ -15,7 +15,7 @@ const defaultNewsItem = {
 const NewsCard = ({
   title = "Local Buzz",
   item = defaultNewsItem,
-  isMobile = true // Set default value here
+  isMobile = false // Set default value here
 }) => {
   if (isMobile) {
     // Mobile View
