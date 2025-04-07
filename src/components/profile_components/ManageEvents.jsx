@@ -6,17 +6,20 @@ function ManageEvents({ events }) {
       <h1 className="text-2xl font-bold mb-6">Manage Events</h1>
 
       <div className="space-y-4">
-        {events.map((event) => (
+        {events.map(event => (
           <div
             key={event.id}
             className="rounded-lg border border-gray-100 bg-white p-4"
           >
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
               <div className="mb-4 md:mb-0">
-                <h3 className="text-lg font-semibold">{event.title}</h3>
+                <h3 className="text-lg font-semibold">{event.eventName}</h3>
                 <div className="flex items-center text-gray-600 mt-1">
                   <Calendar size={16} className="mr-2" />
-                  <span>{event.date}</span>
+                  <span>
+                    {event.date.split("T")[0]} At{" "}
+                    {event.date.split("T")[1].slice(0, 8)}
+                  </span>
                 </div>
               </div>
 
@@ -24,12 +27,12 @@ function ManageEvents({ events }) {
                 <button className="text-[#7B189F] hover:text-[#6A1587] font-medium">
                   Track Request
                 </button>
-                <div className="w-px h-6 bg-gray-200 hidden md:block"></div>
+                <div className="w-px h-6 bg-gray-200 hidden md:block" />
                 <button className="text-[#7B189F] hover:text-[#6A1587] font-medium flex items-center gap-1">
                   <Pencil size={16} />
                   Edit Event
                 </button>
-                <div className="w-px h-6 bg-gray-200 hidden md:block"></div>
+                <div className="w-px h-6 bg-gray-200 hidden md:block" />
                 <button className="text-[#7B189F] hover:text-[#6A1587] font-medium flex items-center gap-1">
                   <Trash2 size={16} />
                   Delete Event

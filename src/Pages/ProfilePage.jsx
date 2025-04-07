@@ -23,37 +23,7 @@ import { toast } from "react-toastify";
 import { GetProfile } from "../services/profile";
 import { queryListings } from "../services/classified";
 import { jwtDecode } from "jwt-decode";
-
-const events = [
-  {
-    id: 1,
-    title: "Our Gender Reveal Party",
-    date: "13th Nov, 11:00 AM"
-  }
-];
-
-const classifieds = [
-  {
-    id: 1,
-    type: "House",
-    title: "2563 W. Gray st.utica, Pennsylvania 5...",
-    details: {
-      beds: 3,
-      baths: 7
-    },
-    price: 249500,
-    condition: "Used",
-    image: "/placeholder.svg"
-  },
-  {
-    id: 2,
-    type: "Appliance",
-    title: "Play Station 5",
-    price: 420,
-    condition: "New",
-    image: "/placeholder.svg"
-  }
-];
+import { getPersonalEvents } from "../services/events";
 
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -61,6 +31,7 @@ function ProfilePage() {
   const [formData, setFormData] = useState(null);
   const [userData, setUserData] = useState(null);
   const [classifiedData, setClassifiedData] = useState(null);
+  const [eventsData, setEventsData] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
   const [imagePickerOpen, setImagePickerOpen] = useState(false);
@@ -98,6 +69,18 @@ function ProfilePage() {
       }
     }
     fetchListings();
+  }, []);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const eventsResponse = await getPersonalEvents();
+        setEventsData(eventsResponse.message);
+      } catch (error) {
+        toast.error("Error while fetching personal events");
+      }
+    }
+    fetchEvents();
   }, []);
 
   useEffect(() => {}, [isEditing, debugCounter]);
@@ -221,10 +204,12 @@ function ProfilePage() {
                 setDebugCounter={setDebugCounter}
               />
             )}
-          {activeTab === "events" && <ManageEvents events={events} />}
-          {activeTab === "classifieds" && classifiedData && (
-            <ManageClassifieds classifieds={classifiedData} />
-          )}
+          {activeTab === "events" &&
+            eventsData && <ManageEvents events={eventsData} />}
+          {activeTab === "classifieds" &&
+            classifiedData && (
+              <ManageClassifieds classifieds={classifiedData} />
+            )}
         </div>
       </div>
       {imagePickerOpen && (
