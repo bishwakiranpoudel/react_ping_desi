@@ -1,10 +1,10 @@
 import { handleGetRequest, handlePostRequest } from "../hooks/api";
 
 // Service to handle location related requests. No need for error handling as it will be caught with outer component which calls this
-export const fetchMasterCities = async (payload) => {
+export const fetchMasterCities = async (payload=null) => {
   let endpoint="/location/getAllLocationInfo"
-  if (payload.geohash){
-    endpoint+="&geohash="+payload.geohash
+  if (payload && payload.geohash){
+    endpoint+="?geohash="+payload.geohash
 
   }
   const masterCities = await handleGetRequest(

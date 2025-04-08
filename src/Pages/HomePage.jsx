@@ -193,10 +193,10 @@ function HomePage2() {
         setIsProcessing(true);
         const geohash = localStorage.getItem("geohash") ?? "9v6m";
         const payload = { geohash: geohash };
-        const location = await retrieveMasterCity(payload);
+        const location = await fetchMasterCities(payload);
         const eventsResponse = await fetchCommunityEvents({
-          state: location.data.state,
-          city: location.data.city
+          state: location.data[0].state,
+          city: location.data[0].city
         });
         setCommunityEvents(eventsResponse.data);
       } catch (error) {

@@ -310,7 +310,7 @@ const SocialPostCard = ({
     }
   };
 
-  console.log(scoopData, post, images, "testing");
+  //console.log(scoopData, post, images, "testing");
 
   // Function to calculate time ago from post creation date
   const getTimeAgo = (createdDate) => {
