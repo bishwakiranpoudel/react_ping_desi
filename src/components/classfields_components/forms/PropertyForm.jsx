@@ -84,47 +84,38 @@ export function PropertyForm({
         );
       case 2: // Add Title
         return (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Add title of your Property
-              </label>
+          <div className="p-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-medium font-fraunces">
+                Now, let's title your home
+              </h2>
+              <p className="text-sm text-gray-500">
+                Get creative—you can always tweak it later!
+              </p>
+            </div>
+
+            <div className="space-y-4">
               <input
                 id="title"
                 type="text"
-                placeholder="Enter a descriptive title"
+                placeholder="Enter Title Here"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
-            </div>
-            <div className="space-y-2">
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Description
-              </label>
-              <textarea
-                id="description"
-                placeholder="Describe your property"
-                rows={4}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-              />
+
+              {/* Large empty area for description - not visible in the screenshots but included based on original code */}
+              <div className="h-40"></div>
             </div>
           </div>
         );
       case 3: // Key Details
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium">
+          <div className="space-y-5">
+            <h2 className="text-xl font-medium font-fraunces">
               Add key details about your Property
             </h2>
+
             <div className="space-y-2">
               <label
                 htmlFor="propertyType"
@@ -136,7 +127,7 @@ export function PropertyForm({
                 id="propertyType"
                 value={propertyType}
                 onChange={(e) => setPropertyType(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
               >
                 <option value="">Select property type</option>
                 <option value="land">Land</option>
@@ -146,6 +137,7 @@ export function PropertyForm({
                 <option value="other">Other</option>
               </select>
             </div>
+
             <div className="space-y-2">
               <label
                 htmlFor="size"
@@ -159,14 +151,15 @@ export function PropertyForm({
                 placeholder="Enter property size"
                 value={size}
                 onChange={(e) => setSize(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
-            <div className="space-y-2">
+
+            <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 Property Features
               </label>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-3">
                 <div className="flex items-center">
                   <input
                     type="checkbox"
@@ -175,12 +168,9 @@ export function PropertyForm({
                     onChange={(e) =>
                       handleFeatureChange("water", e.target.checked)
                     }
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
-                  <label
-                    htmlFor="water"
-                    className="ml-3 block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="water" className="ml-2 text-sm text-gray-700">
                     Water Access
                   </label>
                 </div>
@@ -192,11 +182,11 @@ export function PropertyForm({
                     onChange={(e) =>
                       handleFeatureChange("electricity", e.target.checked)
                     }
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
                   <label
                     htmlFor="electricity"
-                    className="ml-3 block text-sm font-medium text-gray-700"
+                    className="ml-2 text-sm text-gray-700"
                   >
                     Electricity
                   </label>
@@ -209,12 +199,9 @@ export function PropertyForm({
                     onChange={(e) =>
                       handleFeatureChange("road", e.target.checked)
                     }
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
-                  <label
-                    htmlFor="road"
-                    className="ml-3 block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="road" className="ml-2 text-sm text-gray-700">
                     Road Access
                   </label>
                 </div>
@@ -226,11 +213,11 @@ export function PropertyForm({
                     onChange={(e) =>
                       handleFeatureChange("zoning", e.target.checked)
                     }
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
                   <label
                     htmlFor="zoning"
-                    className="ml-3 block text-sm font-medium text-gray-700"
+                    className="ml-2 text-sm text-gray-700"
                   >
                     Zoning Permits
                   </label>
@@ -241,8 +228,11 @@ export function PropertyForm({
         );
       case 4: // Price
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium">Add price for your Property</h2>
+          <div className="space-y-5 mb-8">
+            <h2 className="text-xl font-medium font-fraunces">
+              Add price for your Property
+            </h2>
+
             <div className="space-y-2">
               <label
                 htmlFor="price"
@@ -256,14 +246,15 @@ export function PropertyForm({
                 placeholder="Enter price"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
+
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
                 Listing Type
               </label>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex items-center">
                   <input
                     type="radio"
@@ -271,12 +262,9 @@ export function PropertyForm({
                     value="sale"
                     checked={listingType === "sale"}
                     onChange={(e) => setListingType(e.target.value)}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                    className="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500"
                   />
-                  <label
-                    htmlFor="sale"
-                    className="ml-3 block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="sale" className="ml-2 text-sm text-gray-700">
                     For Sale
                   </label>
                 </div>
@@ -287,12 +275,9 @@ export function PropertyForm({
                     value="lease"
                     checked={listingType === "lease"}
                     onChange={(e) => setListingType(e.target.value)}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                    className="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500"
                   />
-                  <label
-                    htmlFor="lease"
-                    className="ml-3 block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="lease" className="ml-2 text-sm text-gray-700">
                     For Lease
                   </label>
                 </div>
@@ -303,7 +288,7 @@ export function PropertyForm({
       case 5: // Tell story
         return (
           <div className="space-y-4">
-            <h2 className="text-lg font-medium">
+            <h2 className="text-xl font-medium font-fraunces">
               Tell the story behind your Property
             </h2>
             <p className="text-sm text-gray-500">
@@ -324,7 +309,7 @@ export function PropertyForm({
                 rows={6}
                 value={story}
                 onChange={(e) => setStory(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
           </div>

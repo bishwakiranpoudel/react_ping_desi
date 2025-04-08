@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Home,
   Car,
@@ -9,9 +8,12 @@ import {
   MapPin,
   Phone,
   Mail,
-  DollarSign,
   Bath,
   BedDouble,
+  ChevronLeft,
+  Share2,
+  Heart,
+  ExternalLink,
 } from "lucide-react";
 
 export function ClassifiedPreview({ formData, category }) {
@@ -53,35 +55,47 @@ export function ClassifiedPreview({ formData, category }) {
     switch (category.toLowerCase()) {
       case "house":
         return (
-          <div className="flex flex-wrap gap-3 mt-2">
+          <div className="flex flex-wrap gap-6 mt-6 border-t border-b border-gray-200 py-4">
             {formData.bedrooms && (
-              <div className="flex items-center gap-1 border border-gray-300 rounded-md p-1 text-gray-600">
-                <BedDouble className="h-3 w-3" />
-                {formData.bedrooms}{" "}
-                {Number.parseInt(formData.bedrooms) === 1
-                  ? "Bedroom"
-                  : "Bedrooms"}
+              <div className="flex flex-col items-center">
+                <div className="flex items-center gap-2">
+                  <BedDouble className="h-5 w-5 text-gray-500" />
+                  <span className="text-xl font-semibold">
+                    {formData.bedrooms}
+                  </span>
+                </div>
+                <span className="text-xs text-gray-500 mt-1">
+                  {Number.parseInt(formData.bedrooms) === 1
+                    ? "Bedroom"
+                    : "Bedrooms"}
+                </span>
               </div>
             )}
             {formData.bathrooms && (
-              <div className="flex items-center gap-1 border border-gray-300 rounded-md p-1 text-gray-600">
-                <Bath className="h-3 w-3" />
-                {formData.bathrooms}{" "}
-                {formData.bathrooms === "1" ? "Bathroom" : "Bathrooms"}
+              <div className="flex flex-col items-center">
+                <div className="flex items-center gap-2">
+                  <Bath className="h-5 w-5 text-gray-500" />
+                  <span className="text-xl font-semibold">
+                    {formData.bathrooms}
+                  </span>
+                </div>
+                <span className="text-xs text-gray-500 mt-1">
+                  {formData.bathrooms === "1" ? "Bathroom" : "Bathrooms"}
+                </span>
               </div>
             )}
             {formData.propertyType && (
-              <div className="flex items-center gap-1 border border-gray-300 rounded-md p-1 text-gray-600">
-                <Home className="h-3 w-3" />
-                {formData.propertyType.charAt(0).toUpperCase() +
-                  formData.propertyType.slice(1)}
-              </div>
-            )}
-            {formData.listingType && (
-              <div className="bg-[#f2e8f5] text-[#7b189f] p-1 rounded-md">
-                For{" "}
-                {formData.listingType.charAt(0).toUpperCase() +
-                  formData.listingType.slice(1)}
+              <div className="flex flex-col items-center">
+                <div className="flex items-center gap-2">
+                  <Home className="h-5 w-5 text-gray-500" />
+                  <span className="text-sm font-medium">
+                    {formData.propertyType.charAt(0).toUpperCase() +
+                      formData.propertyType.slice(1)}
+                  </span>
+                </div>
+                <span className="text-xs text-gray-500 mt-1">
+                  Property Type
+                </span>
               </div>
             )}
           </div>
@@ -93,111 +107,211 @@ export function ClassifiedPreview({ formData, category }) {
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-lg font-medium">Preview your classified</h2>
-      <p className="text-sm text-gray-500">
-        Here's how your classified will look when published. Review all details
-        before posting.
-      </p>
+    <div className="max-w-3xl mx-auto bg-white rounded-lg overflow-hidden">
+      {/* Header */}
+      <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+        <h2 className="text-xl font-bold font-fraunces">
+          Here's How Your Listing Looks!
+        </h2>
+        <button className="text-gray-500 hover:text-gray-700">
+          <span className="sr-only">Close</span>
+          &times;
+        </button>
+      </div>
 
-      <div className="overflow-hidden rounded-md shadow-md">
-        <div className="relative w-full h-64">
+      {/* Main content */}
+      <div className="overflow-y-auto max-h-[80vh]">
+        {/* Cover image */}
+        <div className="relative w-full h-[300px] md:h-[400px]">
           <img
             src={coverImage || "/placeholder.svg"}
             alt={formData.title || "Classified image"}
             className="w-full h-full object-cover"
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-            <div className="flex items-center gap-2">
-              <div className="bg-[#7b189f] text-white p-1 rounded-md">
-                {category}
-              </div>
-              {formData.price && (
-                <div className="bg-white text-black p-1 rounded-md flex items-center gap-1">
-                  <DollarSign className="h-3 w-3" />
-                  {formatPrice(formData.price)}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
 
-        <div className="p-4">
-          <div className="flex items-center gap-2">
-            {getCategoryIcon()}
-            <h3 className="font-medium">
-              {formData.title || `${category} Listing`}
-            </h3>
-          </div>
-          <div className="flex items-center gap-1 text-gray-600 mt-1">
-            <MapPin className="h-3 w-3" />
-            {formData.city && formData.state
-              ? `${formData.city}, ${formData.state}`
-              : "Location not specified"}
+          {/* Action buttons */}
+          <div className="absolute top-4 right-4 flex gap-2">
+            <button className="bg-white p-2 rounded-full shadow-md">
+              <Share2 className="h-5 w-5 text-gray-700" />
+            </button>
+            <button className="bg-white p-2 rounded-full shadow-md">
+              <Heart className="h-5 w-5 text-gray-700" />
+            </button>
           </div>
 
-          {renderCategoryDetails()}
-        </div>
-
-        <div className="p-4 space-y-4">
-          {formData.description && (
-            <div>
-              <h3 className="font-medium mb-1">Description</h3>
-              <p className="text-sm text-gray-700">{formData.description}</p>
+          {/* Category and price tag */}
+          {formData.listingType && (
+            <div className="absolute top-4 left-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+              For{" "}
+              {formData.listingType.charAt(0).toUpperCase() +
+                formData.listingType.slice(1)}
             </div>
           )}
+        </div>
 
-          {formData.story && (
-            <div>
-              <h3 className="font-medium mb-1">Seller's Story</h3>
-              <p className="text-sm text-gray-700">{formData.story}</p>
-            </div>
-          )}
-
-          <hr className="border-gray-300" />
-
-          <div>
-            <h3 className="font-medium mb-2">Contact Information</h3>
-            <div className="space-y-1">
-              {formData.contactName && (
-                <p className="text-sm font-medium">{formData.contactName}</p>
-              )}
-              {formData.contactPhone && (
-                <p className="text-sm flex items-center gap-1">
-                  <Phone className="h-3 w-3" />
-                  {formData.contactPhone}
-                </p>
-              )}
-              {formData.contactEmail && (
-                <p className="text-sm flex items-center gap-1">
-                  <Mail className="h-3 w-3" />
-                  {formData.contactEmail}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-4 gap-2 mt-4">
-            {formData.images?.slice(0, 4).map((img, index) => (
+        {/* Thumbnail gallery */}
+        {formData.images && formData.images.length > 1 && (
+          <div className="flex overflow-x-auto gap-2 p-2 bg-gray-50">
+            {formData.images.map((img, index) => (
               <div
-                key={img.id}
-                className="relative aspect-square rounded-md overflow-hidden"
+                key={img.id || index}
+                className="flex-shrink-0 w-20 h-20 rounded-md overflow-hidden"
               >
                 <img
                   src={img.url || "/placeholder.svg"}
                   alt={`Image ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
-                {index === 3 && formData.images.length > 4 && (
-                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white">
-                    +{formData.images.length - 4} more
-                  </div>
-                )}
               </div>
             ))}
           </div>
+        )}
+
+        {/* Title and location */}
+        <div className="p-4">
+          <div className="flex items-center gap-2 text-purple-700 text-sm font-medium mb-1">
+            {getCategoryIcon()}
+            <span>{category}</span>
+          </div>
+
+          <h1 className="text-2xl font-bold mb-2">
+            {formData.title || `${category} Listing`}
+          </h1>
+
+          <div className="flex items-center gap-1 text-gray-600">
+            <MapPin className="h-4 w-4" />
+            <span>
+              {formData.address ||
+                (formData.city && formData.state
+                  ? `${formData.address || ""}, ${formData.city}, ${
+                      formData.state
+                    } ${formData.zip || ""}`
+                  : "Location not specified")}
+            </span>
+          </div>
+
+          {/* Price */}
+          {formData.price && (
+            <div className="mt-3 text-2xl font-bold text-purple-700">
+              {formatPrice(formData.price)}
+            </div>
+          )}
+
+          {/* Category-specific details */}
+          {renderCategoryDetails()}
+        </div>
+
+        {/* Collapsible sections */}
+        <div className="px-4 space-y-4">
+          {/* Reason for selling */}
+          {formData.reasonForSelling && (
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="p-4 flex items-center justify-between bg-gray-50">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">Reason For Selling</span>
+                </div>
+                <ChevronLeft className="h-5 w-5 transform rotate-90" />
+              </div>
+              <div className="p-4">
+                <p className="text-gray-700">{formData.reasonForSelling}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Description */}
+          {formData.description && (
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="p-4 flex items-center justify-between bg-gray-50">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">More Description</span>
+                </div>
+                <ChevronLeft className="h-5 w-5 transform rotate-90" />
+              </div>
+              <div className="p-4">
+                <p className="text-gray-700">{formData.description}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Seller's story */}
+          {formData.story && (
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="p-4 flex items-center justify-between bg-gray-50">
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">Seller's Story</span>
+                </div>
+                <ChevronLeft className="h-5 w-5 transform rotate-90" />
+              </div>
+              <div className="p-4">
+                <p className="text-gray-700">{formData.story}</p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Seller info */}
+        <div className="p-4 mt-4">
+          <div className="border border-gray-200 rounded-lg">
+            <div className="p-4">
+              <h3 className="font-medium text-gray-900 mb-3">Seller</h3>
+
+              {/* Property address */}
+              {(formData.address || formData.city) && (
+                <div className="mb-4">
+                  <h4 className="text-sm font-medium text-gray-500 mb-1">
+                    Property
+                  </h4>
+                  <p className="text-gray-900">
+                    {formData.address || ""}
+                    {formData.address &&
+                      (formData.city || formData.state) &&
+                      ", "}
+                    {formData.city || ""}
+                    {formData.city && formData.state && ", "}
+                    {formData.state || ""} {formData.zip || ""}
+                  </p>
+                </div>
+              )}
+
+              {/* Contact info */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="text-sm font-medium text-gray-500 mb-1">
+                    Contact Seller
+                  </h4>
+                  {formData.contactName && (
+                    <p className="text-gray-900 font-medium">
+                      {formData.contactName}
+                    </p>
+                  )}
+                  {formData.contactPhone && (
+                    <p className="text-gray-700 flex items-center gap-1 mt-1">
+                      <Phone className="h-4 w-4" />
+                      {formData.contactPhone}
+                    </p>
+                  )}
+                  {formData.contactEmail && (
+                    <p className="text-gray-700 flex items-center gap-1 mt-1">
+                      <Mail className="h-4 w-4" />
+                      {formData.contactEmail}
+                    </p>
+                  )}
+                </div>
+
+                {/* Map link */}
+                {(formData.address || formData.city) && (
+                  <button className="text-purple-700 flex items-center gap-1 text-sm">
+                    <ExternalLink className="h-4 w-4" />
+                    View in map
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Footer with action buttons */}
     </div>
   );
 }

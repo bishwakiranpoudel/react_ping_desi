@@ -39,6 +39,7 @@ export const queryListings = async (userInput = {}) => {
     geohash: localStorage.getItem("geohash") || "9v6m"
   };
 
+  if (userInput.user_id) payload.user_id = userInput.user_id;
   if (userInput.query) payload.query = userInput.query;
   if (userInput.category) payload.category = userInput.category;
   if (userInput.sort_by) payload.sort_by = userInput.sort_by;

@@ -1,9 +1,10 @@
 import React from "react";
 
 const VehicleCard = ({
-  image,
+  coverPhoto,
   title,
   price,
+  details,
   mileage,
   location,
   engine,
@@ -12,8 +13,12 @@ const VehicleCard = ({
   badgeClassName = "",
   titleClassName = "",
   priceClassName = "",
-  locationClassName = "",
+  locationClassName = ""
 }) => {
+  const detailsMap = details.reduce((acc, item) => {
+    acc[item.key] = item.value;
+    return acc;
+  }, {});
   return (
     <div
       className={`col-span-1 flex justify-center items-center w-[244px] h-[280px] rounded-xl bg-white shadow-sm ${className}`}
@@ -21,12 +26,12 @@ const VehicleCard = ({
       <div className="w-[244px] h-[280px] flex flex-col">
         <div className="relative w-[244px] h-[180px]">
           <img
-            src={image || "/placeholder.svg"}
+            src={coverPhoto || "/placeholder.svg"}
             alt={imageAlt || title}
             className="w-full h-full object-cover"
           />
           <div className="absolute top-3 right-3 bg-white/90 text-black font-medium py-1 px-2 rounded-lg">
-            {mileage} Miles
+            {detailsMap.kmRan} KM
           </div>
         </div>
         <div className="p-3 h-[100px] flex flex-col">

@@ -1,8 +1,10 @@
 import React from "react";
 
 const PropertyCard = ({
-  image,
+  title,
+  coverPhoto,
   address,
+  details,
   price,
   beds,
   baths,
@@ -14,16 +16,20 @@ const PropertyCard = ({
   addressClassName = "",
   detailsClassName = "",
   priceClassName = "",
-  distanceClassName = "",
+  distanceClassName = ""
 }) => {
+  const detailsMap = details.reduce((acc, item) => {
+    acc[item.key] = item.value;
+    return acc;
+  }, {});
   return (
     <div
-      className={`col-span-1 flex justify-center items-center w-[244px] h-[280px] rounded-xl bg-white shadow-sm ${className}`}
+      className={`col-span-1 flex justify-center items-center w-[244px] h-[350px] rounded-xl bg-white shadow-sm ${className}`}
     >
       <div className="w-[244px] h-[280px] flex flex-col">
         <div className="relative w-[244px] h-[180px]">
           <img
-            src={image || "/placeholder.svg?height=400&width=600"}
+            src={coverPhoto || "/placeholder.svg?height=400&width=600"}
             alt={imageAlt || address}
             className="w-full h-full object-cover"
           />
@@ -33,25 +39,25 @@ const PropertyCard = ({
               alt="Square Foot"
               className="w-4 h-4 mr-1"
             />
-            {sqft} sq.ft.
+            {detailsMap.squareFoot} sq.ft.
           </div>
         </div>
         <div className="p-3 h-[100px] flex flex-col">
           <h3
             className={`font-medium text-base mb-1 line-clamp-1 text-gray-900 ${addressClassName}`}
           >
-            {address}
+            {title}
           </h3>
           <div
             className={`flex items-center gap-2 text-sm text-gray-500 mb-1 ${detailsClassName}`}
           >
-            <div className="flex items-center gap-1">
+            <div className="flex row items-center gap-1">
               <img src="/images/bed-icon.svg" alt="Bed" className="w-4 h-4" />
-              <span>{beds} bed</span>
+              <span>{detailsMap.bedNo} bed</span>
             </div>
             <div className="flex items-center gap-1">
               <img src="/images/bath-icon.svg" alt="Bath" className="w-4 h-4" />
-              <span>{baths} bath</span>
+              <span>{detailsMap.bathNo} bath</span>
             </div>
           </div>
           <div className="mt-auto flex items-center justify-between">

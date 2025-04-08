@@ -13,9 +13,7 @@ function HomeRightSidebar() {
     async function fetchNews() {
       try {
         const news = await getNews();
-        const onePerCategory = news.map(item => item.news[0]); // get first news from each
-        console.log("news", onePerCategory);
-        setNewsData(onePerCategory);
+        setNewsData(news[0].news.slice(0, 4));
       } catch (error) {
         toast.error("Error while fetching News");
       }
@@ -55,7 +53,6 @@ function HomeRightSidebar() {
             {newsData.map((item, index) => (
               <NewsCard key={index} item={item} />
             ))}
-
           </div>
         </div>
       </div>

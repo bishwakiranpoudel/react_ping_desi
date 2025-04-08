@@ -78,52 +78,48 @@ export function AutoForm({
         );
       case 2: // Add Title
         return (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Add title of your Vehicle
-              </label>
+          <div className="p-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-medium font-fraunces">
+                Now, let's title your Vehicle
+              </h2>
+              <p className="text-sm text-gray-500">
+                Get creative—you can always tweak it later!
+              </p>
+            </div>
+
+            <div className="space-y-5">
               <input
                 id="title"
                 type="text"
-                placeholder="Enter a descriptive title"
+                placeholder="Enter Title Here"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
-            </div>
-            <div className="space-y-2">
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Description
-              </label>
+
               <textarea
                 id="description"
                 placeholder="Describe your vehicle"
                 rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
           </div>
         );
       case 3: // Key Details
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium">
+          <div className="space-y-5">
+            <h2 className="text-xl font-medium font-fraunces">
               Add key details about your Vehicle
             </h2>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 Condition
               </label>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex items-center">
                   <input
                     type="radio"
@@ -131,7 +127,7 @@ export function AutoForm({
                     value="new"
                     checked={condition === "new"}
                     onChange={(e) => setCondition(e.target.value)}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                    className="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500"
                   />
                   <label
                     htmlFor="new"
@@ -147,7 +143,7 @@ export function AutoForm({
                     value="preowned"
                     checked={condition === "preowned"}
                     onChange={(e) => setCondition(e.target.value)}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                    className="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500"
                   />
                   <label
                     htmlFor="preowned"
@@ -158,7 +154,7 @@ export function AutoForm({
                 </div>
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="make"
                 className="block text-sm font-medium text-gray-700"
@@ -171,10 +167,10 @@ export function AutoForm({
                 placeholder="Enter vehicle make"
                 value={make}
                 onChange={(e) => setMake(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="model"
                 className="block text-sm font-medium text-gray-700"
@@ -187,11 +183,11 @@ export function AutoForm({
                 placeholder="Enter vehicle model"
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label
                   htmlFor="year"
                   className="block text-sm font-medium text-gray-700"
@@ -204,10 +200,10 @@ export function AutoForm({
                   placeholder="Enter year"
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
-                  className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <label
                   htmlFor="kilometers"
                   className="block text-sm font-medium text-gray-700"
@@ -220,11 +216,11 @@ export function AutoForm({
                   placeholder="Enter kilometers"
                   value={kilometers}
                   onChange={(e) => setKilometers(e.target.value)}
-                  className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                  className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="engineType"
                 className="block text-sm font-medium text-gray-700"
@@ -235,7 +231,7 @@ export function AutoForm({
                 id="engineType"
                 value={engineType}
                 onChange={(e) => setEngineType(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="">Select engine type</option>
                 <option value="petrol">Petrol</option>
@@ -249,9 +245,11 @@ export function AutoForm({
         );
       case 4: // Price
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium">Add price for your Vehicle</h2>
-            <div className="space-y-2">
+          <div className="space-y-5">
+            <h2 className="text-xl font-medium font-fraunces">
+              Add price for your Vehicle
+            </h2>
+            <div className="space-y-3">
               <label
                 htmlFor="price"
                 className="block text-sm font-medium text-gray-700"
@@ -264,15 +262,15 @@ export function AutoForm({
                 placeholder="Enter price"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
           </div>
         );
       case 5: // Tell story
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium">
+          <div className="space-y-5">
+            <h2 className="text-xl font-medium font-fraunces">
               Tell the story behind your Vehicle
             </h2>
             <p className="text-sm text-gray-500">
@@ -280,7 +278,7 @@ export function AutoForm({
               interesting details that might help buyers connect with your
               vehicle.
             </p>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="story"
                 className="block text-sm font-medium text-gray-700"
@@ -293,7 +291,7 @@ export function AutoForm({
                 rows={6}
                 value={story}
                 onChange={(e) => setStory(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
           </div>
