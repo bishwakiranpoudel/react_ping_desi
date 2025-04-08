@@ -14,14 +14,17 @@ export const Button = React.forwardRef(
     const Comp = asChild ? React.Fragment : "button";
 
     const variantClasses = {
-      default: "bg-primary text-primary-foreground hover:bg-primary/90",
+      default:
+        "bg-[#7b189f] text-primary-foreground hover:bg-[#7b189f]/90 font-afacad ",
       destructive:
-        "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        "bg-destructive text-destructive-foreground hover:bg-destructive/90 font-afacad",
       outline:
-        "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-      secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-      ghost: "bg-transparent hover:bg-accent hover:text-accent-foreground",
-      link: "bg-transparent underline-offset-4 hover:underline text-primary",
+        "border border-bg-[#7b189f] border-input bg-background hover:bg-accent hover:text-accent-foreground font-afacad",
+      secondary:
+        "bg-secondary text-secondary-foreground hover:bg-secondary/80 font-afacad",
+      ghost:
+        "bg-transparent hover:bg-accent hover:text-accent-foreground font-afacad",
+      link: "bg-transparent underline-offset-4 hover:underline text-primary font-afacad",
     };
 
     const sizeClasses = {

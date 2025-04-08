@@ -86,48 +86,44 @@ export function FurnitureForm({
         );
       case 2: // Add Title
         return (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Add title of your Furniture
-              </label>
+          <div className="p-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-medium font-fraunces">
+                Now, let's title your Furniture
+              </h2>
+              <p className="text-sm text-gray-500">
+                Get creative—you can always tweak it later!
+              </p>
+            </div>
+
+            <div className="space-y-5">
               <input
                 id="title"
                 type="text"
-                placeholder="Enter a descriptive title"
+                placeholder="Enter Title Here"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
-            </div>
-            <div className="space-y-2">
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Description
-              </label>
+
               <textarea
                 id="description"
                 placeholder="Describe your furniture"
                 rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
           </div>
         );
       case 3: // Key Details
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium">
+          <div className="space-y-5">
+            <h2 className="text-xl font-medium font-fraunces">
               Add key details about your Furniture
             </h2>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="furnitureType"
                 className="block text-sm font-medium text-gray-700"
@@ -138,7 +134,7 @@ export function FurnitureForm({
                 id="furnitureType"
                 value={furnitureType}
                 onChange={(e) => setFurnitureType(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="">Select furniture type</option>
                 <option value="sofa">Sofa/Couch</option>
@@ -151,7 +147,7 @@ export function FurnitureForm({
                 <option value="other">Other</option>
               </select>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="material"
                 className="block text-sm font-medium text-gray-700"
@@ -162,7 +158,7 @@ export function FurnitureForm({
                 id="material"
                 value={material}
                 onChange={(e) => setMaterial(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="">Select primary material</option>
                 <option value="wood">Wood</option>
@@ -174,7 +170,7 @@ export function FurnitureForm({
                 <option value="other">Other</option>
               </select>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="age"
                 className="block text-sm font-medium text-gray-700"
@@ -185,7 +181,7 @@ export function FurnitureForm({
                 id="age"
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="">Select age</option>
                 <option value="0-1">Less than 1 year</option>
@@ -200,11 +196,11 @@ export function FurnitureForm({
         );
       case 4: // Price
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium">
+          <div className="space-y-5">
+            <h2 className="text-xl font-medium font-fraunces">
               Add price and condition for your Furniture
             </h2>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="price"
                 className="block text-sm font-medium text-gray-700"
@@ -217,14 +213,14 @@ export function FurnitureForm({
                 placeholder="Enter price"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 Condition
               </label>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex items-center">
                   <input
                     type="radio"
@@ -232,7 +228,7 @@ export function FurnitureForm({
                     value="new"
                     checked={condition === "new"}
                     onChange={(e) => setCondition(e.target.value)}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                    className="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500"
                   />
                   <label
                     htmlFor="new"
@@ -248,7 +244,7 @@ export function FurnitureForm({
                     value="like-new"
                     checked={condition === "like-new"}
                     onChange={(e) => setCondition(e.target.value)}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                    className="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500"
                   />
                   <label
                     htmlFor="like-new"
@@ -264,7 +260,7 @@ export function FurnitureForm({
                     value="good"
                     checked={condition === "good"}
                     onChange={(e) => setCondition(e.target.value)}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                    className="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500"
                   />
                   <label
                     htmlFor="good"
@@ -280,7 +276,7 @@ export function FurnitureForm({
                     value="fair"
                     checked={condition === "fair"}
                     onChange={(e) => setCondition(e.target.value)}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                    className="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500"
                   />
                   <label
                     htmlFor="fair"
@@ -291,7 +287,7 @@ export function FurnitureForm({
                 </div>
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 Features
               </label>
@@ -304,7 +300,7 @@ export function FurnitureForm({
                     onChange={(e) =>
                       handleFeatureChange("assembled", e.target.checked)
                     }
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
                   <label
                     htmlFor="assembled"
@@ -321,7 +317,7 @@ export function FurnitureForm({
                     onChange={(e) =>
                       handleFeatureChange("delivery", e.target.checked)
                     }
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
                   <label
                     htmlFor="delivery"
@@ -338,7 +334,7 @@ export function FurnitureForm({
                     onChange={(e) =>
                       handleFeatureChange("pet-free", e.target.checked)
                     }
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
                   <label
                     htmlFor="pet-free"
@@ -355,7 +351,7 @@ export function FurnitureForm({
                     onChange={(e) =>
                       handleFeatureChange("smoke-free", e.target.checked)
                     }
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
                   <label
                     htmlFor="smoke-free"
@@ -370,8 +366,8 @@ export function FurnitureForm({
         );
       case 5: // Tell story
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium">
+          <div className="space-y-5">
+            <h2 className="text-xl font-medium font-fraunces">
               Tell the story behind your Furniture
             </h2>
             <p className="text-sm text-gray-500">
@@ -379,7 +375,7 @@ export function FurnitureForm({
               interesting details that might help buyers connect with your
               furniture.
             </p>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="story"
                 className="block text-sm font-medium text-gray-700"
@@ -392,7 +388,7 @@ export function FurnitureForm({
                 rows={6}
                 value={story}
                 onChange={(e) => setStory(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
           </div>

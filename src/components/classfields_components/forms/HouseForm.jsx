@@ -86,48 +86,44 @@ export function HouseForm({
         );
       case 2: // Add Title
         return (
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <label
-                htmlFor="title"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Add title of your House
-              </label>
+          <div className="p-6">
+            <div className="mb-6">
+              <h2 className="text-xl font-medium font-fraunces">
+                Now, let's title your House
+              </h2>
+              <p className="text-sm text-gray-500">
+                Get creative—you can always tweak it later!
+              </p>
+            </div>
+
+            <div className="space-y-5">
               <input
                 id="title"
                 type="text"
-                placeholder="Enter a descriptive title"
+                placeholder="Enter Title Here"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
-            </div>
-            <div className="space-y-2">
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Description
-              </label>
+
               <textarea
                 id="description"
                 placeholder="Describe your property"
                 rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
           </div>
         );
       case 3: // Key Details
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium">
+          <div className="space-y-5">
+            <h2 className="text-xl font-medium font-fraunces">
               Add key details about your House
             </h2>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="propertyType"
                 className="block text-sm font-medium text-gray-700"
@@ -138,7 +134,7 @@ export function HouseForm({
                 id="propertyType"
                 value={propertyType}
                 onChange={(e) => setPropertyType(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="">Select property type</option>
                 <option value="apartment">Apartment</option>
@@ -147,7 +143,7 @@ export function HouseForm({
                 <option value="townhouse">Townhouse</option>
               </select>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="bedrooms"
                 className="block text-sm font-medium text-gray-700"
@@ -158,7 +154,7 @@ export function HouseForm({
                 id="bedrooms"
                 value={bedrooms}
                 onChange={(e) => setBedrooms(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="">Select number of bedrooms</option>
                 <option value="1">1</option>
@@ -168,7 +164,7 @@ export function HouseForm({
                 <option value="5+">5+</option>
               </select>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="bathrooms"
                 className="block text-sm font-medium text-gray-700"
@@ -179,7 +175,7 @@ export function HouseForm({
                 id="bathrooms"
                 value={bathrooms}
                 onChange={(e) => setBathrooms(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               >
                 <option value="">Select number of bathrooms</option>
                 <option value="1">1</option>
@@ -193,9 +189,11 @@ export function HouseForm({
         );
       case 4: // Price
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium">Add price for your House</h2>
-            <div className="space-y-2">
+          <div className="space-y-5">
+            <h2 className="text-xl font-medium font-fraunces">
+              Add price for your House
+            </h2>
+            <div className="space-y-3">
               <label
                 htmlFor="price"
                 className="block text-sm font-medium text-gray-700"
@@ -208,14 +206,14 @@ export function HouseForm({
                 placeholder="Enter price"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 Listing Type
               </label>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <div className="flex items-center">
                   <input
                     type="radio"
@@ -223,7 +221,7 @@ export function HouseForm({
                     value="rent"
                     checked={listingType === "rent"}
                     onChange={(e) => setListingType(e.target.value)}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                    className="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500"
                   />
                   <label
                     htmlFor="rent"
@@ -239,7 +237,7 @@ export function HouseForm({
                     value="sale"
                     checked={listingType === "sale"}
                     onChange={(e) => setListingType(e.target.value)}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
+                    className="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500"
                   />
                   <label
                     htmlFor="sale"
@@ -250,7 +248,7 @@ export function HouseForm({
                 </div>
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="block text-sm font-medium text-gray-700">
                 Amenities
               </label>
@@ -263,7 +261,7 @@ export function HouseForm({
                     onChange={(e) =>
                       handleAmenityChange("parking", e.target.checked)
                     }
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
                   <label
                     htmlFor="parking"
@@ -281,7 +279,7 @@ export function HouseForm({
                     onChange={(e) =>
                       handleAmenityChange("ac", e.target.checked)
                     }
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
                   <label
                     htmlFor="ac"
@@ -299,7 +297,7 @@ export function HouseForm({
                     onChange={(e) =>
                       handleAmenityChange("furnished", e.target.checked)
                     }
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
                   <label
                     htmlFor="furnished"
@@ -317,7 +315,7 @@ export function HouseForm({
                     onChange={(e) =>
                       handleAmenityChange("pets", e.target.checked)
                     }
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
+                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
                   />
                   <label
                     htmlFor="pets"
@@ -332,8 +330,8 @@ export function HouseForm({
         );
       case 5: // Tell story
         return (
-          <div className="space-y-4">
-            <h2 className="text-lg font-medium">
+          <div className="space-y-5">
+            <h2 className="text-xl font-medium font-fraunces">
               Tell the story behind your House
             </h2>
             <p className="text-sm text-gray-500">
@@ -341,7 +339,7 @@ export function HouseForm({
               interesting details that might help buyers connect with your
               property.
             </p>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label
                 htmlFor="story"
                 className="block text-sm font-medium text-gray-700"
@@ -354,7 +352,7 @@ export function HouseForm({
                 rows={6}
                 value={story}
                 onChange={(e) => setStory(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
               />
             </div>
           </div>

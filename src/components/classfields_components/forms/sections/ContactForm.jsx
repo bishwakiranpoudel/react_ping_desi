@@ -31,12 +31,16 @@ export function ContactForm({ formData, updateFormData }) {
   };
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-lg font-medium">Add your contact details</h2>
-      <p className="text-sm text-gray-500">
-        These details will be visible to potential buyers who are interested in
-        your listing.
-      </p>
+    <div className="space-y-5">
+      <div>
+        <h2 className="text-xl font-medium font-fraunces">
+          Add your contact details
+        </h2>
+        <p className="text-sm text-gray-500 mt-1">
+          These details will be visible to potential buyers who are interested
+          in your listing.
+        </p>
+      </div>
 
       <div className="space-y-4">
         <div className="space-y-2">
@@ -52,7 +56,7 @@ export function ContactForm({ formData, updateFormData }) {
             placeholder="Enter your full name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="block w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
         </div>
 
@@ -70,7 +74,7 @@ export function ContactForm({ formData, updateFormData }) {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="block w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <div className="space-y-2">
@@ -86,7 +90,7 @@ export function ContactForm({ formData, updateFormData }) {
               placeholder="Enter your phone number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="block w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
         </div>
@@ -102,7 +106,7 @@ export function ContactForm({ formData, updateFormData }) {
             id="preferred-contact"
             value={preferredContact}
             onChange={(e) => setPreferredContact(e.target.value)}
-            className="block w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
           >
             <option value="">Select preferred contact method</option>
             <option value="email">Email</option>
@@ -124,7 +128,7 @@ export function ContactForm({ formData, updateFormData }) {
             placeholder="Enter your address"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            className="block w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
         </div>
 
@@ -142,7 +146,7 @@ export function ContactForm({ formData, updateFormData }) {
               placeholder="Enter city"
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="block w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
           <div className="space-y-2">
@@ -158,7 +162,7 @@ export function ContactForm({ formData, updateFormData }) {
               placeholder="Enter state"
               value={state}
               onChange={(e) => setState(e.target.value)}
-              className="block w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
         </div>
@@ -176,7 +180,7 @@ export function ContactForm({ formData, updateFormData }) {
             placeholder="Enter zip code"
             value={zip}
             onChange={(e) => setZip(e.target.value)}
-            className="block w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
         </div>
 
@@ -186,9 +190,9 @@ export function ContactForm({ formData, updateFormData }) {
             type="checkbox"
             checked={agreeTerms}
             onChange={(e) => setAgreeTerms(e.target.checked)}
-            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+            className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
           />
-          <label htmlFor="terms" className="text-sm">
+          <label htmlFor="terms" className="text-sm text-gray-700">
             I agree to the terms and conditions and privacy policy
           </label>
         </div>
