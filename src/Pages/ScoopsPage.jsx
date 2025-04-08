@@ -9,6 +9,7 @@ import FloatingActionButton from "../components/scoops_components/FAB";
 import HomeRightSidebar from "../components/home_components/HomeRightSidebar";
 import { postScoops } from "../services/scoops";
 import { toast } from "react-toastify";
+import SocialPostCard from "../components/home_components/SocialPostCard";
 
 function ScoopsPage() {
   const isMobile = useIsMobile();
@@ -67,7 +68,6 @@ function ScoopsPage() {
 
       setShowMobileCreate(false);
     } catch (error) {
-      console.error("Error posting scoop:", error);
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
