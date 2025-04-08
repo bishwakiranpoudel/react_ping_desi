@@ -23,7 +23,7 @@ CardHeader.displayName = "CardHeader";
 
 const CardTitle = React.forwardRef(({ className, ...props }, ref) => {
   const classes = [
-    "text-2xl font-semibold leading-none tracking-tight",
+    "text-2xl font-semibold leading-none tracking-tight font-fraunces",
     className,
   ]
     .filter(Boolean)
@@ -34,7 +34,7 @@ const CardTitle = React.forwardRef(({ className, ...props }, ref) => {
 CardTitle.displayName = "CardTitle";
 
 const CardDescription = React.forwardRef(({ className, ...props }, ref) => {
-  const classes = ["text-sm text-muted-foreground", className]
+  const classes = ["text-sm text-muted-foreground font-afacad", className]
     .filter(Boolean)
     .join(" ");
 
@@ -50,7 +50,7 @@ const CardContent = React.forwardRef(({ className, ...props }, ref) => {
 CardContent.displayName = "CardContent";
 
 const CardFooter = React.forwardRef(({ className, ...props }, ref) => {
-  const classes = ["flex items-center p-6 pt-0", className]
+  const classes = ["flex items-center p-6 pt-6 font-afacad", className]
     .filter(Boolean)
     .join(" ");
 

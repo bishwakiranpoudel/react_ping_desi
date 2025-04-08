@@ -1,71 +1,71 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { CategorySelector } from "./CategorySelector"
-import { HouseForm } from "./forms/HouseForm"
-import { AutoForm } from "./forms/AutoForm"
-import { FurnitureForm } from "./forms/FurnitureForm"
-import { ElectronicsForm } from "./forms/ElectronicsForm"
-import { ApplianceForm } from "./forms/ApplianceForm"
-import { PropertyForm } from "./forms/PropertyForm"
-import { SubleaseForm } from "./forms/SubleaseForm"
-import { ApparelForm } from "./forms/ApparelForm"
+import { useState } from "react";
+import { CategorySelector } from "./CategorySelector";
+import { HouseForm } from "./forms/HouseForm";
+import { AutoForm } from "./forms/AutoForm";
+import { FurnitureForm } from "./forms/FurnitureForm";
+import { ElectronicsForm } from "./forms/ElectronicsForm";
+import { ApplianceForm } from "./forms/ApplianceForm";
+import { PropertyForm } from "./forms/PropertyForm";
+import { SubleaseForm } from "./forms/SubleaseForm";
+import { ApparelForm } from "./forms/ApparelForm";
 
 export function ClassifiedContent({ onClose }) {
-  const [category, setCategory] = useState(null)
-  const [step, setStep] = useState(1)
-  const [formData, setFormData] = useState({})
+  const [category, setCategory] = useState(null);
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({});
 
   // All categories follow the same 7-step flow
-  const maxSteps = 7
+  const maxSteps = 7;
 
   const handleCategorySelect = (selected) => {
-    setCategory(selected)
+    setCategory(selected);
     // Start directly at the image upload step (which is now step 1)
-    setStep(1)
+    setStep(1);
     setFormData({
       category: selected,
-    })
-  }
+    });
+  };
 
   const handleNext = () => {
     if (step < maxSteps) {
-      setStep(step + 1)
+      setStep(step + 1);
     } else {
       // If we're at the last step and the user clicks "Post Classified"
       // We would normally submit the data to the server here
       // For now, just close the modal
-      handleClose()
+      handleClose();
     }
-  }
+  };
 
   const handleBack = () => {
     if (step > 1) {
-      setStep(step - 1)
+      setStep(step - 1);
     } else {
-      setCategory(null)
+      setCategory(null);
     }
-  }
+  };
 
   const handleClose = () => {
     // Reset state
-    setCategory(null)
-    setStep(1)
-    setFormData({})
+    setCategory(null);
+    setStep(1);
+    setFormData({});
     // Close the modal
-    onClose()
-  }
+    onClose();
+  };
 
   const updateFormData = (data) => {
     setFormData((prev) => ({
       ...prev,
       ...data,
-    }))
-  }
+    }));
+  };
 
   const renderForm = () => {
     if (!category) {
-      return <CategorySelector onSelect={handleCategorySelect} />
+      return <CategorySelector onSelect={handleCategorySelect} />;
     }
 
     const formProps = {
@@ -76,30 +76,29 @@ export function ClassifiedContent({ onClose }) {
       onClose: handleClose,
       formData,
       updateFormData,
-    }
+    };
 
     switch (category) {
       case "house":
-        return <HouseForm {...formProps} />
+        return <HouseForm {...formProps} />;
       case "auto":
-        return <AutoForm {...formProps} />
+        return <AutoForm {...formProps} />;
       case "furniture":
-        return <FurnitureForm {...formProps} />
+        return <FurnitureForm {...formProps} />;
       case "electronics":
-        return <ElectronicsForm {...formProps} />
+        return <ElectronicsForm {...formProps} />;
       case "appliance":
-        return <ApplianceForm {...formProps} />
+        return <ApplianceForm {...formProps} />;
       case "property":
-        return <PropertyForm {...formProps} />
+        return <PropertyForm {...formProps} />;
       case "sublease":
-        return <SubleaseForm {...formProps} />
+        return <SubleaseForm {...formProps} />;
       case "apparel":
-        return <ApparelForm {...formProps} />
+        return <ApparelForm {...formProps} />;
       default:
-        return <CategorySelector onSelect={handleCategorySelect} />
+        return <CategorySelector onSelect={handleCategorySelect} />;
     }
-  }
+  };
 
-  return <div className="p-4 md:p-6">{renderForm()}</div>
+  return <div className="p-0 md:p-0">{renderForm()}</div>;
 }
-

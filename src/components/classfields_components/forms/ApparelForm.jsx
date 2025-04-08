@@ -76,7 +76,7 @@ export function ApparelForm({
             <div className="space-y-2">
               <label
                 htmlFor="title"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 font-fraunces"
               >
                 Add title of your Apparel
               </label>
@@ -110,7 +110,7 @@ export function ApparelForm({
       case 3: // Key Details
         return (
           <div className="space-y-4">
-            <h2 className="text-lg font-medium">
+            <h2 className="text-lg font-medium font-fraunces">
               Add key details about your Apparel
             </h2>
             <div className="space-y-2">
@@ -235,7 +235,9 @@ export function ApparelForm({
       case 4: // Price
         return (
           <div className="space-y-4">
-            <h2 className="text-lg font-medium">Add price for your Apparel</h2>
+            <h2 className="text-lg font-medium font-fraunces">
+              Add price for your Apparel
+            </h2>
             <div className="space-y-2">
               <label
                 htmlFor="price"
@@ -257,7 +259,7 @@ export function ApparelForm({
       case 5: // Tell story
         return (
           <div className="space-y-4">
-            <h2 className="text-lg font-medium">
+            <h2 className="text-lg font-medium font-fraunces">
               Tell the story behind your Apparel
             </h2>
             <p className="text-sm text-gray-500">

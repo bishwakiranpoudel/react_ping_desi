@@ -11,7 +11,7 @@ import ClothingListing from "../components/classfields_components/ClothingListin
 import { useEffect } from "react";
 import {
   getInitialListings,
-  getListingCategories
+  getListingCategories,
 } from "../services/classified";
 import { toast } from "react-toastify";
 
@@ -20,38 +20,38 @@ const CategoryTabs = () => {
   const [activeTab, setActiveTab] = useState("All");
   const [categoryData, setCategoryData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleTabChange = value => {
+  const handleTabChange = (value) => {
     setActiveTab(value);
   };
   const categoryComponentMap = {
     House: {
       component: PropertyListing,
-      propName: "propertyItems"
+      propName: "propertyItems",
     },
     Auto: {
       component: VehicleListing,
-      propName: "vehicleItems"
+      propName: "vehicleItems",
     },
     Sublease: {
       component: PropertyListing,
-      propName: "propertyItems"
+      propName: "propertyItems",
     },
     Appliances: {
       component: ElectronicsListing,
-      propName: "electronicsItems"
+      propName: "electronicsItems",
     },
     Electronics: {
       component: ElectronicsListing,
-      propName: "electronicsItems"
+      propName: "electronicsItems",
     },
     Apparels: {
       component: ClothingListing,
-      propName: "clothingItems"
+      propName: "clothingItems",
     },
     Roommate: {
       component: ClothingListing,
-      propName: "clothingItems"
-    }
+      propName: "clothingItems",
+    },
   };
 
   /* ------------------ Get all categories ----------------------*/
@@ -62,10 +62,10 @@ const CategoryTabs = () => {
 
         const responseMap = [];
         responseMap.push({ value: "All", label: "All" });
-        const tempResponseMap = response.data.map(data => {
+        const tempResponseMap = response.data.map((data) => {
           return {
             value: data.name,
-            label: data.name
+            label: data.name,
           };
         });
 
@@ -78,25 +78,22 @@ const CategoryTabs = () => {
     }
     fetchCategories();
   }, []);
-  /* -------------------- Get Initial Load -----------------------_____*/
+  /* -------------------- Get Initial Load -----------------------_*/
 
   const [listingsData, setListingsData] = useState([]);
-  useEffect(
-    () => {
-      async function fetchInitialListings() {
-        try {
-          const response = await getInitialListings();
-          console.log(response.data.data);
-          setListingsData(response.data.data);
-        } catch (error) {
-          console.error("Error occured while fetching categories", error);
-          toast.error("Error occured while fetching categories");
-        }
+  useEffect(() => {
+    async function fetchInitialListings() {
+      try {
+        const response = await getInitialListings();
+        console.log(response.data.data);
+        setListingsData(response.data.data);
+      } catch (error) {
+        console.error("Error occured while fetching categories", error);
+        toast.error("Error occured while fetching categories");
       }
-      fetchInitialListings();
-    },
-    [activeTab]
-  );
+    }
+    fetchInitialListings();
+  }, [activeTab]);
 
   return (
     <MainLayout rs={false}>
@@ -107,10 +104,10 @@ const CategoryTabs = () => {
             className="flex overflow-x-auto md:overflow-x-hidden"
             style={{
               scrollbarWidth: "none" /* Firefox */,
-              msOverflowStyle: "none" /* IE and Edge */
+              msOverflowStyle: "none" /* IE and Edge */,
             }}
           >
-            {categoryData?.map(tab => (
+            {categoryData?.map((tab) => (
               <button
                 key={tab.label.toLowerCase()}
                 className={`py-0 px-4 text-sm font-medium transition-all duration-300 border-b-2 ${
@@ -126,6 +123,7 @@ const CategoryTabs = () => {
                     className="w-5 mb-1"
                     alt="Zodiac Sign"
                   />
+
                   {tab.label}
                 </div>
               </button>
@@ -145,14 +143,14 @@ const CategoryTabs = () => {
             style={{
               bottom: "4.5rem",
               right: "2rem",
-              zIndex: 9999 /* Highest z-index */
+              zIndex: 9999 /* Highest z-index */,
             }}
           >
             +
           </button>
         </div>
 
-        {listingsData?.map(data => {
+        {listingsData?.map((data) => {
           const title = data.category.title;
           const config = categoryComponentMap[title];
 
@@ -162,7 +160,7 @@ const CategoryTabs = () => {
           const Component = config.component;
           const props = {
             isDouble: false,
-            [config.propName]: data.category.products || []
+            [config.propName]: data.category.products || [],
           };
 
           return (
