@@ -355,7 +355,6 @@ function CreateScoopForm() {
         }
       });
 
-      console.log("Posting scoop with files", formData);
       for (const [key, value] of formData.entries()) {
         console.log(
           key + ":",
