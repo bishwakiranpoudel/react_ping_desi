@@ -20,6 +20,7 @@ export function ClassifiedContent({ onClose }) {
   const maxSteps = 7;
 
   const handleCategorySelect = (selected) => {
+    console.log(selected, "selected");
     setCategory(selected);
     // Start directly at the image upload step (which is now step 1)
     setStep(1);
@@ -35,6 +36,7 @@ export function ClassifiedContent({ onClose }) {
       // If we're at the last step and the user clicks "Post Classified"
       // We would normally submit the data to the server here
       // For now, just close the modal
+      console.log(formData, "formdata");
       handleClose();
     }
   };
