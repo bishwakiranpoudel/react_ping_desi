@@ -191,9 +191,12 @@ function HomePage2() {
     async function fetchCommunityEvent() {
       try {
         setIsProcessing(true);
+        const geohash = localStorage.getItem("geohash") ?? "9v6m";
+        const payload = { geohash: geohash };
+        const location = await retrieveMasterCity(payload);
         const eventsResponse = await fetchCommunityEvents({
-          state: "Texas",
-          city: "Austin"
+          state: location.data.state,
+          city: location.data.city
         });
         setCommunityEvents(eventsResponse.data);
       } catch (error) {
@@ -280,7 +283,6 @@ function HomePage2() {
                   newsData.map((item, index) => (
                     <NewsCard item={item} index={index} isMobile="true" />
                   ))}
-
               </div>
             </div>
           </section>
