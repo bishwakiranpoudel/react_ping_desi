@@ -355,15 +355,6 @@ function CreateScoopForm() {
         }
       });
 
-      for (const [key, value] of formData.entries()) {
-        console.log(
-          key + ":",
-          value instanceof File
-            ? `File: ${value.name}, type: ${value.type}, size: ${value.size} bytes`
-            : value
-        );
-      }
-
       // Send data using your postScoops service, modified to handle FormData
       const response = await postScoops(formData);
 
