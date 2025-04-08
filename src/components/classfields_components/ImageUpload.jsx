@@ -143,6 +143,7 @@ export function ImageUpload({
       const newImages = Array.from(e.target.files).map((file) => ({
         id: crypto.randomUUID(),
         url: URL.createObjectURL(file),
+        file: file, // Store actual file for form submission
         isCover: images.length === 0 && changeImageRef.current === null,
       }));
 
@@ -160,10 +161,7 @@ export function ImageUpload({
         // Add new images
         setImages((prev) => {
           const updatedImages = [...prev, ...newImages];
-          // If this is the first image, make it the cover
-          if (prev.length === 0 && updatedImages.length > 0) {
-            updatedImages[0].isCover = true;
-          }
+          updatedImages.forEach((img, index) => (img.isCover = index === 0)); // Ensure first image is cover
           return updatedImages;
         });
       }
@@ -190,9 +188,10 @@ export function ImageUpload({
 
   const setCoverImage = (id) => {
     setImages((prev) =>
-      prev.map((img) => ({
+      prev.map((img, index) => ({
         ...img,
-        isCover: img.id === id,
+        isCover:
+          img.id === id || index === prev.findIndex(({ id }) => id === id),
       }))
     );
   };
@@ -210,9 +209,28 @@ export function ImageUpload({
         const oldIndex = items.findIndex((item) => item.id === active.id);
         const newIndex = items.findIndex((item) => item.id === over.id);
 
-        return arrayMove(items, oldIndex, newIndex);
+        const updatedImages = arrayMove(items, oldIndex, newIndex);
+        updatedImages.forEach((img, index) => (img.isCover = index === 0)); // Ensure first image is cover
+        return updatedImages;
       });
     }
+  };
+
+  const handleSubmit = () => {
+    const formData = new FormData();
+
+    images.forEach((image, index) => {
+      formData.append(`image_${index}`, image.file); // Append actual file to form data
+      formData.append(`isCover_${index}`, image.isCover); // Append cover status
+    });
+
+    fetch("/upload", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("Upload successful:", data))
+      .catch((error) => console.error("Upload failed:", error));
   };
 
   if (images.length === 0) {
@@ -293,6 +311,9 @@ export function ImageUpload({
         multiple
         onChange={handleImageUpload}
       />
+
+      {/* Submit Button */}
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 }
