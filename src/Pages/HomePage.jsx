@@ -182,6 +182,7 @@ function HomePage2() {
       setIsProcessing(false);
     }
   }
+  console.log(postings, "post");
 
   // Loading spinner component
   const LoadingSpinner = () => (

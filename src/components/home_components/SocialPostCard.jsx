@@ -12,6 +12,7 @@ const SocialPostCard = ({
   onComment,
   className = "",
 }) => {
+  // Main state variables
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
@@ -19,21 +20,20 @@ const SocialPostCard = ({
     (post.userLikes && post.userLikes[0]) || null
   );
   const [scoopData, setScoopData] = useState(null);
-  const [allScoops, setAllScoops] = useState([]);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [totalLikes, setTotalLikes] = useState(post.totalLikes);
-  const likeButtonRef = useRef(null);
-  const reactionsRef = useRef(null);
   const [reactionGroups, setReactionGroups] = useState({});
 
-  // Fetch all scoops data on component mount
+  // Refs for UI interactions
+  const likeButtonRef = useRef(null);
+  const reactionsRef = useRef(null);
+
+  // Fetch scoops data on component mount
   useEffect(() => {
     const fetchScoops = async () => {
       try {
         const scoopResponse = await getScoops();
-        setAllScoops(scoopResponse);
 
-        // Find the scoop data that matches the post's scoopname
+        // Find matching scoop data and process reactions
         if (post.scoopname) {
           const matchingScoop = scoopResponse.find(
             (scoop) => scoop.scoopname === post.scoopname
@@ -49,16 +49,8 @@ const SocialPostCard = ({
         }
       } catch (error) {
         toast.error(
-          "" + (error.response?.data?.message ?? error.data?.message ?? error),
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-          }
+          "" + (error.response?.data?.message ?? error.data?.message ?? error)
         );
-      } finally {
-        setIsProcessing(false);
       }
     };
 
@@ -86,6 +78,7 @@ const SocialPostCard = ({
     };
   }, []);
 
+  // Image carousel navigation
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : prev));
   };
@@ -96,55 +89,39 @@ const SocialPostCard = ({
     );
   };
 
+  // Like/reaction handlers
   const onLike = async (postid, emoji) => {
-    const payload = { postid: postid, emojiid: emoji.emojiid };
     try {
-      await addLike(payload);
+      await addLike({ postid, emojiid: emoji.emojiid });
       setSelectedReaction(emoji);
 
       if (!isLiked) {
         setTotalLikes((prev) => prev + 1);
       }
+      setIsLiked(true);
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ??
-        error.data?.message ??
-        error.message ??
-        error;
-
       if (!localStorage.getItem("token")) {
         window.location.href = "/signin";
       }
       toast.error("Error While Adding Like");
     }
   };
-  const onRemoveLike = async (postid) => {
-    const payload = { postid: postid };
-    try {
-      await removeLike(payload);
-      setTotalLikes((prev) => {
-        if (prev > 1) {
-          return prev - 1;
-        }
-        return 0;
-      });
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ??
-        error.data?.message ??
-        error.message ??
-        error;
 
+  const onRemoveLike = async (postid) => {
+    try {
+      await removeLike({ postid });
+      setTotalLikes((prev) => (prev > 1 ? prev - 1 : 0));
+      setIsLiked(false);
+      setSelectedReaction(null);
+    } catch (error) {
       toast.error("Error While Removing Like");
     }
   };
 
-  const handleLikeHover = () => {
-    setShowReactions(true);
-  };
+  // UI interaction handlers
+  const handleLikeHover = () => setShowReactions(true);
 
   const handleLikeLeave = () => {
-    // Don't hide immediately to allow clicking on reactions
     setTimeout(() => {
       if (!reactionsRef.current?.matches(":hover")) {
         setShowReactions(false);
@@ -152,56 +129,42 @@ const SocialPostCard = ({
     }, 300);
   };
 
+  // Handle reaction selection
   const handleReactionSelect = async (reaction) => {
-    // Store the previous reaction for potential removal
     const previousReaction = selectedReaction;
 
-    // Check if clicking the same reaction (toggle off)
-    if (
-      isLiked &&
-      selectedReaction &&
-      selectedReaction.emojiid === reaction.emojiid
-    ) {
-      // Update UI immediately before API call
+    // Toggle off if clicking the same reaction
+    if (isLiked && selectedReaction?.emojiid === reaction.emojiid) {
       setSelectedReaction(null);
       setIsLiked(false);
-
-      // Remove this reaction from the groups if it was the user's only contribution
-      setReactionGroups((prevGroups) => {
-        const updatedGroups = { ...prevGroups };
-        if (updatedGroups[reaction.emoji]) {
-          // Decrease count
-          updatedGroups[reaction.emoji].count -= 1;
-
-          // Remove current user from users list
-          const currentUsername = localStorage.getItem("username") || "You";
-          updatedGroups[reaction.emoji].users = updatedGroups[
-            reaction.emoji
-          ].users.filter((username) => username !== currentUsername);
-
-          // Remove the emoji group if count is zero
-          if (updatedGroups[reaction.emoji].count <= 0) {
-            delete updatedGroups[reaction.emoji];
-          }
-        }
-        return updatedGroups;
-      });
-
-      // Call API to remove like
+      updateReactionGroups(reaction, true);
       await onRemoveLike(post.postingid);
       return;
     }
 
-    // Set the new reaction immediately for responsive UI
+    // Set new reaction
     setSelectedReaction(reaction);
     setIsLiked(true);
 
-    // Update the reaction groups immediately
+    // Update UI groups
+    updateReactionGroups(reaction, false, previousReaction);
+    setShowReactions(false);
+
+    // Call API
+    await onLike(post.postingid, reaction);
+  };
+
+  // Update reaction groups in UI
+  const updateReactionGroups = (
+    reaction,
+    isRemove,
+    previousReaction = null
+  ) => {
     setReactionGroups((prevGroups) => {
       const updatedGroups = { ...prevGroups };
       const currentUsername = localStorage.getItem("username") || "You";
 
-      // If user had a previous reaction, remove it from that group
+      // Remove previous reaction if exists
       if (previousReaction && previousReaction.emoji) {
         if (updatedGroups[previousReaction.emoji]) {
           updatedGroups[previousReaction.emoji].count -= 1;
@@ -209,24 +172,35 @@ const SocialPostCard = ({
             previousReaction.emoji
           ].users.filter((username) => username !== currentUsername);
 
-          // Remove the emoji group if count is zero
           if (updatedGroups[previousReaction.emoji].count <= 0) {
             delete updatedGroups[previousReaction.emoji];
           }
         }
       }
 
-      // Add the new reaction to the groups
+      // Handle removal
+      if (isRemove) {
+        if (updatedGroups[reaction.emoji]) {
+          updatedGroups[reaction.emoji].count -= 1;
+          updatedGroups[reaction.emoji].users = updatedGroups[
+            reaction.emoji
+          ].users.filter((username) => username !== currentUsername);
+
+          if (updatedGroups[reaction.emoji].count <= 0) {
+            delete updatedGroups[reaction.emoji];
+          }
+        }
+        return updatedGroups;
+      }
+
+      // Add new reaction
       if (!updatedGroups[reaction.emoji]) {
         updatedGroups[reaction.emoji] = {
           count: 1,
           users: [currentUsername],
         };
       } else {
-        // Increment count if the emoji group already exists
         updatedGroups[reaction.emoji].count += 1;
-
-        // Add user to the users list if not already there
         if (!updatedGroups[reaction.emoji].users.includes(currentUsername)) {
           updatedGroups[reaction.emoji].users.push(currentUsername);
         }
@@ -234,85 +208,23 @@ const SocialPostCard = ({
 
       return updatedGroups;
     });
-
-    // Hide reactions panel
-    setShowReactions(false);
-
-    // Call API to add like
-    await onLike(post.postingid, reaction);
   };
 
+  // Handle direct like button click
   const handleLikeClick = async () => {
     if (selectedReaction) {
-      // Update UI immediately
-      const reactionToRemove = selectedReaction;
-      setSelectedReaction(null);
-      setIsLiked(false);
-
-      // Update reaction groups
-      setReactionGroups((prevGroups) => {
-        const updatedGroups = { ...prevGroups };
-        if (updatedGroups[reactionToRemove.emoji]) {
-          // Decrease count
-          updatedGroups[reactionToRemove.emoji].count -= 1;
-
-          // Remove current user from users list
-          const currentUsername = localStorage.getItem("username") || "You";
-          updatedGroups[reactionToRemove.emoji].users = updatedGroups[
-            reactionToRemove.emoji
-          ].users.filter((username) => username !== currentUsername);
-
-          // Remove the emoji group if count is zero
-          if (updatedGroups[reactionToRemove.emoji].count <= 0) {
-            delete updatedGroups[reactionToRemove.emoji];
-          }
-        }
-        return updatedGroups;
-      });
-
-      // Call API
+      // Remove like
+      updateReactionGroups(selectedReaction, true);
       await onRemoveLike(post.postingid);
-    } else if (scoopData && scoopData.emojis && scoopData.emojis.length > 0) {
-      // Default to first emoji when clicking like button directly
+    } else if (scoopData?.emojis?.length > 0) {
+      // Add default reaction
       const defaultReaction = scoopData.emojis[0];
-      setSelectedReaction(defaultReaction);
-      setIsLiked(true);
-
-      // Update reaction groups
-      setReactionGroups((prevGroups) => {
-        const updatedGroups = { ...prevGroups };
-        const currentUsername = localStorage.getItem("username") || "You";
-
-        if (!updatedGroups[defaultReaction.emoji]) {
-          updatedGroups[defaultReaction.emoji] = {
-            count: 1,
-            users: [currentUsername],
-          };
-        } else {
-          // Increment count
-          updatedGroups[defaultReaction.emoji].count += 1;
-
-          // Add user to the users list if not already there
-          if (
-            !updatedGroups[defaultReaction.emoji].users.includes(
-              currentUsername
-            )
-          ) {
-            updatedGroups[defaultReaction.emoji].users.push(currentUsername);
-          }
-        }
-
-        return updatedGroups;
-      });
-
-      // Call API
+      updateReactionGroups(defaultReaction, false);
       await onLike(post.postingid, defaultReaction);
     }
   };
 
-  //console.log(scoopData, post, images, "testing");
-
-  // Function to calculate time ago from post creation date
+  // Calculate time ago from post creation date
   const getTimeAgo = (createdDate) => {
     if (!createdDate) return "";
 
@@ -320,81 +232,69 @@ const SocialPostCard = ({
     const now = new Date();
     const diffInSeconds = Math.floor((now - created) / 1000);
 
-    // Less than a minute
-    if (diffInSeconds < 60) {
-      return "Just now";
-    }
+    if (diffInSeconds < 60) return "Just now";
 
-    // Less than an hour
     const diffInMinutes = Math.floor(diffInSeconds / 60);
-    if (diffInMinutes < 60) {
-      return `${diffInMinutes}m ago`;
-    }
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
 
-    // Less than a day
     const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) {
-      return `${diffInHours}h ago`;
-    }
+    if (diffInHours < 24) return `${diffInHours}h ago`;
 
-    // Less than a week
     const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays === 1) {
-      return "1 day ago";
-    }
-    if (diffInDays < 7) {
-      return `${diffInDays} days ago`;
-    }
+    if (diffInDays === 1) return "1 day ago";
+    if (diffInDays < 7) return `${diffInDays} days ago`;
 
-    // Less than a month
     const diffInWeeks = Math.floor(diffInDays / 7);
-    if (diffInWeeks === 1) {
-      return "1 week ago";
-    }
-    if (diffInWeeks < 4) {
-      return `${diffInWeeks} weeks ago`;
-    }
+    if (diffInWeeks === 1) return "1 week ago";
+    if (diffInWeeks < 4) return `${diffInWeeks} weeks ago`;
 
-    // Less than a year
     const diffInMonths = Math.floor(diffInDays / 30);
-    if (diffInMonths === 1) {
-      return "1 month ago";
-    }
-    if (diffInMonths < 12) {
-      return `${diffInMonths} months ago`;
-    }
+    if (diffInMonths === 1) return "1 month ago";
+    if (diffInMonths < 12) return `${diffInMonths} months ago`;
 
-    // More than a year
     const diffInYears = Math.floor(diffInDays / 365);
-    if (diffInYears === 1) {
-      return "1 year ago";
-    }
-    return `${diffInYears} years ago`;
+    return diffInYears === 1 ? "1 year ago" : `${diffInYears} years ago`;
   };
 
   const timeAgo = getTimeAgo(post.createdate);
 
-  // PaginationDots component embedded in the same file
-  const PaginationDots = ({
-    totalDots = 3,
-    activeDot = 0,
-    onDotClick,
-    className = "",
-  }) => {
-    return (
-      <div
-        className={`flex items-center justify-center space-x-2 ${className}font-afacad`}
-      >
-        {Array.from({ length: totalDots }).map((_, index) => (
-          <button
-            key={index}
-            onClick={() => onDotClick(index)}
-            className="focus:outline-none"
-            aria-label={`Go to slide ${index + 1}`}
-            aria-current={index === activeDot ? "true" : "false"}
-          >
-            <div
-              className={`
+  // Process reactions and group them by emoji type
+  const processReactions = (likes) => {
+    if (!likes || !Array.isArray(likes)) return {};
+
+    const groups = {};
+    likes.forEach((like) => {
+      if (like.emoji) {
+        if (!groups[like.emoji]) {
+          groups[like.emoji] = {
+            count: 1,
+            users: [like.username || "User"],
+          };
+        } else {
+          groups[like.emoji].count += 1;
+          if (like.username) {
+            groups[like.emoji].users.push(like.username);
+          }
+        }
+      }
+    });
+
+    return groups;
+  };
+
+  // Component for pagination dots in image carousel
+  const PaginationDots = ({ totalDots, activeDot, onDotClick }) => (
+    <div className="flex items-center justify-center space-x-2 font-afacad">
+      {Array.from({ length: totalDots }).map((_, index) => (
+        <button
+          key={index}
+          onClick={() => onDotClick(index)}
+          className="focus:outline-none"
+          aria-label={`Go to slide ${index + 1}`}
+          aria-current={index === activeDot ? "true" : "false"}
+        >
+          <div
+            className={`
               ${
                 index === activeDot
                   ? "w-4 h-4 bg-white"
@@ -402,16 +302,15 @@ const SocialPostCard = ({
               } 
               rounded-full transition-all duration-300
             `}
-            />
-          </button>
-        ))}
-      </div>
-    );
-  };
+          />
+        </button>
+      ))}
+    </div>
+  );
 
-  // Reactions panel component
+  // Component for reactions panel
   const ReactionsPanel = ({ scoopData }) => {
-    if (!scoopData || !scoopData.emojis) return null;
+    if (!scoopData?.emojis) return null;
 
     return (
       <div
@@ -437,31 +336,7 @@ const SocialPostCard = ({
     );
   };
 
-  // Function to process reactions and group them by emoji type
-  const processReactions = (likes) => {
-    if (!likes || !Array.isArray(likes)) return {};
-
-    const groups = {};
-    likes.forEach((like) => {
-      if (like.emoji) {
-        if (!groups[like.emoji]) {
-          groups[like.emoji] = {
-            count: 1,
-            users: [like.username || "User"],
-          };
-        } else {
-          groups[like.emoji].count += 1;
-          if (like.username) {
-            groups[like.emoji].users.push(like.username);
-          }
-        }
-      }
-    });
-
-    return groups;
-  };
-
-  // Reaction bubbles component to show emoji reactions
+  // Component to show emoji reactions
   const ReactionBubbles = ({ reactionGroups }) => {
     if (!reactionGroups || Object.keys(reactionGroups).length === 0)
       return null;
@@ -485,6 +360,7 @@ const SocialPostCard = ({
     );
   };
 
+  // Mobile layout
   if (isMobile) {
     return (
       <div className="bg-white rounded-lg shadow-sm overflow-hidden w-full flex-shrink-0">
@@ -512,21 +388,18 @@ const SocialPostCard = ({
           </div>
 
           {/* Image Carousel */}
-
           {images && images.length > 0 && (
             <div className="relative flex-grow mb-4">
-              <div className="w-full h-full relative rounded-lg  bg-white overflow-hidden">
-                <div className="w-full h-full rounded-lg overflow-hidden ">
-                  <img
-                    src={images[currentImageIndex] || "/placeholder.svg"}
-                    alt="Post image"
-                    className="w-full h-[160px] object-cover"
-                    style={{}}
-                  />
-                </div>
+              <div className="w-full h-full relative rounded-lg bg-white overflow-hidden">
+                <img
+                  src={images[currentImageIndex] || "/placeholder.svg"}
+                  alt="Post image"
+                  className="w-full h-[160px] object-cover"
+                />
               </div>
               {images.length > 1 && (
                 <>
+                  {/* Navigation arrows */}
                   <div className="absolute left-3 top-1/2 transform -translate-y-1/2 z-10">
                     <button
                       onClick={handlePrevImage}
@@ -557,6 +430,7 @@ const SocialPostCard = ({
                       />
                     </button>
                   </div>
+                  {/* Pagination dots */}
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
                     <PaginationDots
                       totalDots={images.length}
@@ -658,6 +532,7 @@ const SocialPostCard = ({
     );
   }
 
+  // Desktop layout
   return (
     <div
       className={`bg-white border rounded-xl shadow-sm overflow-hidden h-full mb-6 flex flex-col ${className}`}
@@ -696,21 +571,20 @@ const SocialPostCard = ({
       </div>
 
       {/* Image Carousel */}
-
       {images && images.length > 0 && (
         <div className="relative flex-grow">
-          <div className="w-full h-full relative rounded-lg pr-4 pl-4 bg-white overflow-hidden">
-            <div className="w-full h-full rounded-lg overflow-hidden ">
+          <div className="w-full h-full relative rounded-lg px-4 bg-white overflow-hidden">
+            <div className="w-full h-full rounded-lg overflow-hidden">
               <img
                 src={images[currentImageIndex] || "/placeholder.svg"}
                 alt="Post image"
                 className="w-full h-[388px] object-cover"
-                style={{}}
               />
             </div>
           </div>
           {images.length > 1 && (
             <>
+              {/* Navigation arrows */}
               <div className="absolute left-6 top-1/2 transform -translate-y-1/2 z-10">
                 <button
                   onClick={handlePrevImage}
@@ -741,6 +615,7 @@ const SocialPostCard = ({
                   />
                 </button>
               </div>
+              {/* Pagination dots */}
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10">
                 <PaginationDots
                   totalDots={images.length}
@@ -797,7 +672,7 @@ const SocialPostCard = ({
               aria-label={isLiked ? "Unlike" : "Like"}
             >
               {selectedReaction ? (
-                <span className="text-xl ">{selectedReaction.emoji}</span>
+                <span className="text-xl">{selectedReaction.emoji}</span>
               ) : (
                 <svg
                   width="30"
