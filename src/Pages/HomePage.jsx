@@ -315,7 +315,6 @@ function HomePage2() {
           Scoops Around You
         </h1>
 
-        {/* Social Posts - Limited to 5 */}
         {postings.map((post, index) => (
           <div key={post.id || post._id || index}>
             <SocialPostCard
