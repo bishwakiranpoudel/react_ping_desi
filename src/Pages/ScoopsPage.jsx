@@ -249,7 +249,15 @@ function ScoopsPage() {
 
   return (
     <MainLayout rightSidebar={!isMobile ? <HomeRightSidebar /> : null}>
-      <CreateScoopForm />
+      <CreateScoopForm
+        postings={postings}
+        feedLoading={feedLoading}
+        initialLoading={initialLoading}
+        error={error}
+        hasMore={hasMore}
+        lastPostElementRef={lastPostElementRef}
+        refreshFeed={refreshFeed}
+      />
     </MainLayout>
   );
 }
