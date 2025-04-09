@@ -22,7 +22,7 @@ export const getInitialListings = async () => {
   return listings;
 };
 
-export const getListing = async id => {
+export const getListing = async (id) => {
   const endpoint = "/classified/getListingProduct/" + id;
   const listing = await handleGetRequest(endpoint);
   if (listing.error) {
@@ -36,7 +36,7 @@ export const queryListings = async (userInput = {}) => {
 
   // Start with geohash (always required)
   const payload = {
-    geohash: localStorage.getItem("geohash") || "9v6m"
+    geohash: localStorage.getItem("geohash") || "9v6m",
   };
 
   if (userInput.user_id) payload.user_id = userInput.user_id;
@@ -64,3 +64,14 @@ export const queryListings = async (userInput = {}) => {
   }
   return listings;
 };
+
+export async function postClassfieds(payload) {
+  const endpoint = "/classified/addNewItem";
+  const response = await handlePostRequest(endpoint, payload, undefined, true);
+
+  if (response?.error) {
+    throw new Error(response.error);
+  }
+
+  return response;
+}
