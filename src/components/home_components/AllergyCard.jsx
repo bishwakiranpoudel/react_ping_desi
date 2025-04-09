@@ -192,7 +192,7 @@ export default function AllergyCard({
 
   // Skeleton loader component
   const AllergyCardSkeleton = () => (
-    <div className="max-w-md mx-auto">
+    <div className="max-w-md mx-auto" style={{ width: "100%" }}>
       <div className="rounded-2xl overflow-hidden shadow-sm border">
         {/* Top section skeleton */}
         <div className="bg-gray-200 relative">
@@ -253,7 +253,7 @@ export default function AllergyCard({
   }
 
   return (
-    <div className="max-w-md mx-auto">
+    <div className="max-w-md mx-auto" style={{ width: "100%" }}>
       <div className="rounded-2xl overflow-hidden shadow-sm border">
         {/* Top section with allergens */}
         <div className="relative">

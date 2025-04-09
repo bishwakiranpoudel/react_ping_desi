@@ -60,7 +60,7 @@ export default function WeatherCard({
 
   // Skeleton loader component
   const WeatherCardSkeleton = () => (
-    <div className="max-w-md mx-auto">
+    <div className="max-w-md mx-auto" style={{ width: "100%" }}>
       <div className="rounded-2xl border overflow-hidden shadow-sm bg-gray-100">
         {/* Card Header Skeleton */}
         <div className="relative p-4 flex justify-between items-center bg-gray-200 h-24">
@@ -110,7 +110,7 @@ export default function WeatherCard({
   }
 
   return (
-    <div className="max-w-md mx-auto">
+    <div className="max-w-md mx-auto" style={{ width: "100%" }}>
       <div className="rounded-2xl border overflow-hidden shadow-sm bg-gray-100">
         {/* Card Header with Day/Night Info */}
         <div className="relative p-4 flex justify-between items-center">
