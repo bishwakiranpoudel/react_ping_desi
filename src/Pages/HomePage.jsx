@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useIsMobile } from "../hooks/use-mobile";
 import { TabbedContent } from "../components/home_components/tabbed-content";
@@ -12,7 +14,7 @@ import HomeRightSidebar from "../components/home_components/HomeRightSidebar";
 
 import {
   fetchMasterCities,
-  retrieveMasterCity
+  retrieveMasterCity,
 } from "../services/locationServices";
 import { fetchCommunityEvents } from "../services/events";
 import { convertDateToObject } from "../lib/utils";
@@ -22,23 +24,19 @@ import NewsCard from "../components/home_components/NewsCard";
 import { getNews } from "../services/news";
 
 function HomePage2() {
-  // State to track visibility of the first card
   const [isFirstCardVisible, setIsFirstCardVisible] = useState(true);
-  // State to track visibility of the second card
   const [isSecondCardVisible, setIsSecondCardVisible] = useState(false);
-  // Check if we're on mobile
   const isMobile = useIsMobile();
 
-  /***********************social media*****************/
+  /* ---------------------- Social Media Posts Section ----------------------
+   * Fetches and displays the 5 most recent social media posts
+   */
   const [postings, setPostings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const observer = useRef();
-  const POSTS_PER_PAGE = 10;
 
   const [newsData, setNewsData] = useState([]);
+
   useEffect(() => {
     async function fetchNews() {
       try {
@@ -51,30 +49,8 @@ function HomePage2() {
     fetchNews();
   }, []);
 
-  // Last element ref callback for intersection observer
-  const lastPostElementRef = useCallback(
-    node => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-
-      observer.current = new IntersectionObserver(
-        entries => {
-          if (entries[0].isIntersecting && hasMore) {
-            fetchMorePosts();
-          }
-        },
-        {
-          rootMargin: "100px"
-        }
-      );
-
-      if (node) observer.current.observe(node);
-    },
-    [loading, hasMore]
-  );
-
-  // Function to fetch initial posts
-  const fetchInitialPosts = async () => {
+  // Function to fetch posts
+  const fetchPosts = async () => {
     setLoading(true);
     setError(null);
 
@@ -83,9 +59,7 @@ function HomePage2() {
 
     try {
       const response = await getPostings(requestBody);
-      setPostings(response.posts || []);
-      setOffset(POSTS_PER_PAGE);
-      setHasMore((response.posts || []).length >= POSTS_PER_PAGE);
+      setPostings((response.posts || []).slice(0, 5));
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ?? error.data?.message ?? error;
@@ -95,54 +69,16 @@ function HomePage2() {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true
+        closeOnClick: true,
       });
-      setHasMore(false);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Function to fetch more posts
-  const fetchMorePosts = async () => {
-    if (!hasMore || loading) return;
-
-    setLoading(true);
-    const geohash = localStorage.getItem("geohash") || "9v6m";
-    const endpoint = "/posting/getAllPostings";
-    const requestBody = { geohash, offset };
-
-    try {
-      const response = await getPostings(requestBody);
-      const newPosts = response.posts || [];
-      if (newPosts.length > 0) {
-        setPostings(prevPosts => [...prevPosts, ...newPosts]);
-        setOffset(prevOffset => prevOffset + POSTS_PER_PAGE);
-        setHasMore(newPosts.length >= POSTS_PER_PAGE);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ?? error.data?.message ?? error;
-      setError(errorMessage);
-      toast.error("" + errorMessage, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true
-      });
-      setHasMore(false);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchInitialPosts();
+    fetchPosts();
   }, []);
-
-  /***********************social media end*****************/
 
   // Function to handle close button click
   const handleCloseClick = () => {
@@ -155,7 +91,7 @@ function HomePage2() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState({
     state: "",
-    city: ""
+    city: "",
   });
   const [communityEvents, setCommunityEvents] = useState([]);
 
@@ -176,7 +112,7 @@ function HomePage2() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true
+            closeOnClick: true,
           }
         );
       } finally {
@@ -196,7 +132,7 @@ function HomePage2() {
         const location = await fetchMasterCities(payload);
         const eventsResponse = await fetchCommunityEvents({
           state: location.data[0].state,
-          city: location.data[0].city
+          city: location.data[0].city,
         });
         setCommunityEvents(eventsResponse.data);
       } catch (error) {
@@ -206,7 +142,7 @@ function HomePage2() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true
+            closeOnClick: true,
           }
         );
       } finally {
@@ -222,7 +158,7 @@ function HomePage2() {
       latitude: 0.0,
       longitude: 0.0,
       city: selectedLocation.city,
-      state: selectedLocation.state
+      state: selectedLocation.state,
     };
     try {
       if (isProcessing) {
@@ -239,14 +175,13 @@ function HomePage2() {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true
+          closeOnClick: true,
         }
       );
     } finally {
       setIsProcessing(false);
     }
   }
-  /* ----------------------- Location Service end ----------------------_*/
 
   // Loading spinner component
   const LoadingSpinner = () => (
@@ -281,7 +216,12 @@ function HomePage2() {
               <div className="flex space-x-4">
                 {newsData &&
                   newsData.map((item, index) => (
-                    <NewsCard item={item} index={index} isMobile="true" />
+                    <NewsCard
+                      key={index}
+                      item={item}
+                      index={index}
+                      isMobile="true"
+                    />
                   ))}
               </div>
             </div>
@@ -300,14 +240,9 @@ function HomePage2() {
             {/* Social Post */}
             <div className="overflow-x-auto ">
               <div className="flex space-x-4">
-                {postings?.slice(0, 5).map((post, index) => (
+                {postings.map((post, index) => (
                   <div
                     key={post.id || post._id || index}
-                    ref={
-                      index === Math.min(postings.length, 5) - 1
-                        ? lastPostElementRef
-                        : null
-                    }
                     className="min-w-full"
                   >
                     <SocialPostCard
@@ -347,7 +282,7 @@ function HomePage2() {
                         name: "Community",
                         icon: "👨‍👩‍👧‍👦",
                         bgColor: "bg-blue-100",
-                        textColor: "text-blue-800"
+                        textColor: "text-blue-800",
                       }}
                       title={event.name}
                       description={event.description}
@@ -380,16 +315,9 @@ function HomePage2() {
           Scoops Around You
         </h1>
 
-        {/* Social Posts with Infinite Scroll */}
-        {postings?.slice(0, 5).map((post, index) => (
-          <div
-            key={post.id || post._id || index}
-            ref={
-              index === Math.min(postings.length, 5) - 1
-                ? lastPostElementRef
-                : null
-            }
-          >
+        {/* Social Posts - Limited to 5 */}
+        {postings.map((post, index) => (
+          <div key={post.id || post._id || index}>
             <SocialPostCard
               post={post}
               username={post.username}
@@ -399,14 +327,7 @@ function HomePage2() {
         ))}
         {/* Loading indicator */}
         {loading && <LoadingSpinner />}
-        {/* End of content message */}
-        {!loading &&
-          !hasMore &&
-          postings.length > 0 && (
-            <div className="text-center py-4 text-gray-500">
-              You've reached the end of the content
-            </div>
-          )}
+
         <h1 className="text-xl lg:text-2xl font-bold mb-4 mt-3 font-fraunces">
           Happening Near You
         </h1>
@@ -421,7 +342,7 @@ function HomePage2() {
                 name: "Community",
                 icon: "👨‍👩‍👧‍👦",
                 bgColor: "bg-blue-100",
-                textColor: "text-blue-800"
+                textColor: "text-blue-800",
               }}
               title={event.name}
               description={event.description}
