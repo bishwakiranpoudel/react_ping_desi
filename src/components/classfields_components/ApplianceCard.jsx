@@ -1,13 +1,13 @@
 "use client";
 
-const ClothingCard = ({
-  image,
+const ApplianceCard = ({
+  coverPhoto,
   title,
   price,
   details,
-  type,
+  condition,
+  brand,
   location,
-  size,
   className = "",
   imageAlt = "",
   badgeClassName = "",
@@ -40,33 +40,32 @@ const ClothingCard = ({
   };
 
   const detailsMap = parseDetails(details);
-  const displayType = type || detailsMap.apparelType || "Clothing";
-  const displaySize = size || detailsMap.size || "M";
+  const displayCondition = condition || detailsMap.condition || "Used";
+  const displayBrand = brand || detailsMap.brand || "";
 
   const handleClick = () => {
     if (onClick) {
       onClick({
         title,
         price,
-        image,
-        images: [image],
+        image: coverPhoto,
+        images: [coverPhoto],
         description: props.description || "",
-        category: "Apparels",
-        categoryId: 29, // Apparels category ID
-        type: displayType,
-        size: displaySize,
-        brand: props.brand || "",
-        condition: props.condition || detailsMap.condition || "New",
-        color: props.color || "",
+        category: "Appliances",
+        categoryId: 28, // Appliances category ID
+        condition: displayCondition,
+        brand: displayBrand,
+        model: props.model || "",
+        age: props.age || "1-3 years",
+        warranty: props.warranty || "No warranty",
+        energyRating: props.energyRating || "A",
         location,
-        used:
-          (props.condition || detailsMap.condition || "").toLowerCase() !==
-          "new",
-        distance: props.distance || "1.5 km away",
+        used: displayCondition.toLowerCase() !== "new",
+        distance: props.distance || "3.2 km away",
         story: props.story || "",
         additionalDetails: props.additionalDetails || "",
         seller: props.seller || {
-          name: "Clothing Seller",
+          name: "Appliance Seller",
           verified: true,
           address: location,
         },
@@ -82,12 +81,12 @@ const ClothingCard = ({
       <div className="w-[244px] h-[280px] flex flex-col">
         <div className="relative w-[244px] h-[180px]">
           <img
-            src={image || "/placeholder.svg?height=400&width=600"}
+            src={coverPhoto || "/placeholder.svg?height=400&width=600"}
             alt={imageAlt || title}
             className="w-full h-full object-cover"
           />
           <div className="absolute top-3 right-3 bg-white/90 text-black font-medium py-1 px-2 rounded-lg">
-            {displayType}
+            {displayCondition}
           </div>
         </div>
         <div className="p-3 h-[100px] flex flex-col">
@@ -96,7 +95,7 @@ const ClothingCard = ({
           >
             {title}
           </h3>
-          <div className="text-gray-600 text-md">{displaySize}</div>
+          <div className="text-gray-600 text-md">{displayBrand}</div>
           <div className="mt-auto flex items-center justify-between">
             <div
               className={`font-bold text-gray-900 text-lg ${priceClassName}`}
@@ -116,4 +115,4 @@ const ClothingCard = ({
   );
 };
 
-export default ClothingCard;
+export default ApplianceCard;

@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 
 const PropertyCard = ({
   title,
@@ -16,15 +16,66 @@ const PropertyCard = ({
   addressClassName = "",
   detailsClassName = "",
   priceClassName = "",
-  distanceClassName = ""
+  distanceClassName = "",
+  onClick,
+  ...props
 }) => {
-  const detailsMap = details.reduce((acc, item) => {
-    acc[item.key] = item.value;
-    return acc;
-  }, {});
+  // Parse specific details if they're in string format
+  const parseDetails = (detailsArray) => {
+    if (!detailsArray) return {};
+
+    if (Array.isArray(detailsArray)) {
+      const detailsMap = {};
+      detailsArray.forEach((detail) => {
+        if (typeof detail === "string") {
+          const [key, value] = detail.split(":");
+          if (key && value) {
+            detailsMap[key] = value;
+          }
+        } else if (detail && detail.key && detail.value) {
+          detailsMap[detail.key] = detail.value;
+        }
+      });
+      return detailsMap;
+    }
+
+    return detailsArray;
+  };
+
+  const detailsMap = parseDetails(details);
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick({
+        title: title || address,
+        price,
+        image: coverPhoto,
+        images: [coverPhoto],
+        description: props.description || "",
+        category: "House",
+        categoryId: 24, // House category ID
+        bedrooms: beds || detailsMap.bedNo,
+        bathrooms: baths || detailsMap.bathNo,
+        propertyType: props.propertyType || "Residential",
+        size: sqft || detailsMap.squareFoot,
+        location: address || distance,
+        used: false,
+        distance: distance || "2.5 km away",
+        story: props.story || "",
+        additionalDetails: props.additionalDetails || "",
+        seller: props.seller || {
+          name: "Property Seller",
+          verified: true,
+          address: address || distance,
+        },
+      });
+    }
+  };
+
   return (
     <div
-      className={`col-span-1 flex justify-center items-center w-[244px] h-[350px] rounded-xl bg-white shadow-sm ${className}`}
+      className={`col-span-1 flex justify-center items-center w-[244px] h-[280px] rounded-xl bg-white shadow-sm cursor-pointer hover:shadow-md transition-shadow ${className}`}
+      onClick={handleClick}
     >
       <div className="w-[244px] h-[280px] flex flex-col">
         <div className="relative w-[244px] h-[180px]">
@@ -39,25 +90,25 @@ const PropertyCard = ({
               alt="Square Foot"
               className="w-4 h-4 mr-1"
             />
-            {detailsMap.squareFoot} sq.ft.
+            {detailsMap.squareFoot || sqft || "1,500"} sq.ft.
           </div>
         </div>
         <div className="p-3 h-[100px] flex flex-col">
           <h3
             className={`font-medium text-base mb-1 line-clamp-1 text-gray-900 ${addressClassName}`}
           >
-            {title}
+            {title || address}
           </h3>
           <div
             className={`flex items-center gap-2 text-sm text-gray-500 mb-1 ${detailsClassName}`}
           >
             <div className="flex row items-center gap-1">
               <img src="/images/bed-icon.svg" alt="Bed" className="w-4 h-4" />
-              <span>{detailsMap.bedNo} bed</span>
+              <span>{detailsMap.bedNo || beds || "3"} bed</span>
             </div>
             <div className="flex items-center gap-1">
               <img src="/images/bath-icon.svg" alt="Bath" className="w-4 h-4" />
-              <span>{detailsMap.bathNo} bath</span>
+              <span>{detailsMap.bathNo || baths || "2"} bath</span>
             </div>
           </div>
           <div className="mt-auto flex items-center justify-between">

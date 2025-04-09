@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import ElectronicCard from "./ElectronicCard";
 
 const styles = {
@@ -14,7 +16,11 @@ const styles = {
   },
 };
 
-const ElectronicsListing = ({ electronicsItems, isDouble = true }) => {
+const ElectronicsListing = ({
+  electronicsItems,
+  isDouble = true,
+  onItemClick,
+}) => {
   // State to store screen height
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
 
@@ -24,6 +30,17 @@ const ElectronicsListing = ({ electronicsItems, isDouble = true }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Function to handle item click
+  const handleItemClick = (item) => {
+    if (onItemClick) {
+      onItemClick({
+        ...item,
+        category: "Electronics",
+        images: item.images || [item.image],
+      });
+    }
+  };
 
   // Function to split items into rows based on screen size
   const splitItemsIntoRows = () => {
@@ -67,7 +84,11 @@ const ElectronicsListing = ({ electronicsItems, isDouble = true }) => {
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className="flex gap-4">
               {row.map((item, index) => (
-                <ElectronicCard key={index} {...item} />
+                <ElectronicCard
+                  key={index}
+                  {...item}
+                  onClick={() => handleItemClick(item)}
+                />
               ))}
             </div>
           ))}
@@ -83,7 +104,11 @@ const ElectronicsListing = ({ electronicsItems, isDouble = true }) => {
           style={styles.scrollbarHide}
         >
           {electronicsItems.map((item, index) => (
-            <ElectronicCard key={index} {...item} />
+            <ElectronicCard
+              key={index}
+              {...item}
+              onClick={() => handleItemClick(item)}
+            />
           ))}
         </div>
       </div>

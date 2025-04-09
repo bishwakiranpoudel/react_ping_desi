@@ -1,7 +1,13 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import PropertyCard from "./PropertyCard";
 
-const PropertyListing = ({ propertyItems = [], isDouble = true }) => {
+const PropertyListing = ({
+  propertyItems = [],
+  isDouble = true,
+  onItemClick,
+}) => {
   const styles = {
     scrollbarHide: {
       overflowX: "auto",
@@ -24,6 +30,17 @@ const PropertyListing = ({ propertyItems = [], isDouble = true }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Function to handle item click
+  const handleItemClick = (item) => {
+    if (onItemClick) {
+      onItemClick({
+        ...item,
+        category: "House",
+        images: item.images || [item.image],
+      });
+    }
+  };
 
   // Function to split items into rows based on screen size
   const splitItemsIntoRows = () => {
@@ -66,7 +83,11 @@ const PropertyListing = ({ propertyItems = [], isDouble = true }) => {
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className="flex gap-4">
               {row.map((item, index) => (
-                <PropertyCard key={index} {...item} />
+                <PropertyCard
+                  key={index}
+                  {...item}
+                  onClick={() => handleItemClick(item)}
+                />
               ))}
             </div>
           ))}
@@ -82,7 +103,11 @@ const PropertyListing = ({ propertyItems = [], isDouble = true }) => {
           style={styles.scrollbarHide}
         >
           {propertyItems.map((item, index) => (
-            <PropertyCard key={index} {...item} />
+            <PropertyCard
+              key={index}
+              {...item}
+              onClick={() => handleItemClick(item)}
+            />
           ))}
         </div>
       </div>
