@@ -4,38 +4,141 @@ import { useState } from "react";
 import { CategorySelector } from "./CategorySelector";
 import { HouseForm } from "./forms/HouseForm";
 import { AutoForm } from "./forms/AutoForm";
-import { FurnitureForm } from "./forms/FurnitureForm";
 import { ElectronicsForm } from "./forms/ElectronicsForm";
 import { ApplianceForm } from "./forms/ApplianceForm";
-import { PropertyForm } from "./forms/PropertyForm";
 import { SubleaseForm } from "./forms/SubleaseForm";
 import { ApparelForm } from "./forms/ApparelForm";
+import { postClassfieds } from "../../services/classified";
+import { toast } from "react-toastify";
+// import { RoommateForm } from "./forms/RoommateForm";
 
 export function ClassifiedContent({ onClose }) {
   const [category, setCategory] = useState(null);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // All categories follow the same 7-step flow
   const maxSteps = 7;
 
-  const handleCategorySelect = (selected) => {
-    setCategory(selected);
+  const handleCategorySelect = (selectedId) => {
+    setCategory(selectedId);
     // Start directly at the image upload step (which is now step 1)
     setStep(1);
     setFormData({
-      category: selected,
+      categoryId: selectedId,
     });
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step < maxSteps) {
       setStep(step + 1);
     } else {
-      // If we're at the last step and the user clicks "Post Classified"
-      // We would normally submit the data to the server here
-      // For now, just close the modal
-      handleClose();
+      try {
+        console.log(formData, "data");
+        setIsProcessing(true);
+        const geohash = localStorage.getItem("geohash") || "9v6m";
+
+        const accessToken = localStorage.getItem("access_token");
+        if (!accessToken) {
+          toast.error("No access token found!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          });
+          return null;
+        }
+
+        const base64Payload = accessToken.split(".")[1];
+        const payload = JSON.parse(atob(base64Payload));
+
+        const submissionFormData = new FormData();
+
+        submissionFormData.append(
+          "cover_photo",
+          formData.images?.[0]?.file || null
+        );
+
+        if (formData.images && formData.images.length > 1) {
+          for (let i = 1; i < formData.images.length; i++) {
+            submissionFormData.append(
+              "product_images",
+              formData.images[i].file
+            );
+          }
+        }
+
+        submissionFormData.append("title", formData.title || "");
+
+        // Handle specific_details
+        if (formData.condition) {
+          submissionFormData.append(
+            "specific_details",
+            `condition:${formData.condition}`
+          );
+        }
+
+        if (formData.kilometers) {
+          submissionFormData.append(
+            "specific_details",
+            `kmRan:${formData.kilometers}`
+          );
+        }
+
+        if (formData.engineType) {
+          submissionFormData.append(
+            "specific_details",
+            `engine:${formData.engineType}`
+          );
+        }
+
+        submissionFormData.append("price", formData.price || "");
+        submissionFormData.append("reason_for_selling", formData.story || "");
+        submissionFormData.append(
+          "more_description",
+          formData.description || ""
+        );
+        submissionFormData.append("seller_id", payload.userid || "1");
+        submissionFormData.append("category_id", formData.categoryId || "");
+        submissionFormData.append("phone_number", formData.phone || "");
+        submissionFormData.append("address1", formData.address1 || "");
+        submissionFormData.append("address2", formData.address2 || "");
+        submissionFormData.append("state", formData.state || "");
+        submissionFormData.append("full_name", formData.name || "");
+        submissionFormData.append("geohash", geohash);
+
+        console.log("Submitting data:", Object.fromEntries(submissionFormData));
+
+        // Call API to post classified
+        const response = await postClassfieds(submissionFormData);
+
+        console.log("Post successful:", response);
+
+        toast.success("Your classified has been posted successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+        });
+
+        // Close modal after successful submission
+        handleClose();
+      } catch (error) {
+        console.error("Error posting classified:", error);
+
+        toast.error(
+          "" + (error.response?.data?.message ?? error.data?.message ?? error),
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          }
+        );
+      } finally {
+        setIsProcessing(false);
+      }
     }
   };
 
@@ -76,25 +179,24 @@ export function ClassifiedContent({ onClose }) {
       onClose: handleClose,
       formData,
       updateFormData,
+      isProcessing,
     };
 
     switch (category) {
-      case "house":
+      case 24: // House
         return <HouseForm {...formProps} />;
-      case "auto":
+      case 25: // Auto
         return <AutoForm {...formProps} />;
-      case "furniture":
-        return <FurnitureForm {...formProps} />;
-      case "electronics":
-        return <ElectronicsForm {...formProps} />;
-      case "appliance":
-        return <ApplianceForm {...formProps} />;
-      case "property":
-        return <PropertyForm {...formProps} />;
-      case "sublease":
+      case 26: // Sublease
         return <SubleaseForm {...formProps} />;
-      case "apparel":
+      case 27: // Electronics
+        return <ElectronicsForm {...formProps} />;
+      case 28: // Appliances
+        return <ApplianceForm {...formProps} />;
+      case 29: // Apparels
         return <ApparelForm {...formProps} />;
+      case 30:
+        return <CategorySelector onSelect={handleCategorySelect} />;
       default:
         return <CategorySelector onSelect={handleCategorySelect} />;
     }
