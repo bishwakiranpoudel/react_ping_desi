@@ -1,3 +1,5 @@
+"use client";
+
 import { CloudRain } from "lucide-react";
 import { useState, useEffect } from "react";
 import { handlePostRequest } from "../../hooks/api";
@@ -27,7 +29,6 @@ export default function WeatherCard({
           {},
           false
         );
-        console.log(response, "Weather Response");
         if (response && response.data) {
           setWeatherData(response);
         }
@@ -57,14 +58,55 @@ export default function WeatherCard({
     weatherData?.data?.algtrending ||
     "Weather details unavailable at the moment.";
 
-  if (isProcessing) {
-    return (
-      <div className="max-w-md mx-auto">
-        <div className="rounded-2xl border overflow-hidden shadow-sm bg-gray-100 p-4">
-          <p className="text-center">Loading weather data...</p>
+  // Skeleton loader component
+  const WeatherCardSkeleton = () => (
+    <div className="max-w-md mx-auto">
+      <div className="rounded-2xl border overflow-hidden shadow-sm bg-gray-100">
+        {/* Card Header Skeleton */}
+        <div className="relative p-4 flex justify-between items-center bg-gray-200 h-24">
+          {/* Day Section Skeleton */}
+          <div className="flex items-center overflow-x-hidden">
+            <div className="h-10 w-10 bg-gray-300 rounded-full animate-pulse"></div>
+            <div className="ml-1 flex flex-col justify-center">
+              <div className="h-4 w-16 bg-gray-300 rounded animate-pulse mb-1"></div>
+              <div className="flex items-center gap-1">
+                <div className="h-6 w-10 bg-gray-300 rounded animate-pulse"></div>
+                <div className="h-3 w-14 bg-gray-300 rounded animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Divider Skeleton */}
+          <div className="h-16 w-px bg-gray-300"></div>
+
+          {/* Night Section Skeleton */}
+          <div className="flex items-center overflow-x-hidden">
+            <div className="ml-4 flex flex-col justify-center">
+              <div className="h-4 w-16 bg-gray-300 rounded animate-pulse mb-1"></div>
+              <div className="flex items-center gap-2">
+                <div className="h-6 w-10 bg-gray-300 rounded animate-pulse"></div>
+                <div className="h-3 w-14 bg-gray-300 rounded animate-pulse"></div>
+              </div>
+            </div>
+            <div className="h-10 w-10 bg-gray-300 rounded-full animate-pulse ml-1"></div>
+          </div>
+        </div>
+
+        {/* Card Content Skeleton */}
+        <div className="p-4 bg-white">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="h-5 w-5 bg-gray-300 rounded animate-pulse"></div>
+            <div className="h-5 w-32 bg-gray-300 rounded animate-pulse"></div>
+          </div>
+          <div className="h-4 w-full bg-gray-300 rounded animate-pulse mb-2"></div>
+          <div className="h-4 w-3/4 bg-gray-300 rounded animate-pulse"></div>
         </div>
       </div>
-    );
+    </div>
+  );
+
+  if (isProcessing) {
+    return <WeatherCardSkeleton />;
   }
 
   return (
@@ -76,12 +118,12 @@ export default function WeatherCard({
           <div className="absolute inset-0">
             <div className="relative w-full h-full">
               <img
-                src={backgroundImg}
+                src={backgroundImg || "/placeholder.svg"}
                 alt="Background"
                 className="object-cover rounded-t-2xl w-full h-full absolute"
                 style={{
                   filter: "blur(1px) brightness(0.9)",
-                  transform: "scale(1.05)", // Slightly scale up to avoid blur edges
+                  transform: "scale(1.05)",
                 }}
               />
             </div>
@@ -90,11 +132,10 @@ export default function WeatherCard({
           {/* Content overlay */}
           <div className="relative z-10 flex justify-between items-center w-full">
             {/* Day Section */}
-
             <div className="flex items-center overflow-x-hidden">
               <div className="h-full flex-shrink-0">
                 <img
-                  src={dayIcon}
+                  src={dayIcon || "/placeholder.svg"}
                   alt="Day icon"
                   className="h-full object-contain rounded-full"
                 />
@@ -136,7 +177,7 @@ export default function WeatherCard({
 
               <div className="h-full flex-shrink-0">
                 <img
-                  src={nightIcon}
+                  src={nightIcon || "/placeholder.svg"}
                   alt="Night icon"
                   className="h-full object-contain rounded-full"
                 />

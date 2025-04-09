@@ -1,6 +1,7 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import { RefreshCw } from "lucide-react";
-import { useEffect } from "react";
 import { fetchHoroscope } from "../../services/horosocope";
 import { toast } from "react-toastify";
 
@@ -21,11 +22,12 @@ const zodiacSigns = [
 ];
 
 export default function HoroscopeCard() {
-  // State for current zodiac sign index and active tab
-  const [currentIndex, setCurrentIndex] = useState(0); // Default to Aries
-  const [activeTab, setActiveTab] = useState("sun"); // Default to sun tab
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [activeTab, setActiveTab] = useState("sun");
   const [isChanging, setIsChanging] = useState(false);
   const [horoscopeData, setHoroscopeData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Initial full card loading
+  const [isContentLoading, setIsContentLoading] = useState(false); // Content-only loading for tab switches
 
   // Get current zodiac sign
   const currentZodiac = zodiacSigns[currentIndex];
@@ -34,13 +36,22 @@ export default function HoroscopeCard() {
   const handleTabChange = (tab) => {
     if (tab !== activeTab) {
       setActiveTab(tab);
+      setIsContentLoading(true); // Only load the content area
     }
   };
 
-  // Gettting Horoscope Data
+  // Getting Horoscope Data
   useEffect(() => {
     async function fetchHoroscopes() {
       try {
+        // If it's the initial load, we'll show the full skeleton
+        // If it's a tab switch, we'll only show the content skeleton
+        if (isLoading) {
+          setIsLoading(true);
+        } else {
+          setIsContentLoading(true);
+        }
+
         const payload = {
           mode: activeTab,
           sign: zodiacSigns[currentIndex],
@@ -49,10 +60,13 @@ export default function HoroscopeCard() {
         setHoroscopeData(horoscopeResponse.horoscope);
       } catch (error) {
         toast.error("Error while fetching the horoscope");
+      } finally {
+        setIsLoading(false);
+        setIsContentLoading(false);
       }
     }
     fetchHoroscopes();
-  }, [activeTab, currentIndex]);
+  }, [activeTab, currentIndex, isLoading]);
 
   // Handle zodiac change
   const handleChange = () => {
@@ -64,8 +78,88 @@ export default function HoroscopeCard() {
     }, 300);
   };
 
+  // Skeleton loader component
+  const HoroscopeCardSkeleton = () => (
+    <div className="max-w-md w-full mx-auto font-afacad">
+      <div className="rounded-xl overflow-hidden shadow-md bg-white">
+        {/* Header with tabs skeleton */}
+        <div className="h-24 relative flex items-end overflow-hidden bg-gray-200">
+          <div className="flex w-full h-full">
+            {/* Sun Tab Skeleton */}
+            <div className="flex-1 flex items-center justify-center pb-2 relative">
+              <div className="h-10 w-10 bg-gray-300 rounded-full animate-pulse"></div>
+            </div>
+
+            {/* Moon Tab Skeleton */}
+            <div className="flex-1 flex items-center justify-center pb-2 relative">
+              <div className="h-10 w-10 bg-gray-300 rounded-full animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Content area skeleton */}
+        <div className="p-4">
+          {/* Zodiac info with icon skeleton */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              {/* Zodiac icon skeleton */}
+              <div className="w-12 h-12 rounded-full border-2 border-gray-300 flex items-center justify-center bg-gray-200 animate-pulse"></div>
+
+              {/* Zodiac name and switch option skeleton */}
+              <div className="ml-3">
+                <div className="h-6 w-24 bg-gray-300 rounded animate-pulse mb-2"></div>
+                <div className="h-4 w-32 bg-gray-300 rounded animate-pulse"></div>
+              </div>
+            </div>
+
+            {/* Change button skeleton */}
+            <div className="h-8 w-20 bg-gray-300 rounded animate-pulse"></div>
+          </div>
+
+          {/* Horoscope content skeleton */}
+          <div className="mt-4">
+            <div className="flex items-center mb-2">
+              <div className="h-6 w-6 bg-gray-300 rounded animate-pulse mr-2"></div>
+              <div className="h-6 w-24 bg-gray-300 rounded animate-pulse"></div>
+            </div>
+
+            <div className="space-y-2">
+              <div className="h-4 w-full bg-gray-300 rounded animate-pulse"></div>
+              <div className="h-4 w-full bg-gray-300 rounded animate-pulse"></div>
+              <div className="h-4 w-3/4 bg-gray-300 rounded animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Add a content-only skeleton loader component
+  const ContentSkeleton = () => (
+    <div className="mt-4">
+      <div className="flex items-center mb-2">
+        <span className="text-lg mr-2">
+          {activeTab === "sun" ? "✨" : "🌙"}
+        </span>
+        <span className="font-medium text-gray-700">
+          {activeTab === "sun" ? "Sun Vibes:" : "Moon Vibes:"}
+        </span>
+      </div>
+
+      <div className="space-y-2 min-h-[80px]">
+        <div className="h-4 w-full bg-gray-300 rounded animate-pulse"></div>
+        <div className="h-4 w-full bg-gray-300 rounded animate-pulse"></div>
+        <div className="h-4 w-3/4 bg-gray-300 rounded animate-pulse"></div>
+      </div>
+    </div>
+  );
+
+  if (isLoading) {
+    return <HoroscopeCardSkeleton />;
+  }
+
   return (
-    <div className="max-w-md mx-auto font-afacad">
+    <div className="max-w-md w-full mx-auto font-afacad">
       <div className="rounded-xl overflow-hidden shadow-md bg-white">
         {/* Header with tabs */}
         <div className="h-24 relative flex items-end overflow-hidden">
@@ -167,24 +261,28 @@ export default function HoroscopeCard() {
           </div>
 
           {/* Horoscope content */}
-          <div className="mt-4">
-            <div className="flex items-center mb-2">
-              <span className="text-lg mr-2">
-                {activeTab === "sun" ? "✨" : "🌙"}
-              </span>
-              <span className="font-medium text-gray-700">
-                {activeTab === "sun" ? "Sun Vibes:" : "Moon Vibes:"}
-              </span>
-            </div>
+          {isContentLoading ? (
+            <ContentSkeleton />
+          ) : (
+            <div className="mt-4">
+              <div className="flex items-center mb-2">
+                <span className="text-lg mr-2">
+                  {activeTab === "sun" ? "✨" : "🌙"}
+                </span>
+                <span className="font-medium text-gray-700">
+                  {activeTab === "sun" ? "Sun Vibes:" : "Moon Vibes:"}
+                </span>
+              </div>
 
-            <div
-              className={`text-gray-600 transition-opacity duration-300 text-sm ${
-                isChanging ? "opacity-0" : "opacity-100"
-              }`}
-            >
-              {horoscopeData && horoscopeData.witty_message}
+              <div
+                className={`text-gray-600 transition-opacity duration-300 text-sm min-h-[80px] ${
+                  isChanging ? "opacity-0" : "opacity-100"
+                }`}
+              >
+                {horoscopeData && horoscopeData.witty_message}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
