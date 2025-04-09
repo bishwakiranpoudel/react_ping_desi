@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { Menu } from "react-feather"; // Using react-feather instead of lucide-react
 import { useIsMobile } from "../hooks/use-mobile";
@@ -25,56 +27,24 @@ import { convertDateToObject } from "../lib/utils";
 import { getPostings } from "../services/scoops";
 
 export default function HomePage() {
-  // State to track viewport height for proper sidebar sizing
   const [viewportHeight, setViewportHeight] = useState("100vh");
-  // State to track visibility of the first card
   const [isFirstCardVisible, setIsFirstCardVisible] = useState(true);
-  // State to track visibility of the second card
   const [isSecondCardVisible, setIsSecondCardVisible] = useState(false);
-  // State for mobile sidebar
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  // Check if we're on mobile
   const isMobile = useIsMobile();
-
-  //Get location data
-
-  // Add these new state variables after the existing state declarations
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
-  /***********************social media*****************/
+  /* ---------------------- Social Media Posts Section ----------------------
+   * Fetches and displays the 5 most recent social media posts
+   * Uses the getPostings service to retrieve posts based on geohash location
+   */
   const [postings, setPostings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const observer = useRef();
-  const POSTS_PER_PAGE = 10;
 
-  // Last element ref callback for intersection observer
-  const lastPostElementRef = useCallback(
-    (node) => {
-      if (loading) return;
-      if (observer.current) observer.current.disconnect();
-
-      observer.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting && hasMore) {
-            fetchMorePosts();
-          }
-        },
-        {
-          rootMargin: "100px",
-        }
-      );
-
-      if (node) observer.current.observe(node);
-    },
-    [loading, hasMore]
-  );
-
-  // Function to fetch initial posts
-  const fetchInitialPosts = async () => {
+  // Function to fetch the 5 most recent posts from the API
+  const fetchPosts = async () => {
     setLoading(true);
     setError(null);
 
@@ -83,9 +53,7 @@ export default function HomePage() {
 
     try {
       const response = await getPostings(requestBody);
-      setPostings(response.posts || []);
-      setOffset(POSTS_PER_PAGE);
-      setHasMore((response.posts || []).length >= POSTS_PER_PAGE);
+      setPostings((response.posts || []).slice(0, 5)); // Only take the first 5 posts
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ??
@@ -100,52 +68,14 @@ export default function HomePage() {
         hideProgressBar: false,
         closeOnClick: true,
       });
-      setHasMore(false);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Function to fetch more posts
-  const fetchMorePosts = async () => {
-    if (!hasMore || loading) return;
-
-    setLoading(true);
-    const geohash = localStorage.getItem("geohash") || "9v6m";
-    const endpoint = "/posting/getAllPostings";
-    const requestBody = { geohash, offset };
-
-    try {
-      const response = await getPostings(requestBody);
-      const newPosts = response.posts || [];
-      if (newPosts.length > 0) {
-        setPostings((prevPosts) => [...prevPosts, ...newPosts]);
-        setOffset((prevOffset) => prevOffset + POSTS_PER_PAGE);
-        setHasMore(newPosts.length >= POSTS_PER_PAGE);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ?? error.data?.message ?? error;
-      setError(errorMessage);
-      toast.error("" + errorMessage, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-      });
-      setHasMore(false);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchInitialPosts();
+    fetchPosts();
   }, []);
-
-  /***********************social media end*****************/
 
   // Function to handle close button click
   const handleCloseClick = () => {
@@ -170,7 +100,6 @@ export default function HomePage() {
   }, []);
 
   // Add this new useEffect for scroll handling in the mobile view
-
   useEffect(() => {
     if (!isMobile) return;
 
@@ -233,7 +162,6 @@ export default function HomePage() {
           state: "Texas",
           city: "Austin",
         });
-        console.log("eeve", eventsResponse.data);
         setCommunityEvents(eventsResponse.data);
       } catch (error) {
         toast.error(
@@ -260,7 +188,6 @@ export default function HomePage() {
       city: selectedLocation.city,
       state: selectedLocation.state,
     };
-    console.log("pay", payload);
     try {
       if (isProcessing) {
         return;
@@ -292,7 +219,10 @@ export default function HomePage() {
     </div>
   );
 
-  // Mobile layout
+  /* ---------------------- Mobile Layout ----------------------
+   * Responsive design for mobile devices
+   * Includes header, main content sections, and bottom navigation
+   */
   if (isMobile) {
     return (
       <div className="min-h-screen bg-gray-50 font-afacad">
@@ -455,17 +385,13 @@ export default function HomePage() {
                   View all <span className="ml-1">→</span>
                 </a>
               </div>
+              {/* Display up to 5 social media posts in a scrollable container */}
               {/* Social Post */}
               <div className="overflow-x-auto ">
                 <div className="flex space-x-4">
-                  {postings?.slice(0, 5).map((post, index) => (
+                  {postings.map((post, index) => (
                     <div
                       key={post.id || post._id || index}
-                      ref={
-                        index === Math.min(postings.length, 5) - 1
-                          ? lastPostElementRef
-                          : null
-                      }
                       className="min-w-full"
                     >
                       <SocialPostCard post={post} isMobile={isMobile} />
@@ -492,8 +418,9 @@ export default function HomePage() {
                   style={{ minWidth: "min-content" }}
                 >
                   {communityEvents &&
-                    communityEvents.map((event) => (
+                    communityEvents.map((event, index) => (
                       <HappeningCard
+                        key={event.id || index}
                         image="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
                         imageAlt="Gender Reveal Party"
                         category={{
@@ -578,6 +505,12 @@ export default function HomePage() {
     );
   }
 
+  /* ---------------------- Desktop Layout ----------------------
+   * Three-column layout for desktop screens
+   * Left sidebar: Navigation menu
+   * Middle: Main content with posts and events
+   * Right sidebar: Weather, horoscope, and local news
+   */
   // Desktop layout (original code)
   return (
     <div className="flex justify-center w-full bg-pink-50 font-afacad ">
@@ -710,16 +643,10 @@ export default function HomePage() {
               Scoops Around You
             </h1>
 
-            {/* Social Posts with Infinite Scroll */}
-            {postings?.slice(0, 5).map((post, index) => (
-              <div
-                key={post.id || post._id || index}
-                ref={
-                  index === Math.min(postings.length, 5) - 1
-                    ? lastPostElementRef
-                    : null
-                }
-              >
+            {/* Display up to 5 social media posts in a scrollable container */}
+            {/* Social Posts - Limited to 5 */}
+            {postings.map((post, index) => (
+              <div key={post.id || post._id || index}>
                 <SocialPostCard
                   post={post}
                   username={post.username}
@@ -729,19 +656,15 @@ export default function HomePage() {
             ))}
             {/* Loading indicator */}
             {loading && <LoadingSpinner />}
-            {/* End of content message */}
-            {!loading && !hasMore && postings.length > 0 && (
-              <div className="text-center py-4 text-gray-500">
-                You've reached the end of the content
-              </div>
-            )}
+
             <h1 className="text-xl lg:text-2xl font-bold mb-4 mt-3 font-fraunces">
               Happening Near You
             </h1>
 
             {communityEvents &&
-              communityEvents.map((event) => (
+              communityEvents.map((event, index) => (
                 <HappeningCard
+                  key={event.id || index}
                   image="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
                   imageAlt="Gender Reveal Party"
                   category={{
