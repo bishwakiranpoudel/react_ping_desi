@@ -26,8 +26,8 @@ export default function HoroscopeCard() {
   const [activeTab, setActiveTab] = useState("sun");
   const [isChanging, setIsChanging] = useState(false);
   const [horoscopeData, setHoroscopeData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isContentLoading, setIsContentLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Initial full card loading
+  const [isContentLoading, setIsContentLoading] = useState(false); // Content-only loading for tab switches
 
   // Get current zodiac sign
   const currentZodiac = zodiacSigns[currentIndex];
@@ -80,7 +80,7 @@ export default function HoroscopeCard() {
 
   // Skeleton loader component
   const HoroscopeCardSkeleton = () => (
-    <div className="max-w-md mx-auto font-afacad">
+    <div className="max-w-md w-full mx-auto font-afacad">
       <div className="rounded-xl overflow-hidden shadow-md bg-white">
         {/* Header with tabs skeleton */}
         <div className="h-24 relative flex items-end overflow-hidden bg-gray-200">
@@ -146,7 +146,7 @@ export default function HoroscopeCard() {
         </span>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2 min-h-[80px]">
         <div className="h-4 w-full bg-gray-300 rounded animate-pulse"></div>
         <div className="h-4 w-full bg-gray-300 rounded animate-pulse"></div>
         <div className="h-4 w-3/4 bg-gray-300 rounded animate-pulse"></div>
@@ -159,7 +159,7 @@ export default function HoroscopeCard() {
   }
 
   return (
-    <div className="max-w-md mx-auto font-afacad">
+    <div className="max-w-md w-full mx-auto font-afacad">
       <div className="rounded-xl overflow-hidden shadow-md bg-white">
         {/* Header with tabs */}
         <div className="h-24 relative flex items-end overflow-hidden">
@@ -275,7 +275,7 @@ export default function HoroscopeCard() {
               </div>
 
               <div
-                className={`text-gray-600 transition-opacity duration-300 text-sm ${
+                className={`text-gray-600 transition-opacity duration-300 text-sm min-h-[80px] ${
                   isChanging ? "opacity-0" : "opacity-100"
                 }`}
               >
