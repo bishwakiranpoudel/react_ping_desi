@@ -25,7 +25,7 @@ export async function getComments(postid) {
   return response;
 }
 export async function removeComments(postid) {
-  const requestBody = { postid: postid };
+  const requestBody = { commentid: postid };
 
   const endpoint = "/posting/removeCommentFromPosting";
   const response = await handlePostRequest(endpoint, requestBody, {}, false);

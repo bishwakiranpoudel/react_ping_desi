@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import CommentInput from "./CommentInput";
 import Comment from "./Comment";
-import { postComments, getComments, } from "../../services/addComment";
+import { postComments, getComments } from "../../services/addComment";
 import { toast } from "react-toastify";
 
 const CommentSection = ({ onCommentCountChange, postid }) => {
