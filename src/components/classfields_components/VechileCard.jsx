@@ -74,11 +74,11 @@ const VehicleCard = ({
 
   return (
     <div
-      className={`col-span-1 flex justify-center items-center w-[244px] h-[280px] rounded-xl bg-white shadow-md border cursor-pointer hover:shadow-md transition-shadow ${className}  `}
+      className={`col-span-1 flex justify-center items-center w-[244px] h-[280px] rounded-xl bg-white shadow-sm border cursor-pointer hover:shadow-md transition-shadow ${className}  `}
       onClick={handleClick}
     >
       <div className="w-[244px] h-[280px] flex flex-col">
-        <div className="relative w-[244px] h-[180px]">
+        <div className="relative w-[244px] h-[180px] border-b">
           <img
             src={coverPhoto || "/placeholder.svg"}
             alt={imageAlt || title}
@@ -94,9 +94,13 @@ const VehicleCard = ({
           >
             {title}
           </h3>
-          <div className="text-gray-600 text-md">
-            {engine || detailsMap.engine || "2.0L Engine"}
+          <div className="flex row items-center gap-1">
+            <img src="/images/engine-icon.svg" alt="Bed" className="w-4 h-4" />
+            <span className="text-gray-600">
+              {engine || detailsMap.engine || "2.0L Engine"}
+            </span>
           </div>
+
           <div className="mt-auto flex items-center justify-between">
             <div
               className={`font-bold text-gray-900 text-lg ${priceClassName}`}

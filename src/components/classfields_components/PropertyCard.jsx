@@ -74,11 +74,11 @@ const PropertyCard = ({
 
   return (
     <div
-      className={`col-span-1 flex justify-center items-center w-[244px] h-[280px] rounded-xl bg-white shadow-md border cursor-pointer hover:shadow-md transition-shadow ${className}`}
+      className={`col-span-1 flex justify-center items-center w-[244px] h-[280px] rounded-xl bg-white shadow-sm border cursor-pointer hover:shadow-md transition-shadow ${className}`}
       onClick={handleClick}
     >
       <div className="w-[244px] h-[280px] flex flex-col">
-        <div className="relative w-[244px] h-[180px]">
+        <div className="relative w-[244px] h-[180px] border-b">
           <img
             src={coverPhoto || "/placeholder.svg?height=400&width=600"}
             alt={imageAlt || address}
