@@ -36,6 +36,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
   };
 
   const categoryId = listing.categoryId || getCategoryId(category);
+  console.log(categoryId, "id");
 
   // Render property details with icons
   const renderPropertyDetails = () => {
@@ -579,10 +580,12 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
 
     // Create a details object with all relevant properties
     const details = {};
+    console.log(categoryId, "categoryid");
 
     // Add properties based on category
     switch (categoryId) {
       case CATEGORY_IDS.HOUSE:
+        console.log(categoryId, "categoryid im in");
         details.bedrooms = listing.bedrooms;
         details.bathrooms = listing.bathrooms;
         details.propertyType = listing.propertyType;
@@ -738,7 +741,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
           {/* Main image */}
           <div className="relative w-full aspect-[4/3] mb-2 overflow-hidden rounded-lg">
             <img
-              src={images[selectedImage] || "/placeholder.svg"}
+              src={images[selectedImage]?.image_url || "/placeholder.svg"}
               alt={`${listing.title} - Image ${selectedImage + 1}`}
               className="w-full h-full object-cover"
             />
@@ -759,7 +762,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
                     onClick={() => setSelectedImage(index)}
                   >
                     <img
-                      src={image || "/placeholder.svg"}
+                      src={image?.image_url || "/placeholder.svg"}
                       alt={`Thumbnail ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
@@ -790,6 +793,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
 
           {/* Property-specific details with icons */}
           {renderPropertyDetails()}
+          {console.log("property details")}
 
           {/* Generic details grid for other categories */}
           {renderDetails()}
