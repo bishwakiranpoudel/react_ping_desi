@@ -28,10 +28,13 @@ const SocialPostCard = ({
   const [reactionGroups, setReactionGroups] = useState({});
   const [showComments, setShowComments] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
+  const [commentsLoaded, setCommentsLoaded] = useState(false);
+  const hiddenCommentSectionRef = useRef(null);
 
   // Function to be passed to CommentSection to update comment count
   const updateCommentCount = (count) => {
     setCommentCount(count);
+    setCommentsLoaded(true);
   };
 
   // Fetch all scoops data on component mount
@@ -491,9 +494,13 @@ const SocialPostCard = ({
     );
   };
 
+  const toggleComments = () => {
+    setShowComments(!showComments);
+  };
+
   if (isMobile) {
     return (
-      <div className="bg-white rounded-lg shadow-sm  w-full flex-shrink-0">
+      <div className="bg-white rounded-lg shadow-sm w-full flex-shrink-0">
         <div className="p-4">
           {/* Header */}
           <div className="flex justify-between items-start mb-3">
@@ -518,16 +525,14 @@ const SocialPostCard = ({
           </div>
 
           {/* Image Carousel */}
-
           {images && images.length > 0 && (
             <div className="relative flex-grow mb-4">
-              <div className="w-full h-full relative rounded-lg  bg-white overflow-hidden">
-                <div className="w-full h-full rounded-lg overflow-hidden ">
+              <div className="w-full h-full relative rounded-lg bg-white overflow-hidden">
+                <div className="w-full h-full rounded-lg overflow-hidden">
                   <img
                     src={images[currentImageIndex] || "/placeholder.svg"}
                     alt="Post image"
                     className="w-full h-[160px] object-cover"
-                    style={{}}
                   />
                 </div>
               </div>
@@ -651,10 +656,10 @@ const SocialPostCard = ({
                 <span className="ml-1 text-sm">{totalLikes}</span>
               </div>
               <button
+                onClick={toggleComments}
                 className="flex items-center text-gray-500"
-                onClick={() => setShowComments(!showComments)}
               >
-                <MessageCircle className="h-5 w-5" />
+                <MessageCircle className="h-5 w-5 mr-1" />
                 <span>
                   {commentCount} {commentCount === 1 ? "comment" : "comments"}
                 </span>
@@ -666,9 +671,23 @@ const SocialPostCard = ({
             </button>
           </div>
 
-          {/* Comment Section */}
+          {/* Hidden CommentSection to fetch count on load */}
+          <div className={commentsLoaded ? "hidden" : "hidden"}>
+            <CommentSection
+              onCommentCountChange={updateCommentCount}
+              postid={post.postingid}
+              autoFetchCount={true}
+              ref={hiddenCommentSectionRef}
+            />
+          </div>
+
+          {/* Visible CommentSection when showComments is true */}
           {showComments && (
-            <CommentSection onCommentCountChange={updateCommentCount} />
+            <CommentSection
+              onCommentCountChange={updateCommentCount}
+              postid={post.postingid}
+              autoFetchCount={!commentsLoaded}
+            />
           )}
         </div>
       </div>
@@ -713,7 +732,6 @@ const SocialPostCard = ({
       </div>
 
       {/* Image Carousel */}
-
       {images && images.length > 0 && (
         <div className="relative flex-grow">
           <div className="w-full h-full relative rounded-lg pr-4 pl-4 bg-white overflow-hidden">
@@ -722,7 +740,6 @@ const SocialPostCard = ({
                 src={images[currentImageIndex] || "/placeholder.svg"}
                 alt="Post image"
                 className="w-full h-[388px] object-cover"
-                style={{}}
               />
             </div>
           </div>
@@ -844,7 +861,7 @@ const SocialPostCard = ({
             <span className="text-sm font-medium ml-1">{totalLikes}</span>
           </div>
           <button
-            onClick={() => setShowComments(!showComments)}
+            onClick={toggleComments}
             className="flex items-center"
             aria-label="Comment"
           >
@@ -863,7 +880,7 @@ const SocialPostCard = ({
                 strokeLinejoin="round"
               />
             </svg>
-            <span>
+            <span className="ml-1">
               {commentCount} {commentCount === 1 ? "comment" : "comments"}
             </span>
           </button>
@@ -881,10 +898,23 @@ const SocialPostCard = ({
         </div>
       </div>
 
-      {/* Comment Section */}
+      {/* Hidden CommentSection to fetch count on load */}
+      <div className={commentsLoaded ? "hidden" : "hidden"}>
+        <CommentSection
+          onCommentCountChange={updateCommentCount}
+          postid={post.postingid}
+          autoFetchCount={true}
+          ref={hiddenCommentSectionRef}
+        />
+      </div>
 
+      {/* Visible CommentSection when showComments is true */}
       {showComments && (
-        <CommentSection onCommentCountChange={updateCommentCount} />
+        <CommentSection
+          onCommentCountChange={updateCommentCount}
+          postid={post.postingid}
+          autoFetchCount={!commentsLoaded}
+        />
       )}
     </div>
   );
