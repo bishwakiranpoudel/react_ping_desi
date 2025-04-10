@@ -21,12 +21,12 @@ export function ClassifiedContent({ onClose }) {
   // All categories follow the same 7-step flow
   const maxSteps = 7;
 
-  const handleCategorySelect = (selectedId) => {
+  const handleCategorySelect = selectedId => {
     setCategory(selectedId);
     // Start directly at the image upload step (which is now step 1)
     setStep(1);
     setFormData({
-      categoryId: selectedId,
+      categoryId: selectedId
     });
   };
 
@@ -38,20 +38,6 @@ export function ClassifiedContent({ onClose }) {
         console.log(formData, "data");
         setIsProcessing(true);
         const geohash = localStorage.getItem("geohash") || "9v6m";
-
-        const accessToken = localStorage.getItem("access_token");
-        if (!accessToken) {
-          toast.error("No access token found!", {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-          });
-          return null;
-        }
-
-        const base64Payload = accessToken.split(".")[1];
-        const payload = JSON.parse(atob(base64Payload));
 
         const submissionFormData = new FormData();
 
@@ -99,7 +85,6 @@ export function ClassifiedContent({ onClose }) {
           "more_description",
           formData.description || ""
         );
-        submissionFormData.append("seller_id", payload.userid || "1");
         submissionFormData.append("category_id", formData.categoryId || "");
         submissionFormData.append("phone_number", formData.phone || "");
         submissionFormData.append("address1", formData.address1 || "");
@@ -107,6 +92,7 @@ export function ClassifiedContent({ onClose }) {
         submissionFormData.append("state", formData.state || "");
         submissionFormData.append("full_name", formData.name || "");
         submissionFormData.append("geohash", geohash);
+        console.log("submission form", submissionFormData);
 
         console.log("Submitting data:", Object.fromEntries(submissionFormData));
 
@@ -119,11 +105,11 @@ export function ClassifiedContent({ onClose }) {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true,
+          closeOnClick: true
         });
 
         // Close modal after successful submission
-        handleClose();
+        //handleClose();
       } catch (error) {
         console.error("Error posting classified:", error);
 
@@ -133,7 +119,7 @@ export function ClassifiedContent({ onClose }) {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true,
+            closeOnClick: true
           }
         );
       } finally {
@@ -159,10 +145,10 @@ export function ClassifiedContent({ onClose }) {
     onClose();
   };
 
-  const updateFormData = (data) => {
-    setFormData((prev) => ({
+  const updateFormData = data => {
+    setFormData(prev => ({
       ...prev,
-      ...data,
+      ...data
     }));
   };
 
@@ -179,7 +165,7 @@ export function ClassifiedContent({ onClose }) {
       onClose: handleClose,
       formData,
       updateFormData,
-      isProcessing,
+      isProcessing
     };
 
     switch (category) {
