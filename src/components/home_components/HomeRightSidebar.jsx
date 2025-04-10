@@ -47,8 +47,8 @@ function HomeRightSidebar() {
           </h2>
         </div>
         {/* Top Local Buzz Section */}
-        <div className="w-[99%] mx-auto bg-white p-4 overflow-hidden font-afacad">
-          <div className="space-y-5">
+        <div className="w-[99%] mx-auto bg-white pt-1 pl-4 pr-4 pb-4 overflow-hidden font-afacad">
+          <div className="space-y-1">
             {/* The Verge News */}
             {newsData.map((item, index) => (
               <NewsCard key={index} item={item} />
