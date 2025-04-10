@@ -3,25 +3,12 @@
 import { useState, useEffect } from "react";
 import CommentInput from "./CommentInput";
 import Comment from "./Comment";
+import { postComments } from "../../services/addComment";
+import { toast } from "react-toastify";
 
-const CommentSection = ({ onCommentCountChange }) => {
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      author: {
-        name: "Aarav Patel",
-        username: "AaravAdventures",
-        avatar:
-          "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-lA9AoCnViwHqU7TtSRdbzwG5evxw63.png",
-      },
-      content:
-        "Wow, that sounds incredible! The Spice Lounge is on my must-visit list now, especially for the Biriyani. Thanks for the recommendation! Can't wait to experience the vibe myself.",
-      image: "https://pingdesi-prod.s3.us-east-2.amazonaws.com/freshmind.jpg",
-      timestamp: "Just now",
-      likes: 0,
-      replies: [],
-    },
-  ]);
+const CommentSection = ({ onCommentCountChange, postid }) => {
+  console.log(postid, "post id");
+  const [comments, setComments] = useState([]);
 
   // Calculate total comments (including replies) and update parent component
   useEffect(() => {
@@ -37,7 +24,7 @@ const CommentSection = ({ onCommentCountChange }) => {
     onCommentCountChange(total);
   }, [comments, onCommentCountChange]);
 
-  const addComment = (text, image = null) => {
+  const addComment = async (text, image = null) => {
     if (!text.trim() && !image) return;
 
     const newComment = {
@@ -55,6 +42,30 @@ const CommentSection = ({ onCommentCountChange }) => {
     };
 
     setComments([...comments, newComment]);
+    try {
+      const response = await postComments({
+        postid: postid,
+        comment: text,
+        image: image,
+      });
+
+      toast.success("Added comment sucssfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+      });
+    } catch (error) {
+      toast.error(
+        "" + (error.response?.data?.message ?? error.data?.message ?? error),
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+        }
+      );
+    }
   };
 
   const addReply = (commentId, text, image = null) => {

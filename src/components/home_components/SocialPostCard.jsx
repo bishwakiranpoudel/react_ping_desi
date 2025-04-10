@@ -884,7 +884,10 @@ const SocialPostCard = ({
       {/* Comment Section */}
 
       {showComments && (
-        <CommentSection onCommentCountChange={updateCommentCount} />
+        <CommentSection
+          onCommentCountChange={updateCommentCount}
+          postid={post.postingid}
+        />
       )}
     </div>
   );
