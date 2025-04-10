@@ -21,6 +21,8 @@ const zodiacSigns = [
 ];
 
 export default function HoroscopeCard() {
+  const dayIcon = "/images/sun-icon.png";
+  const nightIcon = "/images/moon-icon.png";
   // State for current zodiac sign index and active tab
   const [currentIndex, setCurrentIndex] = useState(0); // Default to Aries
   const [activeTab, setActiveTab] = useState("sun"); // Default to sun tab
@@ -90,7 +92,13 @@ export default function HoroscopeCard() {
               }`}
               onClick={() => handleTabChange("sun")}
             >
-              <span className="text-yellow-400 text-5xl mr-2">☀️</span>
+              <span className="text-yellow-400 text-5xl mr-2">
+                <img
+                  src={dayIcon}
+                  alt="Day icon"
+                  className="h-full object-contain rounded-full bg-white/10 backdrop-blur-sm"
+                />
+              </span>
 
               {activeTab === "sun" && (
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-purple-600" />
@@ -106,7 +114,15 @@ export default function HoroscopeCard() {
               }`}
               onClick={() => handleTabChange("moon")}
             >
-              <span className="text-yellow-300 text-5xl mr-2">🌙</span>
+              <span className="text-yellow-300 text-5xl mr-2">
+                <img
+                  src={nightIcon}
+                  alt="Night icon"
+                  className={`h-full object-contain rounded-full bg-white/10 backdrop-blur-sm ${
+                    activeTab === "moon" ? "border-[#7B189F]" : ""
+                  }`}
+                />
+              </span>
 
               {activeTab === "moon" && (
                 <div className="absolute bottom-0 left-0 w-full h-1 bg-purple-600" />
