@@ -29,7 +29,7 @@ const SocialPostCard = ({
   const [showComments, setShowComments] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
   const [commentsLoaded, setCommentsLoaded] = useState(false);
-  const hiddenCommentSectionRef = useRef(null);
+  const commentSectionRef = useRef(null);
 
   // Function to be passed to CommentSection to update comment count
   const updateCommentCount = (count) => {
@@ -671,24 +671,28 @@ const SocialPostCard = ({
             </button>
           </div>
 
-          {/* Hidden CommentSection to fetch count on load */}
-          <div className={commentsLoaded ? "hidden" : "hidden"}>
+          {/* Always render CommentSection but keep it hidden when not showing comments */}
+          <div
+            className={!commentsLoaded ? "hidden" : ""}
+            style={{ display: "none" }}
+          >
             <CommentSection
               onCommentCountChange={updateCommentCount}
               postid={post.postingid}
               autoFetchCount={true}
-              ref={hiddenCommentSectionRef}
+              ref={commentSectionRef}
             />
           </div>
 
           {/* Visible CommentSection when showComments is true */}
-          {showComments && (
+          <div style={{ display: showComments ? "block" : "none" }}>
             <CommentSection
               onCommentCountChange={updateCommentCount}
               postid={post.postingid}
               autoFetchCount={!commentsLoaded}
+              ref={commentSectionRef}
             />
-          )}
+          </div>
         </div>
       </div>
     );
@@ -898,24 +902,28 @@ const SocialPostCard = ({
         </div>
       </div>
 
-      {/* Hidden CommentSection to fetch count on load */}
-      <div className={commentsLoaded ? "hidden" : "hidden"}>
+      {/* Always render CommentSection but keep it hidden when not showing comments */}
+      <div
+        className={!commentsLoaded ? "hidden" : ""}
+        style={{ display: "none" }}
+      >
         <CommentSection
           onCommentCountChange={updateCommentCount}
           postid={post.postingid}
           autoFetchCount={true}
-          ref={hiddenCommentSectionRef}
+          ref={commentSectionRef}
         />
       </div>
 
       {/* Visible CommentSection when showComments is true */}
-      {showComments && (
+      <div style={{ display: showComments ? "block" : "none" }}>
         <CommentSection
           onCommentCountChange={updateCommentCount}
           postid={post.postingid}
           autoFetchCount={!commentsLoaded}
+          ref={commentSectionRef}
         />
-      )}
+      </div>
     </div>
   );
 };
