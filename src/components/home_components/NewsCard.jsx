@@ -9,18 +9,18 @@ const defaultNewsItem = {
   logoBackground: "#9333ea",
   logoLetter: "V",
   imageurl:
-    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+    "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png",
 };
 
 const NewsCard = ({
   title = "Local Buzz",
   item = defaultNewsItem,
-  isMobile = false // Set default value here
+  isMobile = false, // Set default value here
 }) => {
   if (isMobile) {
     // Mobile View
     return (
-      <section className="mb-6 font-afacad">
+      <section className="mb-1 font-afacad">
         <div className="overflow-x-auto pb-2">
           <div className="bg-white rounded-lg shadow-sm overflow-hidden flex-shrink-0 w-64">
             <div className="relative h-32 w-full">
