@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import CommentInput from "./CommentInput";
 import Comment from "./Comment";
-import { postComments, getComments } from "../../services/addComment";
+import { postComments, getComments, } from "../../services/addComment";
 import { toast } from "react-toastify";
 
 const CommentSection = ({ onCommentCountChange, postid }) => {
@@ -17,23 +17,33 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
 
       setIsLoading(true);
       try {
-        console.log(postid, "postid");
         const response = await getComments(postid);
-        console.log(response, "response");
-
         if (response.status === "success" && response.data?.comments) {
           // Transform API comments to match our component structure
           const formattedComments = response.data.comments.map((comment) => ({
             id: comment.id,
             author: {
-              name: comment.username,
-              username: comment.username,
-              avatar: null,
+              name: comment.username || "Unknown User",
+              username: comment.username || "unknown",
+              avatar: null, // Set default avatar if needed
             },
             content: comment.comment,
             timestamp: formatDate(comment.createddate),
             likes: 0,
-            replies: comment.replies || [],
+            // Make sure replies have the same structure as main comments
+            replies: Array.isArray(comment.replies)
+              ? comment.replies.map((reply) => ({
+                  id: reply.id,
+                  author: {
+                    name: reply.username || "Unknown User",
+                    username: reply.username || "unknown",
+                    avatar: null, // Set default avatar if needed
+                  },
+                  content: reply.comment,
+                  timestamp: formatDate(reply.createddate),
+                  likes: 0,
+                }))
+              : [],
           }));
 
           setComments(formattedComments);
@@ -76,6 +86,8 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
 
   // Helper function to format date
   const formatDate = (dateString) => {
+    if (!dateString) return "Unknown date";
+
     const date = new Date(dateString);
     const now = new Date();
     const diffInSeconds = Math.floor((now - date) / 1000);
@@ -140,14 +152,27 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
           (comment) => ({
             id: comment.id,
             author: {
-              name: comment.username,
-              username: comment.username,
+              name: comment.username || "Unknown User",
+              username: comment.username || "unknown",
               avatar: null,
             },
             content: comment.comment,
             timestamp: formatDate(comment.createddate),
             likes: 0,
-            replies: comment.replies || [],
+            // Make sure replies have the same structure as main comments
+            replies: Array.isArray(comment.replies)
+              ? comment.replies.map((reply) => ({
+                  id: reply.id,
+                  author: {
+                    name: reply.username || "Unknown User",
+                    username: reply.username || "unknown",
+                    avatar: null,
+                  },
+                  content: reply.comment,
+                  timestamp: formatDate(reply.createddate),
+                  likes: 0,
+                }))
+              : [],
           })
         );
 
@@ -156,7 +181,7 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
     } catch (error) {
       // Remove the optimistically added comment
       setComments(comments);
-      console.error("error",error)
+      console.error("error", error);
 
       toast.error(
         "" + (error.response?.data?.message ?? error.data?.message ?? error),
@@ -170,15 +195,16 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
     }
   };
 
-  const addReply = (commentId, text, image = null) => {
+  const addReply = async (commentId, text, image = null) => {
     if (!text.trim() && !image) return;
 
+    // Create a temporary reply for optimistic UI update
     const reply = {
       id: Date.now(),
       author: {
         name: "You",
         username: "user",
-        avatar: null,
+        avatar: null, // Make sure avatar is defined
       },
       content: text,
       image: image,
@@ -186,6 +212,7 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
       likes: 0,
     };
 
+    // Optimistically update UI
     const updatedComments = comments.map((comment) => {
       if (comment.id === commentId) {
         return {
@@ -198,14 +225,83 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
 
     setComments(updatedComments);
 
-    // You would typically call an API to save the reply here
-    // and then refresh the comments list
-    toast.success("Reply added successfully!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-    });
+    try {
+      // Call the same postComments API but with parentid
+      const response = await postComments({
+        postid: postid,
+        comment: text,
+        image: image,
+        parentid: commentId, // Add the parent comment ID
+      });
+
+      toast.success("Reply added successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+      });
+
+      // Refresh comments to get the updated list with server-generated IDs
+      const updatedCommentsResponse = await getComments(postid);
+      if (
+        updatedCommentsResponse.status === "success" &&
+        updatedCommentsResponse.data?.comments
+      ) {
+        const formattedComments = updatedCommentsResponse.data.comments.map(
+          (comment) => ({
+            id: comment.id,
+            author: {
+              name: comment.username || "Unknown User",
+              username: comment.username || "unknown",
+              avatar: null,
+            },
+            content: comment.comment,
+            timestamp: formatDate(comment.createddate),
+            likes: 0,
+            // Make sure replies have the same structure as main comments
+            replies: Array.isArray(comment.replies)
+              ? comment.replies.map((reply) => ({
+                  id: reply.id,
+                  author: {
+                    name: reply.username || "Unknown User",
+                    username: reply.username || "unknown",
+                    avatar: null,
+                  },
+                  content: reply.comment,
+                  timestamp: formatDate(reply.createddate),
+                  likes: 0,
+                }))
+              : [],
+          })
+        );
+
+        setComments(formattedComments);
+      }
+    } catch (error) {
+      // Revert to previous state on error
+      setComments(
+        comments.map((comment) => {
+          if (comment.id === commentId) {
+            return {
+              ...comment,
+              replies: comment.replies.filter((r) => r.id !== reply.id),
+            };
+          }
+          return comment;
+        })
+      );
+
+      toast.error(
+        "" + (error.response?.data?.message ?? error.data?.message ?? error),
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+        }
+      );
+      console.error("Failed to post reply:", error);
+    }
   };
 
   const handleLike = (commentId) => {

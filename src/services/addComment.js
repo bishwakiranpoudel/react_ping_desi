@@ -24,3 +24,14 @@ export async function getComments(postid) {
 
   return response;
 }
+export async function removeComments(postid) {
+  const requestBody = { postid: postid };
+
+  const endpoint = "/posting/removeCommentFromPosting";
+  const response = await handlePostRequest(endpoint, requestBody, {}, false);
+  if (response?.error) {
+    throw new Error(response.error);
+  }
+
+  return response;
+}
