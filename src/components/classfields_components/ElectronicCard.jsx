@@ -72,7 +72,7 @@ const ElectronicCard = ({
 
   return (
     <div
-      className={`col-span-1 flex justify-center items-center w-[244px] h-[280px] rounded-xl bg-white shadow-sm cursor-pointer hover:shadow-md transition-shadow ${className}`}
+      className={`col-span-1 flex justify-center items-center w-[244px] h-[280px] rounded-xl bg-white shadow-md border cursor-pointer hover:shadow-md transition-shadow ${className}`}
       onClick={handleClick}
     >
       <div className="w-[244px] h-[280px] flex flex-col">
@@ -80,7 +80,7 @@ const ElectronicCard = ({
           <img
             src={coverPhoto || "/placeholder.svg?height=400&width=600"}
             alt={imageAlt || title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-t-xl"
           />
           <div className="absolute top-3 right-3 bg-white/90 text-black font-medium py-1 px-2 rounded-lg">
             {displayCondition}
