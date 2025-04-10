@@ -7,7 +7,13 @@ import MobileHeader from "../Pages/MobileHeader";
 import BottomNavbar from "./home_components/BottomNavBar";
 import MobileSidebar from "./home_components/MobileSidebar";
 
-function MainLayout({ children, rightSidebar, rs = true }) {
+function MainLayout({
+  children,
+  rightSidebar,
+  rs = true,
+  onMenuClick,
+  menu = false,
+}) {
   // State to track viewport height for proper sidebar sizing
   const [viewportHeight, setViewportHeight] = useState("100vh");
   // State for mobile sidebar
@@ -58,7 +64,7 @@ function MainLayout({ children, rightSidebar, rs = true }) {
     return (
       <div className="min-h-screen bg-gray-50 font-afacad">
         {/* Mobile Header */}
-        <MobileHeader onMenuClick={() => setIsMobileSidebarOpen(true)} />
+        <MobileHeader onMenuClick={onMenuClick} menu={menu} />
 
         {/* Mobile Main Content */}
         <main className="pt-6 pb-20">{children}</main>

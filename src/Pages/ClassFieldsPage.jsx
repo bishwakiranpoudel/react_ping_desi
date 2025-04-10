@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus } from "lucide-react";
+import { ArrowRight, PlusCircle } from "lucide-react";
 import { ClassifiedModal } from "../components/classfields_components/ClassifiedModal";
 import MainLayout from "../components/MainLayout";
 import PropertyListing from "../components/classfields_components/PropertyListing";
@@ -115,7 +115,7 @@ const ClassifiedPage = () => {
 
   return (
     <MainLayout rs={false}>
-      <div className="relative font-afacad">
+      <div className="relative font-afacad ">
         {/* Updated Tabs Section - Only show in list view */}
         {viewMode === "list" && (
           <div className="flex flex-wrap justify-center md:justify-start mb-2 border-b border-gray-300 relative md:overflow-x-hidden">
@@ -157,14 +157,14 @@ const ClassifiedPage = () => {
             {/* Floating button for smaller screens */}
             <button
               onClick={() => setIsModalOpen(true)}
-              className="fixed md:hidden py-1.5 px-3 bg-black text-white rounded-full"
+              className="fixed w-14 h-14 rounded-full bg-black flex items-center justify-center shadow-md border-none cursor-pointer"
               style={{
                 bottom: "4.5rem",
                 right: "2rem",
                 zIndex: 9999 /* Highest z-index */,
               }}
             >
-              <Plus size={18} />
+              <PlusCircle size={32} color="white" />
             </button>
           </div>
         )}
@@ -187,8 +187,20 @@ const ClassifiedPage = () => {
             };
 
             return (
-              <div key={title} className="mb-6">
-                <h2 className="text-xl font-bold font-fraunces">{title}</h2>
+              <div key={title} className="mb-6 pl-4 pt-2">
+                <div className="flex justify-between">
+                  <h2 className="text-xl font-bold font-fraunces pb-4">
+                    {title}
+                  </h2>
+                  <div className="flex items-center space-x-2 font-bold text-gray-600 text-xs mr-2">
+                    <span>See more</span>
+                    <ArrowRight
+                      className="text-sm text-gray-600"
+                      width={10}
+                      height={10}
+                    />
+                  </div>
+                </div>
                 <Component {...props} />
               </div>
             );

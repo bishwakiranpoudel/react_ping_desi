@@ -94,7 +94,7 @@ function UserProfile({
             )}
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-gray-700 text-sm font-medium mb-2">
               Flat Number
             </label>
@@ -110,7 +110,7 @@ function UserProfile({
                 {formData.flatNumber}
               </div>
             )}
-          </div>
+          </div> */}
 
           <div>
             <label className="block text-gray-700 text-sm font-medium mb-2">
@@ -130,7 +130,7 @@ function UserProfile({
             )}
           </div>
 
-          <div>
+          {/* <div>
             <label className="block text-gray-700 text-sm font-medium mb-2">
               {isEditing ? "Phone" : "Address"}
             </label>
@@ -146,7 +146,7 @@ function UserProfile({
                 {formData.phone}
               </div>
             )}
-          </div>
+          </div> */}
 
           {isEditing && (
             <div>

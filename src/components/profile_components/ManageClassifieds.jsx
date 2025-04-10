@@ -2,7 +2,7 @@ import { Trash2, Pencil, Home, Tv } from "lucide-react";
 
 function ManageClassifieds({ classifieds }) {
   // Helper function to get the appropriate icon based on type
-  const getTypeIcon = type => {
+  const getTypeIcon = (type) => {
     switch (type.toLowerCase()) {
       case "house":
         return <Home className="mr-2" size={20} />;
@@ -26,7 +26,7 @@ function ManageClassifieds({ classifieds }) {
         </div>
 
         {/* Listing rows */}
-        {classifieds.map(item => {
+        {classifieds.map((item) => {
           const detailsMap = item.details.reduce((acc, item) => {
             acc[item.key] = item.value;
             return acc;
@@ -81,9 +81,9 @@ function ManageClassifieds({ classifieds }) {
 
               {/* Actions column */}
               <div className="flex justify-end gap-2">
-                <button className="flex items-center gap-1 px-4 py-2 rounded-full border border-gray-300 text-[#7B189F] hover:bg-gray-50">
+                <button className="flex items-center gap-1 px-2 py-2 rounded-full border border-gray-300 text-[#7B189F] hover:bg-gray-50">
                   <Pencil size={16} />
-                  <span>Edit</span>
+                  {/* <span>Edit</span> */}
                 </button>
                 <button className="text-gray-500 hover:text-red-500 p-2">
                   <Trash2 size={20} />

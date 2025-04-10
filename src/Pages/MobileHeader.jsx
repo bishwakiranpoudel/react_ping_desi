@@ -3,13 +3,18 @@
 import { Menu } from "react-feather";
 import LocationDisplay from "../components/home_components/Locations";
 
-function MobileHeader({ onMenuClick }) {
+function MobileHeader({ onMenuClick, menu = false }) {
   return (
     <header className="top-0 left-0 right-0 z-30 border-b">
       <div className="flex items-center p-4">
-        <button onClick={onMenuClick} className="mr-3">
-          <Menu className="h-6 w-6" />
-        </button>
+        {menu && (
+          <button
+            className="bg-none border-none cursor-pointer"
+            onClick={onMenuClick}
+          >
+            <Menu size={24} />
+          </button>
+        )}
 
         <div className="p-4 border-b">
           <div className="flex items-center">
