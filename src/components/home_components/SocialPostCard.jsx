@@ -734,7 +734,14 @@ const SocialPostCard = ({
           />
         </button>
       </div>
-
+      {/* Category */}
+      {post.scoopname && (
+        <div className="px-4 pt-0">
+          <button className="bg-black text-white font-medium text-sm rounded-full border shadow-md px-4 py-1.5 mb-2">
+            {post.scoopname}
+          </button>
+        </div>
+      )}
       {/* Image Carousel */}
       {images && images.length > 0 && (
         <div className="relative flex-grow">
@@ -791,15 +798,6 @@ const SocialPostCard = ({
         </div>
       )}
 
-      {/* Category */}
-      {post.scoopname && (
-        <div className="px-4 pt-3">
-          <button className="bg-gray-100 text-gray-800 font-medium text-sm rounded-full border border-gray-200 px-4 py-1.5">
-            {post.scoopname}
-          </button>
-        </div>
-      )}
-
       {/* Content */}
       <div className="p-4 pt-2">
         <p className="text-sm text-gray-800 mb-2">{post.contentinfo}</p>
@@ -814,7 +812,7 @@ const SocialPostCard = ({
           {scoopData.hoops.map((tag, index) => (
             <span
               key={index}
-              className="bg-purple-50 text-purple-800 text-xs px-3 py-1 rounded-full"
+              className="bg-fuchsia-100 text-fuchsia-800 text-xs px-3 py-1 rounded-full font-medium"
             >
               {tag.hooptag}
             </span>
