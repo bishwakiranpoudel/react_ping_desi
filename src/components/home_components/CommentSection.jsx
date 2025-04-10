@@ -156,6 +156,7 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
     } catch (error) {
       // Remove the optimistically added comment
       setComments(comments);
+      console.error("error",error)
 
       toast.error(
         "" + (error.response?.data?.message ?? error.data?.message ?? error),
