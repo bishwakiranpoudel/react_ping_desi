@@ -905,7 +905,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center space-x-2 mb-2">
-                    <span className="font-medium">{listing.seller.name}</span>
+                    <span className="font-medium">{listing.fullname}</span>
                     {listing.seller.verified && (
                       <span className="bg-gray-800 text-white text-xs px-2 py-0.5 rounded">
                         Verified Neighbor
