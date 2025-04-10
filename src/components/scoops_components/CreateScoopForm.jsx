@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import {
   Camera,
-  Image,
+  ImageIcon,
   MapPin,
   Link2,
   ChevronDown,
@@ -13,7 +13,6 @@ import {
   Loader2,
 } from "lucide-react";
 import Button from "./Button";
-import { getPostings } from "../../services/scoops";
 import Popover from "./Popover";
 import { classNames } from "../../utils/classNames";
 import ImagePickerModal from "./ImagePickerModal";
@@ -37,7 +36,15 @@ function Hashtag({ tag, onClick, selected }) {
   );
 }
 
-function CreateScoopForm() {
+function CreateScoopForm({
+  postings = [],
+  feedLoading = false,
+  initialLoading = false,
+  error = null,
+  hasMore = true,
+  lastPostElementRef = () => {},
+  refreshFeed = () => {},
+}) {
   const [content, setContent] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedHashtags, setSelectedHashtags] = useState([]);
@@ -54,120 +61,6 @@ function CreateScoopForm() {
   const [hoops, setHoops] = useState([]);
   const [availableHoops, setAvailableHoops] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  /***********************social media*****************/
-  const [postings, setPostings] = useState([]);
-  const [feedLoading, setFeedLoading] = useState(true);
-  const [initialLoading, setInitialLoading] = useState(true); // For initial load
-  const [error, setError] = useState(null);
-  const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const observer = useRef();
-  const POSTS_PER_PAGE = 10;
-
-  // Last element ref callback for intersection observer
-  const lastPostElementRef = useCallback(
-    (node) => {
-      if (feedLoading) return;
-      if (observer.current) observer.current.disconnect();
-
-      observer.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting && hasMore) {
-            fetchMorePosts();
-          }
-        },
-        {
-          rootMargin: "100px",
-        }
-      );
-
-      if (node) observer.current.observe(node);
-    },
-    [feedLoading, hasMore]
-  );
-
-  // Function to fetch initial posts
-  const fetchInitialPosts = async () => {
-    setInitialLoading(true);
-    setFeedLoading(true);
-    setError(null);
-
-    const geohash = localStorage.getItem("geohash") || "9v6m";
-    const requestBody = { geohash, offset: 0 };
-
-    try {
-      const response = await getPostings(requestBody);
-      setPostings(response.posts || []);
-      setOffset(POSTS_PER_PAGE);
-      setHasMore((response.posts || []).length >= POSTS_PER_PAGE);
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ??
-        error.data?.message ??
-        error.message ??
-        error;
-      setError(errorMessage);
-
-      toast.error("" + errorMessage, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-      });
-      setHasMore(false);
-    } finally {
-      setFeedLoading(false);
-      setInitialLoading(false);
-    }
-  };
-
-  // Function to fetch more posts
-  const fetchMorePosts = async () => {
-    if (!hasMore || feedLoading) return;
-
-    setFeedLoading(true);
-    const geohash = localStorage.getItem("geohash") || "9v6m";
-    const requestBody = { geohash, offset };
-
-    try {
-      const response = await getPostings(requestBody);
-      const newPosts = response.posts || [];
-      if (newPosts.length > 0) {
-        setPostings((prevPosts) => [...prevPosts, ...newPosts]);
-        setOffset((prevOffset) => prevOffset + POSTS_PER_PAGE);
-        setHasMore(newPosts.length >= POSTS_PER_PAGE);
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ?? error.data?.message ?? error;
-      setError(errorMessage);
-      toast.error("" + errorMessage, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-      });
-      setHasMore(false);
-    } finally {
-      setFeedLoading(false);
-    }
-  };
-
-  // Refresh feed after posting
-  const refreshFeed = () => {
-    setOffset(0);
-    setHasMore(true);
-    fetchInitialPosts();
-  };
-
-  useEffect(() => {
-    fetchInitialPosts();
-  }, []);
-
-  /***********************social media end*****************/
 
   // Fetch scoops and hoops when component mounts
   useEffect(() => {
@@ -591,7 +484,7 @@ function CreateScoopForm() {
               onClick={() => openImagePicker("upload")}
               className="text-gray-500 hover:text-gray-800 transition-colors"
             >
-              <Image size={20} />
+              <ImageIcon size={20} />
             </button>
             <button
               onClick={handleAddLocation}
@@ -643,7 +536,7 @@ function CreateScoopForm() {
             <p>Failed to load posts: {error}</p>
             <button
               className="mt-2 text-sm font-medium underline"
-              onClick={fetchInitialPosts}
+              onClick={refreshFeed}
             >
               Try again
             </button>

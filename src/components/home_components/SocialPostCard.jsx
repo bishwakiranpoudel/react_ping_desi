@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { MoreHorizontal, MessageCircle, ThumbsDown } from "lucide-react";
 import { toast } from "react-toastify";
 import { addLike, getScoops, removeLike } from "../../services/scoops.js";
+import CommentSection from "./CommentSection.jsx";
 
 const SocialPostCard = ({
   post,
@@ -25,6 +26,13 @@ const SocialPostCard = ({
   const likeButtonRef = useRef(null);
   const reactionsRef = useRef(null);
   const [reactionGroups, setReactionGroups] = useState({});
+  const [showComments, setShowComments] = useState(false);
+  const [commentCount, setCommentCount] = useState(0);
+
+  // Function to be passed to CommentSection to update comment count
+  const updateCommentCount = (count) => {
+    setCommentCount(count);
+  };
 
   // Fetch all scoops data on component mount
   useEffect(() => {
@@ -310,8 +318,6 @@ const SocialPostCard = ({
     }
   };
 
-  //console.log(scoopData, post, images, "testing");
-
   // Function to calculate time ago from post creation date
   const getTimeAgo = (createdDate) => {
     if (!createdDate) return "";
@@ -487,7 +493,7 @@ const SocialPostCard = ({
 
   if (isMobile) {
     return (
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden w-full flex-shrink-0">
+      <div className="bg-white rounded-lg shadow-sm  w-full flex-shrink-0">
         <div className="p-4">
           {/* Header */}
           <div className="flex justify-between items-start mb-3">
@@ -644,8 +650,14 @@ const SocialPostCard = ({
                 <ReactionBubbles reactionGroups={reactionGroups} />
                 <span className="ml-1 text-sm">{totalLikes}</span>
               </div>
-              <button className="flex items-center text-gray-500">
+              <button
+                className="flex items-center text-gray-500"
+                onClick={() => setShowComments(!showComments)}
+              >
                 <MessageCircle className="h-5 w-5" />
+                <span>
+                  {commentCount} {commentCount === 1 ? "comment" : "comments"}
+                </span>
               </button>
             </div>
             <button className="flex items-center text-gray-500 text-xs">
@@ -653,6 +665,11 @@ const SocialPostCard = ({
               Nahh! Pass
             </button>
           </div>
+
+          {/* Comment Section */}
+          {showComments && (
+            <CommentSection onCommentCountChange={updateCommentCount} />
+          )}
         </div>
       </div>
     );
@@ -827,7 +844,7 @@ const SocialPostCard = ({
             <span className="text-sm font-medium ml-1">{totalLikes}</span>
           </div>
           <button
-            onClick={onComment}
+            onClick={() => setShowComments(!showComments)}
             className="flex items-center"
             aria-label="Comment"
           >
@@ -846,6 +863,9 @@ const SocialPostCard = ({
                 strokeLinejoin="round"
               />
             </svg>
+            <span>
+              {commentCount} {commentCount === 1 ? "comment" : "comments"}
+            </span>
           </button>
         </div>
 
@@ -860,6 +880,15 @@ const SocialPostCard = ({
           <span>Nahh! Pass</span>
         </div>
       </div>
+
+      {/* Comment Section */}
+
+      {showComments && (
+        <CommentSection
+          onCommentCountChange={updateCommentCount}
+          postid={post.postingid}
+        />
+      )}
     </div>
   );
 };

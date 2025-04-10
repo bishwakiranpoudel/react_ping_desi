@@ -1,13 +1,13 @@
 "use client";
 
-const ClothingCard = ({
+const RoommateCard = ({
   image,
   title,
   price,
   details,
-  type,
+  roomType,
   location,
-  size,
+  moveInDate,
   className = "",
   imageAlt = "",
   badgeClassName = "",
@@ -40,8 +40,9 @@ const ClothingCard = ({
   };
 
   const detailsMap = parseDetails(details);
-  const displayType = type || detailsMap.apparelType || "Clothing";
-  const displaySize = size || detailsMap.size || "M";
+  const displayRoomType = roomType || detailsMap.roomType || "Private";
+  const displayMoveInDate =
+    moveInDate || detailsMap.moveInDate || "Immediately";
 
   const handleClick = () => {
     if (onClick) {
@@ -51,22 +52,21 @@ const ClothingCard = ({
         image,
         images: [image],
         description: props.description || "",
-        category: "Apparels",
-        categoryId: 29, // Apparels category ID
-        type: displayType,
-        size: displaySize,
-        brand: props.brand || "",
-        condition: props.condition || detailsMap.condition || "New",
-        color: props.color || "",
+        category: "Roommate",
+        categoryId: 30, // Roommate category ID
+        roomType: displayRoomType,
+        preferredGender:
+          props.preferredGender || detailsMap.preferredGender || "Any",
+        moveInDate: displayMoveInDate,
+        duration: props.duration || detailsMap.duration || "Long term",
+        utilities: props.utilities || detailsMap.utilities || "Not included",
         location,
-        used:
-          (props.condition || detailsMap.condition || "").toLowerCase() !==
-          "new",
-        distance: props.distance || "1.5 km away",
+        used: false,
+        distance: props.distance || "2.5 km away",
         story: props.story || "",
         additionalDetails: props.additionalDetails || "",
         seller: props.seller || {
-          name: "Clothing Seller",
+          name: "Roommate Finder",
           verified: true,
           address: location,
         },
@@ -87,7 +87,7 @@ const ClothingCard = ({
             className="w-full h-full object-cover"
           />
           <div className="absolute top-3 right-3 bg-white/90 text-black font-medium py-1 px-2 rounded-lg">
-            {displayType}
+            {displayRoomType}
           </div>
         </div>
         <div className="p-3 h-[100px] flex flex-col">
@@ -96,7 +96,9 @@ const ClothingCard = ({
           >
             {title}
           </h3>
-          <div className="text-gray-600 text-md">{displaySize}</div>
+          <div className="text-gray-600 text-md">
+            Available {displayMoveInDate}
+          </div>
           <div className="mt-auto flex items-center justify-between">
             <div
               className={`font-bold text-gray-900 text-lg ${priceClassName}`}
@@ -116,4 +118,4 @@ const ClothingCard = ({
   );
 };
 
-export default ClothingCard;
+export default RoommateCard;

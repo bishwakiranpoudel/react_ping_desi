@@ -1,18 +1,22 @@
 "use client";
 
-const ElectronicCard = ({
-  coverPhoto,
+const SubleaseCard = ({
   title,
-  price,
+  coverPhoto,
+  address,
   details,
-  condition,
-  location,
+  price,
+  beds,
+  baths,
+  distance,
+  availableFrom,
   className = "",
   imageAlt = "",
   badgeClassName = "",
-  titleClassName = "",
+  addressClassName = "",
+  detailsClassName = "",
   priceClassName = "",
-  locationClassName = "",
+  distanceClassName = "",
   onClick,
   ...props
 }) => {
@@ -39,32 +43,32 @@ const ElectronicCard = ({
   };
 
   const detailsMap = parseDetails(details);
-  const displayCondition = condition || detailsMap.condition || "Used";
 
   const handleClick = () => {
     if (onClick) {
       onClick({
-        title,
+        title: title || address,
         price,
         image: coverPhoto,
         images: [coverPhoto],
         description: props.description || "",
-        category: "Electronics",
-        categoryId: 27, // Electronics category ID
-        condition: displayCondition,
-        brand: props.brand || "",
-        model: props.model || "",
-        modelReleaseYear: props.year || "",
-        warranty: props.warranty || "",
-        location,
-        used: displayCondition.toLowerCase() !== "new",
-        distance: props.distance || "2.8 km away",
+        category: "Sublease",
+        categoryId: 26, // Sublease category ID
+        bedrooms: beds || detailsMap.bedNo || "1",
+        bathrooms: baths || detailsMap.bathNo || "1",
+        leaseLength: props.leaseLength || "6 months",
+        availableFrom: availableFrom || "Immediately",
+        size: detailsMap.squareFoot || props.size || "800 sq ft",
+        furnished: props.furnished || false,
+        location: address || distance,
+        used: false,
+        distance: distance || "4.1 km away",
         story: props.story || "",
         additionalDetails: props.additionalDetails || "",
         seller: props.seller || {
-          name: "Electronics Seller",
+          name: "Sublease Owner",
           verified: true,
-          address: location,
+          address: address || distance,
         },
       });
     }
@@ -79,19 +83,36 @@ const ElectronicCard = ({
         <div className="relative w-[244px] h-[180px]">
           <img
             src={coverPhoto || "/placeholder.svg?height=400&width=600"}
-            alt={imageAlt || title}
+            alt={imageAlt || address}
             className="w-full h-full object-cover"
           />
-          <div className="absolute top-3 right-3 bg-white/90 text-black font-medium py-1 px-2 rounded-lg">
-            {displayCondition}
+          <div className="absolute top-3 right-3 bg-white/90 text-black font-medium py-1 px-2 rounded-lg flex items-center gap-1">
+            <img
+              src="/images/square-foot-icon.svg"
+              alt="Square Foot"
+              className="w-4 h-4 mr-1"
+            />
+            {detailsMap.squareFoot || "800"} sq.ft.
           </div>
         </div>
         <div className="p-3 h-[100px] flex flex-col">
           <h3
-            className={`font-medium text-base mb-1 line-clamp-1 text-gray-900 ${titleClassName}`}
+            className={`font-medium text-base mb-1 line-clamp-1 text-gray-900 ${addressClassName}`}
           >
-            {title}
+            {title || address}
           </h3>
+          <div
+            className={`flex items-center gap-2 text-sm text-gray-500 mb-1 ${detailsClassName}`}
+          >
+            <div className="flex row items-center gap-1">
+              <img src="/images/bed-icon.svg" alt="Bed" className="w-4 h-4" />
+              <span>{detailsMap.bedNo || beds || "1"} bed</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <img src="/images/bath-icon.svg" alt="Bath" className="w-4 h-4" />
+              <span>{detailsMap.bathNo || baths || "1"} bath</span>
+            </div>
+          </div>
           <div className="mt-auto flex items-center justify-between">
             <div
               className={`font-bold text-gray-900 text-lg ${priceClassName}`}
@@ -100,9 +121,9 @@ const ElectronicCard = ({
               {price}
             </div>
             <div
-              className={`flex items-center text-xs text-gray-500 ${locationClassName}`}
+              className={`flex items-center text-xs text-gray-500 ${distanceClassName}`}
             >
-              {location}
+              {availableFrom || "Available now"}
             </div>
           </div>
         </div>
@@ -111,4 +132,4 @@ const ElectronicCard = ({
   );
 };
 
-export default ElectronicCard;
+export default SubleaseCard;

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import ClothingCard from "./ClothingCard";
 
 const styles = {
@@ -14,7 +16,7 @@ const styles = {
   },
 };
 
-const ClothingListing = ({ clothingItems, isDouble = true }) => {
+const ClothingListing = ({ clothingItems, isDouble = true, onItemClick }) => {
   // State to store screen height
   const [screenHeight, setScreenHeight] = useState(window.innerHeight);
 
@@ -24,6 +26,17 @@ const ClothingListing = ({ clothingItems, isDouble = true }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Function to handle item click
+  const handleItemClick = (item) => {
+    if (onItemClick) {
+      onItemClick({
+        ...item,
+        category: "Apparels",
+        images: item.images || [item.image],
+      });
+    }
+  };
 
   // Function to split items into rows based on screen size
   const splitItemsIntoRows = () => {
@@ -67,7 +80,11 @@ const ClothingListing = ({ clothingItems, isDouble = true }) => {
           {rows.map((row, rowIndex) => (
             <div key={rowIndex} className="flex gap-4">
               {row.map((item, index) => (
-                <ClothingCard key={index} {...item} />
+                <ClothingCard
+                  key={index}
+                  {...item}
+                  onClick={() => handleItemClick(item)}
+                />
               ))}
             </div>
           ))}
@@ -83,7 +100,11 @@ const ClothingListing = ({ clothingItems, isDouble = true }) => {
           style={styles.scrollbarHide}
         >
           {clothingItems.map((item, index) => (
-            <ClothingCard key={index} {...item} />
+            <ClothingCard
+              key={index}
+              {...item}
+              onClick={() => handleItemClick(item)}
+            />
           ))}
         </div>
       </div>
