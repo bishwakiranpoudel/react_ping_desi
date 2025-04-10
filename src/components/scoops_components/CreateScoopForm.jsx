@@ -27,8 +27,8 @@ function Hashtag({ tag, onClick, selected }) {
       className={classNames(
         "px-3 py-1 rounded-full text-sm font-medium",
         selected
-          ? "bg-primary text-white"
-          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          ? "bg-black text-white"
+          : "border text-black hover:bg-gray-800 hover:text-white"
       )}
     >
       {tag}
@@ -327,7 +327,7 @@ function CreateScoopForm({
   );
 
   const categoryPopoverContent = (
-    <div className="flex flex-col max-h-[400px] overflow-y-auto">
+    <div className="flex flex-col w-fit max-h-[400px] overflow-y-auto">
       {isLoading ? (
         <div className="p-4 text-center">Loading categories...</div>
       ) : (
@@ -368,8 +368,7 @@ function CreateScoopForm({
             </div>
           ))}
           <Button
-            variant="ghost"
-            className="ml-auto flex items-center gap-1 text-primary text-sm"
+            className="ml-auto flex items-center gap-1 text-black  text-sm rounded-lg bg-[#7B189F] hover:bg-[#8e23b5] hover:text-white"
             onClick={handleDoneHashtags}
           >
             <Check size={16} />
@@ -392,9 +391,9 @@ function CreateScoopForm({
           >
             <Button
               variant="outline"
-              className="rounded-full flex items-center gap-2 bg-gray-100 text-gray-700"
+              className="rounded-full flex items-center gap-2 bg-amber-100 text-gray-700"
             >
-              <div className="w-6 h-6 rounded-full bg-gray-700 text-white flex items-center justify-center">
+              <div className="w-6 h-6 rounded-full bg-amber-300 text-amber-800 flex items-center justify-center">
                 <Hash size={14} />
               </div>
               <span>
@@ -417,10 +416,10 @@ function CreateScoopForm({
           >
             <Button
               variant="outline"
-              className="rounded-full flex items-center gap-2 bg-gray-100 text-gray-700"
+              className="rounded-full flex items-center gap-2  text-gray-700 bg-fuchsia-100"
               disabled={!selectedCategory}
             >
-              <div className="w-6 h-6 rounded-full bg-gray-700 text-white flex items-center justify-center">
+              <div className="w-6 h-6 rounded-full bg-fuchsia-300 text-fuchsia-800 flex items-center justify-center">
                 <Hash size={14} />
               </div>
               <span>Add Hoop</span>
@@ -500,7 +499,7 @@ function CreateScoopForm({
           {(content || images.length > 0 || selectedHashtags.length > 0) && (
             <Button
               variant="primary"
-              className="rounded-full px-6 bg-black text-white"
+              className="rounded-full px-6 bg-[#7B189F] text-white hover:bg-[#8823ad]"
               onClick={handlePost}
               disabled={isProcessing}
             >
@@ -520,7 +519,9 @@ function CreateScoopForm({
 
       {/* Social Feed Section */}
       <div className="social-feed">
-        <h2 className="text-xl font-semibold mb-4">Recent Posts</h2>
+        <h2 className="text-xl font-semibold mb-4 font-fraunces">
+          Scoops Near you
+        </h2>
 
         {/* Initial loading state */}
         {initialLoading && (
