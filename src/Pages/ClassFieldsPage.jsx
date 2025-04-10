@@ -11,6 +11,7 @@ import ClothingListing from "../components/classfields_components/ClothingListin
 import RoommateListing from "../components/classfields_components/RoommateListing";
 import ApplianceListing from "../components/classfields_components/ApplianceListing";
 import SubleaseListing from "../components/classfields_components/SubleaseListing";
+import { useIsMobile } from "../hooks/use-mobile";
 import {
   getInitialListings,
   getListingCategories,
@@ -24,7 +25,7 @@ const ClassifiedPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
   const [viewMode, setViewMode] = useState("list"); // "list" or "detail"
-
+  const isMobile = useIsMobile();
   const handleTabChange = (value) => {
     setActiveTab(value);
     setViewMode("list"); // Reset to list view when changing tabs
@@ -78,22 +79,27 @@ const ClassifiedPage = () => {
       try {
         const response = await getListingCategories();
 
-        const responseMap = [];
-        responseMap.push({ value: "All", label: "All" });
-        const tempResponseMap = response.data.map((data) => {
+        const responseMap = response.data.map((data) => {
           return {
             value: data.name,
             label: data.name,
           };
         });
 
-        responseMap.push(...tempResponseMap);
-        setCategoryData(responseMap);
+        // Reverse the responseMap and ensure "All" is at index [0]
+        const reversedResponseMap = [
+          { value: "All", label: "All" },
+          ...responseMap.reverse(),
+        ];
+        reversedResponseMap.pop();
+
+        setCategoryData(reversedResponseMap);
       } catch (error) {
-        console.error("Error occured while fetching categories", error);
-        toast.error("Error occured while fetching categories");
+        console.error("Error occurred while fetching categories", error);
+        toast.error("Error occurred while fetching categories");
       }
     }
+
     fetchCategories();
   }, []);
 
@@ -155,17 +161,19 @@ const ClassifiedPage = () => {
               + Create Classfields
             </button>
             {/* Floating button for smaller screens */}
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="fixed w-14 h-14 rounded-full bg-black flex items-center justify-center shadow-md border-none cursor-pointer"
-              style={{
-                bottom: "4.5rem",
-                right: "2rem",
-                zIndex: 9999 /* Highest z-index */,
-              }}
-            >
-              <PlusCircle size={32} color="white" />
-            </button>
+            {isMobile && !isModalOpen && (
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="fixed w-14 h-14 rounded-full bg-[#7B189F] flex items-center justify-center shadow-md border-none cursor-pointer"
+                style={{
+                  bottom: "4.5rem",
+                  right: "2rem",
+                  zIndex: 9999 /* Highest z-index */,
+                }}
+              >
+                <PlusCircle size={32} color="white" />
+              </button>
+            )}
           </div>
         )}
 
@@ -175,6 +183,7 @@ const ClassifiedPage = () => {
           listingsData?.map((data) => {
             const title = data.category.title;
             const config = categoryComponentMap[title];
+            if (title === "Roommate") return null; // Skip Roommate category
 
             if (!config || (activeTab !== "All" && activeTab !== title))
               return null;
