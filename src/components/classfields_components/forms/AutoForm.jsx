@@ -45,19 +45,44 @@ export function AutoForm({
 
   // Save data when moving between steps
   const handleNext = () => {
-    updateFormData({
-      title,
-      description,
-      images,
-      make,
-      model,
-      year,
-      kilometers,
-      engineType,
-      price,
-      condition,
-      story,
-    });
+    if (step === 3) {
+      const specific_details = {
+        condition,
+        kilometers,
+        engineType,
+      };
+      updateFormData({
+        ...formData,
+        specific_details,
+      });
+    } else if (step === 6) {
+      updateFormData({
+        ...formData,
+        contactName: formData.contactName || "",
+        contactEmail: formData.contactEmail || "",
+        contactPhone: formData.contactPhone || "",
+        preferredContact: formData.preferredContact || "",
+        address: formData.address || "",
+        city: formData.city || "",
+        state: formData.state || "",
+        zip: formData.zip || "",
+        agreeTerms: formData.agreeTerms || false,
+      });
+    } else {
+      updateFormData({
+        title,
+        description,
+        images,
+        make,
+        model,
+        year,
+        kilometers,
+        engineType,
+        price,
+        condition,
+        story,
+      });
+    }
     onNext();
   };
 

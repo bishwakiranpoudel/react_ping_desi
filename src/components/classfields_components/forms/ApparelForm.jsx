@@ -5,7 +5,7 @@ import { FormLayout } from "../FormLayout";
 import { ImageUpload } from "../ImageUpload";
 import { ContactForm } from "./sections/ContactForm";
 import { ClassifiedPreview } from "./sections/ClassifiedPreview";
-
+//specific_details
 export function ApparelForm({
   step,
   maxSteps,
@@ -42,16 +42,49 @@ export function ApparelForm({
 
   // Save data when moving between steps
   const handleNext = () => {
-    updateFormData({
-      title,
-      description,
-      images,
-      condition,
-      apparelType,
-      size,
-      price,
-      story,
-    });
+    if (step === 3) {
+      // Create the specific_details dictionary for step 3
+      const specific_details = {
+        condition,
+        apparelType,
+        size,
+      };
+
+      // Log or send the specific_details dictionary
+      console.log("Specific Details:", specific_details);
+
+      // Update formData with the specific details if needed
+      updateFormData({
+        ...formData,
+        specific_details,
+      });
+    } else if (step === 6) {
+      // Contact Details Step
+      updateFormData({
+        ...formData,
+        contactName: formData.contactName || "",
+        contactEmail: formData.contactEmail || "",
+        contactPhone: formData.contactPhone || "",
+        preferredContact: formData.preferredContact || "",
+        address: formData.address || "",
+        city: formData.city || "",
+        state: formData.state || "",
+        zip: formData.zip || "",
+        agreeTerms: formData.agreeTerms || false,
+      });
+    } else {
+      updateFormData({
+        title,
+        description,
+        images,
+        condition,
+        apparelType,
+        size,
+        price,
+        story,
+      });
+    }
+
     onNext();
   };
 
@@ -285,6 +318,7 @@ export function ApparelForm({
             </div>
           </div>
         );
+
       case 6: // Contact details
         return (
           <ContactForm formData={formData} updateFormData={updateFormData} />

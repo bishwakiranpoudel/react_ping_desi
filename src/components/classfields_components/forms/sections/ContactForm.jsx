@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function ContactForm({ formData, updateFormData }) {
   const [name, setName] = useState(formData.contactName || "");
@@ -15,7 +15,7 @@ export function ContactForm({ formData, updateFormData }) {
   const [zip, setZip] = useState(formData.zip || "");
   const [agreeTerms, setAgreeTerms] = useState(formData.agreeTerms || false);
 
-  // Handle form submission when Next is clicked
+  // Automatically update parent data on change
   const handleSubmit = () => {
     updateFormData({
       contactName: name,
@@ -29,6 +29,21 @@ export function ContactForm({ formData, updateFormData }) {
       agreeTerms,
     });
   };
+
+  // Call handleSubmit whenever a field changes
+  useEffect(() => {
+    handleSubmit();
+  }, [
+    name,
+    email,
+    phone,
+    preferredContact,
+    address,
+    city,
+    state,
+    zip,
+    agreeTerms,
+  ]);
 
   return (
     <div className="space-y-5">
