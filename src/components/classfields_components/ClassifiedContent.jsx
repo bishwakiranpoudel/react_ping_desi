@@ -21,12 +21,12 @@ export function ClassifiedContent({ onClose }) {
   // All categories follow the same 7-step flow
   const maxSteps = 7;
 
-  const handleCategorySelect = (selectedId) => {
+  const handleCategorySelect = selectedId => {
     setCategory(selectedId);
     // Start directly at the image upload step (which is now step 1)
     setStep(1);
     setFormData({
-      categoryId: selectedId,
+      categoryId: selectedId
     });
   };
 
@@ -60,6 +60,7 @@ export function ClassifiedContent({ onClose }) {
         Object.entries(formData.specific_details).forEach(([key, value]) => {
           submissionFormData.append("specific_details", `${key}:${value}`);
         });
+        console.log("submissionform", submissionFormData);
 
         submissionFormData.append("price", formData.price || "");
         submissionFormData.append("reason_for_selling", formData.story || "");
@@ -68,14 +69,14 @@ export function ClassifiedContent({ onClose }) {
           formData.description || ""
         );
 
-        submissionFormData.append("contactName", formData.contactName || "");
+        submissionFormData.append("full_name", formData.contactName || "");
         submissionFormData.append("contactEmail", formData.contactEmail || "");
-        submissionFormData.append("contactPhone", formData.contactPhone || "");
+        submissionFormData.append("phone_number", formData.contactPhone || "");
         submissionFormData.append(
           "preferredContact",
           formData.preferredContact || ""
         );
-        submissionFormData.append("address", formData.address || "");
+        submissionFormData.append("address1", formData.address || "");
         submissionFormData.append("city", formData.city || "");
         submissionFormData.append("state", formData.state || "");
         submissionFormData.append("zip", formData.zip || "");
@@ -91,7 +92,7 @@ export function ClassifiedContent({ onClose }) {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true,
+          closeOnClick: true
         });
 
         // Close modal after successful submission
@@ -105,7 +106,7 @@ export function ClassifiedContent({ onClose }) {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true,
+            closeOnClick: true
           }
         );
       } finally {
@@ -131,10 +132,10 @@ export function ClassifiedContent({ onClose }) {
     onClose();
   };
 
-  const updateFormData = (data) => {
-    setFormData((prev) => ({
+  const updateFormData = data => {
+    setFormData(prev => ({
       ...prev,
-      ...data,
+      ...data
     }));
   };
 
@@ -151,7 +152,7 @@ export function ClassifiedContent({ onClose }) {
       onClose: handleClose,
       formData,
       updateFormData,
-      isProcessing,
+      isProcessing
     };
 
     switch (category) {
