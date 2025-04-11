@@ -57,31 +57,9 @@ export function ClassifiedContent({ onClose }) {
 
         submissionFormData.append("title", formData.title || "");
 
-        submissionFormData.append(
-          "specific_details",
-          JSON.stringify(formData.specific_details)
-        );
-        // // Handle specific_details
-        // if (formData.condition) {
-        //   submissionFormData.append(
-        //     "specific_details",
-        //     `condition:${formData.condition}`
-        //   );
-        // }
-
-        // if (formData.kilometers) {
-        //   submissionFormData.append(
-        //     "specific_details",
-        //     `kmRan:${formData.kilometers}`
-        //   );
-        // }
-
-        // if (formData.engineType) {
-        //   submissionFormData.append(
-        //     "specific_details",
-        //     `engine:${formData.engineType}`
-        //   );
-        // }
+        Object.entries(formData.specific_details).forEach(([key, value]) => {
+          submissionFormData.append("specific_details", `${key}:${value}`);
+        });
 
         submissionFormData.append("price", formData.price || "");
         submissionFormData.append("reason_for_selling", formData.story || "");
@@ -102,10 +80,7 @@ export function ClassifiedContent({ onClose }) {
         submissionFormData.append("state", formData.state || "");
         submissionFormData.append("zip", formData.zip || "");
         submissionFormData.append("geohash", geohash);
-
-        console.log("submission form", submissionFormData);
-
-        console.log("Submitting data:", Object.fromEntries(submissionFormData));
+        console.log(submissionFormData, "submission data");
 
         // Call API to post classified
         const response = await postClassfieds(submissionFormData);
