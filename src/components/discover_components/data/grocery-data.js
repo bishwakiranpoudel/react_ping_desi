@@ -1,0 +1,50 @@
+export const groceryData = [
+  {
+    id: "1",
+    name: "Whole Foods Market",
+    imageUrl: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-aZWVseAuwdmVfcKx8V4I85BTxq65Aw.png", // Using same image for demo
+    distance: 5,
+    freeDelivery: true,
+    storeType: "Organic",
+  },
+  {
+    id: "2",
+    name: "Trader Joe's",
+    imageUrl: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-aZWVseAuwdmVfcKx8V4I85BTxq65Aw.png",
+    distance: 7,
+    freeDelivery: true,
+    storeType: "Specialty",
+  },
+  {
+    id: "3",
+    name: "Kroger",
+    imageUrl: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-aZWVseAuwdmVfcKx8V4I85BTxq65Aw.png",
+    distance: 3,
+    freeDelivery: true,
+    storeType: "Supermarket",
+  },
+  {
+    id: "4",
+    name: "Safeway",
+    imageUrl: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-aZWVseAuwdmVfcKx8V4I85BTxq65Aw.png",
+    distance: 8,
+    freeDelivery: true,
+    storeType: "Supermarket",
+  },
+  {
+    id: "5",
+    name: "Target",
+    imageUrl: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-aZWVseAuwdmVfcKx8V4I85BTxq65Aw.png",
+    distance: 12,
+    freeDelivery: false,
+    storeType: "Department",
+  },
+  {
+    id: "6",
+    name: "Costco",
+    imageUrl: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-aZWVseAuwdmVfcKx8V4I85BTxq65Aw.png",
+    distance: 15,
+    freeDelivery: false,
+    storeType: "Wholesale",
+  },
+]

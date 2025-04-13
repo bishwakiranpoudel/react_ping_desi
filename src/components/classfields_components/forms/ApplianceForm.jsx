@@ -96,37 +96,26 @@ export function ApplianceForm({
         );
       case 2: // Add Title
         return (
-          <div className="p-6">
-            <div className="mb-6">
-              <h2 className="text-xl font-medium font-fraunces">
-                Now, let's title your Appliance
-              </h2>
-              <p className="text-sm text-gray-500">
-                Get creative—you can always tweak it later!
-              </p>
-            </div>
-
-            <div className="space-y-5">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700 font-fraunces"
+              >
+                Add title of your Apparel
+              </label>
               <input
                 id="title"
                 type="text"
-                placeholder="Enter Title Here"
+                placeholder="Enter a descriptive title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-
-              <textarea
-                id="description"
-                placeholder="Describe your appliance"
-                rows={4}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md  p-4"
               />
             </div>
           </div>
         );
+
       case 3: // Key Details
         return (
           <div className="space-y-5">
@@ -224,11 +213,14 @@ export function ApplianceForm({
         );
       case 4: // Price
         return (
-          <div className="space-y-5">
-            <h2 className="text-xl font-medium font-fraunces">
-              Add price for your Appliance
+          <div className="space-y-4">
+            <h2 className="text-lg font-medium font-fraunces">
+              Select your perfect price
             </h2>
-            <div className="space-y-3">
+            <h4 className="text-sm font-medium font-afacad text-gray-500">
+              Condition, features, and more -help others see the value!
+            </h4>
+            <div className="space-y-2">
               <label
                 htmlFor="price"
                 className="block text-sm font-medium text-gray-700"
@@ -238,26 +230,24 @@ export function ApplianceForm({
               <input
                 id="price"
                 type="number"
-                placeholder="Enter price"
+                placeholder="$ Enter the amount"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md  p-4"
               />
             </div>
           </div>
         );
       case 5: // Tell story
         return (
-          <div className="space-y-5">
-            <h2 className="text-xl font-medium font-fraunces">
-              Tell the story behind your Appliance
+          <div className="space-y-4">
+            <h2 className="text-lg font-medium font-fraunces">
+              Tell the story behind your Apparel
             </h2>
             <p className="text-sm text-gray-500">
-              Share why you're selling, what you love about it, or any
-              interesting details that might help buyers connect with your
-              appliance.
+              Why sell? share the details!
             </p>
-            <div className="space-y-3">
+            <div className="space-y-2">
               <label
                 htmlFor="story"
                 className="block text-sm font-medium text-gray-700"
@@ -270,11 +260,31 @@ export function ApplianceForm({
                 placeholder="Tell your story..."
                 value={story}
                 onChange={(e) => setStory(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md  p-4"
+              />
+            </div>
+            <p className="text-sm text-gray-500">
+              Why sell? share the details!
+            </p>
+            <div className="space-y-2">
+              <label
+                htmlFor="story"
+                className="block text-sm font-medium text-gray-700"
+              >
+                More Description
+              </label>
+              <textarea
+                id="description"
+                rows={6}
+                placeholder="Add a personal touch -what should buyers know?"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md  p-4"
               />
             </div>
           </div>
         );
+
       case 6: // Contact details
         return (
           <ContactForm formData={formData} updateFormData={updateFormData} />

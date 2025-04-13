@@ -119,54 +119,26 @@ export function ApparelForm({
                 placeholder="Enter a descriptive title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
-              />
-            </div>
-            <div className="space-y-2">
-              <label
-                htmlFor="description"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Description
-              </label>
-              <textarea
-                id="description"
-                rows={4}
-                placeholder="Describe your apparel"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md  p-4"
               />
             </div>
           </div>
         );
+
       case 3: // Key Details
         return (
           <div className="space-y-4">
             <h2 className="text-lg font-medium font-fraunces">
-              Add key details about your Apparel
+              Add key specifics
             </h2>
+            <h4 className="text-sm font-medium font-afacad text-gray-500">
+              Condition, features, and more -help others see the value!
+            </h4>
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700">
-                Condition
+                Condition *
               </label>
               <div className="space-y-2">
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    id="new"
-                    value="new"
-                    checked={condition === "new"}
-                    onChange={(e) => setCondition(e.target.value)}
-                    className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300"
-                  />
-                  <label
-                    htmlFor="new"
-                    className="ml-3 block text-sm font-medium text-gray-700"
-                  >
-                    New with tags
-                  </label>
-                </div>
                 <div className="flex items-center">
                   <input
                     type="radio"
@@ -222,15 +194,14 @@ export function ApparelForm({
                 htmlFor="apparelType"
                 className="block text-sm font-medium text-gray-700"
               >
-                Apparel Type
+                Select Type *
               </label>
               <select
                 id="apparelType"
                 value={apparelType}
                 onChange={(e) => setApparelType(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md  p-4"
               >
-                <option value="">Select apparel type</option>
                 <option value="shoes">Shoes</option>
                 <option value="tshirt">T-Shirt</option>
                 <option value="pants">Pants/Jeans</option>
@@ -245,13 +216,13 @@ export function ApparelForm({
                 htmlFor="size"
                 className="block text-sm font-medium text-gray-700"
               >
-                Size
+                Select Size *
               </label>
               <select
                 id="size"
                 value={size}
                 onChange={(e) => setSize(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md  p-4"
               >
                 <option value="">Select size</option>
                 <option value="xs">XS</option>
@@ -265,12 +236,16 @@ export function ApparelForm({
             </div>
           </div>
         );
+
       case 4: // Price
         return (
           <div className="space-y-4">
             <h2 className="text-lg font-medium font-fraunces">
-              Add price for your Apparel
+              Select your perfect price
             </h2>
+            <h4 className="text-sm font-medium font-afacad text-gray-500">
+              Condition, features, and more -help others see the value!
+            </h4>
             <div className="space-y-2">
               <label
                 htmlFor="price"
@@ -281,10 +256,10 @@ export function ApparelForm({
               <input
                 id="price"
                 type="number"
-                placeholder="Enter price"
+                placeholder="$ Enter the amount"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md    p-4"
               />
             </div>
           </div>
@@ -296,9 +271,7 @@ export function ApparelForm({
               Tell the story behind your Apparel
             </h2>
             <p className="text-sm text-gray-500">
-              Share why you're selling, what you love about it, or any
-              interesting details that might help buyers connect with your
-              apparel.
+              Why sell? share the details!
             </p>
             <div className="space-y-2">
               <label
@@ -313,7 +286,26 @@ export function ApparelForm({
                 placeholder="Tell your story..."
                 value={story}
                 onChange={(e) => setStory(e.target.value)}
-                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md  p-4"
+              />
+            </div>
+            <p className="text-sm text-gray-500">
+              Why sell? share the details!
+            </p>
+            <div className="space-y-2">
+              <label
+                htmlFor="story"
+                className="block text-sm font-medium text-gray-700"
+              >
+                More Description
+              </label>
+              <textarea
+                id="description"
+                rows={6}
+                placeholder="Add a personal touch -what should buyers know?"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md  p-4"
               />
             </div>
           </div>

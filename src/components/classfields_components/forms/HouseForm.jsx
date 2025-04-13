@@ -111,37 +111,26 @@ export function HouseForm({
         );
       case 2: // Add Title
         return (
-          <div className="p-6">
-            <div className="mb-6">
-              <h2 className="text-xl font-medium font-fraunces">
-                Now, let's title your House
-              </h2>
-              <p className="text-sm text-gray-500">
-                Get creative—you can always tweak it later!
-              </p>
-            </div>
-
-            <div className="space-y-5">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <label
+                htmlFor="title"
+                className="block text-sm font-medium text-gray-700 font-fraunces"
+              >
+                Add title of your Apparel
+              </label>
               <input
                 id="title"
                 type="text"
-                placeholder="Enter Title Here"
+                placeholder="Enter a descriptive title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full p-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-
-              <textarea
-                id="description"
-                placeholder="Describe your property"
-                rows={4}
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-4"
               />
             </div>
           </div>
         );
+
       case 3: // Key Details
         return (
           <div className="space-y-5">
@@ -159,7 +148,7 @@ export function HouseForm({
                 id="propertyType"
                 value={propertyType}
                 onChange={(e) => setPropertyType(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full  border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 p-4"
               >
                 <option value="">Select property type</option>
                 <option value="apartment">Apartment</option>
@@ -179,7 +168,7 @@ export function HouseForm({
                 id="bedrooms"
                 value={bedrooms}
                 onChange={(e) => setBedrooms(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-full  border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 p-4"
               >
                 <option value="">Select number of bedrooms</option>
                 <option value="1">1</option>
@@ -200,7 +189,7 @@ export function HouseForm({
                 id="bathrooms"
                 value={bathrooms}
                 onChange={(e) => setBathrooms(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="w-fullborder border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 p-4"
               >
                 <option value="">Select number of bathrooms</option>
                 <option value="1">1</option>
@@ -214,11 +203,14 @@ export function HouseForm({
         );
       case 4: // Price
         return (
-          <div className="space-y-5">
-            <h2 className="text-xl font-medium font-fraunces">
-              Add price for your House
+          <div className="space-y-4">
+            <h2 className="text-lg font-medium font-fraunces">
+              Select your perfect price
             </h2>
-            <div className="space-y-3">
+            <h4 className="text-sm font-medium font-afacad text-gray-500 ">
+              Condition, features, and more -help others see the value!
+            </h4>
+            <div className="space-y-2">
               <label
                 htmlFor="price"
                 className="block text-sm font-medium text-gray-700"
@@ -228,143 +220,24 @@ export function HouseForm({
               <input
                 id="price"
                 type="number"
-                placeholder="Enter price"
+                placeholder="$ Enter the amount"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-4"
               />
-            </div>
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700">
-                Listing Type
-              </label>
-              <div className="space-y-3">
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    id="rent"
-                    value="rent"
-                    checked={listingType === "rent"}
-                    onChange={(e) => setListingType(e.target.value)}
-                    className="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500"
-                  />
-                  <label
-                    htmlFor="rent"
-                    className="ml-3 block text-sm font-medium text-gray-700"
-                  >
-                    For Rent
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="radio"
-                    id="sale"
-                    value="sale"
-                    checked={listingType === "sale"}
-                    onChange={(e) => setListingType(e.target.value)}
-                    className="h-4 w-4 text-purple-600 border-gray-300 focus:ring-purple-500"
-                  />
-                  <label
-                    htmlFor="sale"
-                    className="ml-3 block text-sm font-medium text-gray-700"
-                  >
-                    For Sale
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <label className="block text-sm font-medium text-gray-700">
-                Amenities
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="parking"
-                    checked={amenities.includes("parking")}
-                    onChange={(e) =>
-                      handleAmenityChange("parking", e.target.checked)
-                    }
-                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
-                  />
-                  <label
-                    htmlFor="parking"
-                    className="ml-3 block text-sm font-medium text-gray-700"
-                  >
-                    Parking
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="ac"
-                    value="ac"
-                    checked={amenities.includes("ac")}
-                    onChange={(e) =>
-                      handleAmenityChange("ac", e.target.checked)
-                    }
-                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
-                  />
-                  <label
-                    htmlFor="ac"
-                    className="ml-3 block text-sm font-medium text-gray-700"
-                  >
-                    Air Conditioning
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="furnished"
-                    value="furnished"
-                    checked={amenities.includes("furnished")}
-                    onChange={(e) =>
-                      handleAmenityChange("furnished", e.target.checked)
-                    }
-                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
-                  />
-                  <label
-                    htmlFor="furnished"
-                    className="ml-3 block text-sm font-medium text-gray-700"
-                  >
-                    Furnished
-                  </label>
-                </div>
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="pets"
-                    value="pets"
-                    checked={amenities.includes("pets")}
-                    onChange={(e) =>
-                      handleAmenityChange("pets", e.target.checked)
-                    }
-                    className="h-4 w-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
-                  />
-                  <label
-                    htmlFor="pets"
-                    className="ml-3 block text-sm font-medium text-gray-700"
-                  >
-                    Pets Allowed
-                  </label>
-                </div>
-              </div>
             </div>
           </div>
         );
       case 5: // Tell story
         return (
-          <div className="space-y-5">
-            <h2 className="text-xl font-medium font-fraunces">
-              Tell the story behind your House
+          <div className="space-y-4">
+            <h2 className="text-lg font-medium font-fraunces">
+              Tell the story behind your Apparel
             </h2>
             <p className="text-sm text-gray-500">
-              Share why you're selling, what you love about it, or any
-              interesting details that might help buyers connect with your
-              property.
+              Why sell? share the details!
             </p>
-            <div className="space-y-3">
+            <div className="space-y-2">
               <label
                 htmlFor="story"
                 className="block text-sm font-medium text-gray-700"
@@ -373,15 +246,35 @@ export function HouseForm({
               </label>
               <textarea
                 id="story"
-                placeholder="Tell your story..."
                 rows={6}
+                placeholder="Tell your story..."
                 value={story}
                 onChange={(e) => setStory(e.target.value)}
-                className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-4"
+              />
+            </div>
+            <p className="text-sm text-gray-500">
+              Why sell? share the details!
+            </p>
+            <div className="space-y-2">
+              <label
+                htmlFor="story"
+                className="block text-sm font-medium text-gray-700"
+              >
+                More Description
+              </label>
+              <textarea
+                id="description"
+                rows={6}
+                placeholder="Add a personal touch -what should buyers know?"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md p-4"
               />
             </div>
           </div>
         );
+
       case 6: // Contact details
         return (
           <ContactForm formData={formData} updateFormData={updateFormData} />
