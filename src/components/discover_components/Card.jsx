@@ -13,7 +13,7 @@ function Card({ item, type }) {
       <div className="mt-2 p-4">
         <h3 className="font-medium text-sm text-gray-800 mb-2">{item.name}</h3>
         <div className="flex items-center mt-1 space-x-2">
-          <div className="flex items-center bg-purple-100 px-3 py-1 rounded-lg">
+          <div className="flex items-center bg-purple-100 px-3 py-1 rounded-sm">
             <img
               src="/images/location.png"
               alt="Location"
@@ -24,7 +24,7 @@ function Card({ item, type }) {
             </span>
           </div>
           {item.freeDelivery && (
-            <div className="flex items-center bg-green-100 px-3 py-1 rounded-lg">
+            <div className="flex items-center bg-green-100 px-3 py-1 rounded-sm">
               <img
                 src="/images/delivery.png"
                 alt="Delivery"
