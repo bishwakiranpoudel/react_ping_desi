@@ -128,7 +128,6 @@ export const handlePostRequest = async (
 
     return response.data;
   } catch (error) {
-    console.log("errl", error.response);
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 401) {
         console.log("error erroehe");
@@ -168,6 +167,13 @@ export const handlePostRequest = async (
 export const handlePatchRequest = async (endpoint, data) => {
   const API_URL = getApiUrl();
   const token = handleGetToken();
+  if (!isTokenValid(token)) {
+    try {
+      token = await getValidTokenRefresh();
+    } catch (error) {
+      //pass
+    }
+  }
   try {
     const response = await axios.patch(`${API_URL}${endpoint}`, data, {
       headers: {

@@ -4,12 +4,21 @@ import { toast } from "react-toastify";
 import { handlePostRequest } from "../hooks/api";
 
 const UsernameRegistration = () => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [isAgeConfirmed, setIsAgeConfirmed] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleContinue = async () => {
+    if (!firstName.trim() || !lastName.trim()) {
+      toast.error("Please Enter Your First And Last Name", {
+        position: "top-right",
+        autoClose: 3000
+      });
+      return;
+    }
+
+    /*
     if (!username.trim()) {
       toast.error("Please enter a username", {
         position: "top-right",
@@ -34,11 +43,12 @@ const UsernameRegistration = () => {
       });
       return;
     }
+    */
 
     if (!isAgeConfirmed) {
       toast.error("Please confirm that you are 18 years or older", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 3000
       });
       return;
     }
@@ -46,7 +56,7 @@ const UsernameRegistration = () => {
     setIsProcessing(true);
     let phoneNumber = localStorage.getItem("phoneNumber");
     try {
-      const payload = { username, email, phoneNumber, avatar_id: 12 };
+      const payload = { firstName, lastName, phoneNumber, gender: "male" };
       const registrationResponse = await handlePostRequest(
         "/auth/register",
         payload,
@@ -62,7 +72,7 @@ const UsernameRegistration = () => {
         {
           position: "top-right",
           autoClose: 5000,
-          hideProgressBar: false,
+          hideProgressBar: false
         }
       );
     } finally {
@@ -93,7 +103,7 @@ const UsernameRegistration = () => {
             </div>
             <div className="mb-6">
               <span className="text-xl font-semibold text-gray-800">
-                Create username
+                Register User Info
               </span>
               <p className="text-sm text-gray-600">
                 You can always change it later
@@ -101,16 +111,16 @@ const UsernameRegistration = () => {
             </div>
             <input
               type="text"
-              placeholder="Username *"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              placeholder="First Name *"
+              value={firstName}
+              onChange={e => setFirstName(e.target.value)}
               className="mb-4 block w-full rounded-md border py-3 px-3"
             />
             <input
-              type="email"
-              placeholder="Email *"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="Last Name *"
+              value={lastName}
+              onChange={e => setLastName(e.target.value)}
               className="mb-6 block w-full rounded-md border py-3 px-3"
             />
             <div className="mb-8 flex items-start">
@@ -118,7 +128,7 @@ const UsernameRegistration = () => {
                 id="age-confirm"
                 type="checkbox"
                 checked={isAgeConfirmed}
-                onChange={(e) => setIsAgeConfirmed(e.target.checked)}
+                onChange={e => setIsAgeConfirmed(e.target.checked)}
                 className="h-4 w-4 text-purple-600 border rounded"
               />
               <label
@@ -132,14 +142,14 @@ const UsernameRegistration = () => {
               onClick={handleContinue}
               disabled={
                 isProcessing ||
-                !username.trim() ||
-                !email.trim() ||
+                !firstName.trim() ||
+                !lastName.trim() ||
                 !isAgeConfirmed
               }
               className={`w-full font-semibold py-3 px-4 rounded-md flex items-center justify-center ${
                 isProcessing ||
-                !username.trim() ||
-                !email.trim() ||
+                !firstName.trim() ||
+                !lastName.trim() ||
                 !isAgeConfirmed
                   ? "bg-purple-400 cursor-not-allowed text-gray-200"
                   : "bg-purple-600 hover:bg-purple-700 text-white"

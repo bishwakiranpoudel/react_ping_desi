@@ -2,16 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import {
-  User,
-  Home,
-  Calendar,
-  LogOut,
-  Pencil,
-  Menu,
-  X,
-  Trash2,
-} from "lucide-react";
+import { X } from "lucide-react";
 import { useIsMobile } from "../hooks/use-mobile";
 import MainLayout from "../components/MainLayout";
 import UserProfile from "../components/profile_components/UserProfile";
@@ -24,6 +15,7 @@ import { GetProfile } from "../services/profile";
 import { queryListings } from "../services/classified";
 import { jwtDecode } from "jwt-decode";
 import { getPersonalEvents } from "../services/events";
+import { handlePatchRequest, handlePostRequest } from "../hooks/api";
 
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -43,6 +35,7 @@ function ProfilePage() {
     async function fetchProfile() {
       try {
         const profile = await GetProfile();
+        console.log("profile", profile);
         setFormData(profile.data);
         setUserData(profile.data);
       } catch (error) {
@@ -85,28 +78,49 @@ function ProfilePage() {
 
   useEffect(() => {}, [isEditing, debugCounter]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = e => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
-    setIsEditing(false);
-    setDebugCounter((prev) => prev + 1);
+  const handleSave = async () => {
+    try {
+      console.log("form data", formData);
+      const payload = new FormData();
+
+      payload.append("username", formData.username);
+      payload.append("gender", formData.gender);
+      payload.append("mobileno", formData.mobileno);
+      payload.append("userloginname", formData.userloginname);
+      payload.append("createddate", formData.createddate);
+      payload.append("firstname", formData.firstname);
+      payload.append("lastname", formData.lastname);
+      payload.append("avatar_id", formData.avatar_id.toString());
+      const editProfileResponse = await handlePatchRequest(
+        "/auth/edit-profile",
+        payload
+      );
+      toast.success("UserProfile Details Updated Successfully");
+    } catch (error) {
+      console.error("Error while saving user data", error);
+      toast.error("Error While Updating User Profile");
+    } finally {
+      setIsEditing(false);
+    }
   };
 
   const handleDiscard = () => {
     setFormData({ ...userData });
     setIsEditing(false);
-    setDebugCounter((prev) => prev + 1);
+    setDebugCounter(prev => prev + 1);
   };
 
   const handleEditClick = () => {
     setIsEditing(true);
-    setDebugCounter((prev) => prev + 1);
+    setDebugCounter(prev => prev + 1);
   };
 
-  const handleTabChange = (tab) => {
+  const handleTabChange = tab => {
     setActiveTab(tab);
     if (isMobile) {
       setSidebarOpen(false);
@@ -123,8 +137,8 @@ function ProfilePage() {
     setImagePickerOpen(false);
   };
 
-  const handleImageSelected = (newImage) => {
-    setFormData((prev) => ({ ...prev, profileImage: newImage }));
+  const handleImageSelected = newImage => {
+    setFormData(prev => ({ ...prev, profileImage: newImage }));
     closeImagePicker();
   };
 
@@ -132,32 +146,33 @@ function ProfilePage() {
     <MainLayout rs={false} onMenuClick={() => setSidebarOpen(true)} menu={true}>
       <div className="min-h-screen flex font-afacad">
         {/* Mobile Sidebar */}
-        {isMobile && sidebarOpen && (
-          <div
-            className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-50 z-50 flex"
-            onClick={() => setSidebarOpen(false)}
-          >
+        {isMobile &&
+          sidebarOpen && (
             <div
-              className="w-4/5 max-w-sm bg-white h-full p-4 box-border"
-              onClick={(e) => e.stopPropagation()}
+              className="fixed top-0 left-0 w-full h-full bg-white bg-opacity-50 z-50 flex"
+              onClick={() => setSidebarOpen(false)}
             >
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="m-0 text-xl">Menu</h2>
-                <button
-                  className="bg-none border-none cursor-pointer"
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  <X size={24} />
-                </button>
+              <div
+                className="w-4/5 max-w-sm bg-white h-full p-4 box-border"
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="m-0 text-xl">Menu</h2>
+                  <button
+                    className="bg-none border-none cursor-pointer"
+                    onClick={() => setSidebarOpen(false)}
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
+                <SidebarContent
+                  handleTabChange={handleTabChange}
+                  activeTab={activeTab}
+                  setSidebarOpen={setSidebarOpen}
+                />
               </div>
-              <SidebarContent
-                handleTabChange={handleTabChange}
-                activeTab={activeTab}
-                setSidebarOpen={setSidebarOpen}
-              />
             </div>
-          </div>
-        )}
+          )}
 
         {/* Desktop Sidebar */}
         {!isMobile && (
@@ -172,24 +187,25 @@ function ProfilePage() {
 
         {/* Main Content */}
         <div className="flex-1 p-4 mt-0">
-          {activeTab === "profile" && formData && (
-            <UserProfile
-              formData={formData}
-              isEditing={isEditing}
-              handleAvatarClick={handleAvatarClick}
-              handleInputChange={handleInputChange}
-              handleDiscard={handleDiscard}
-              handleSave={handleSave}
-              setIsEditing={setIsEditing}
-              setDebugCounter={setDebugCounter}
-            />
-          )}
-          {activeTab === "events" && eventsData && (
-            <ManageEvents events={eventsData} />
-          )}
-          {activeTab === "classifieds" && classifiedData && (
-            <ManageClassifieds classifieds={classifiedData} />
-          )}
+          {activeTab === "profile" &&
+            formData && (
+              <UserProfile
+                formData={formData}
+                isEditing={isEditing}
+                handleAvatarClick={handleAvatarClick}
+                handleInputChange={handleInputChange}
+                handleDiscard={handleDiscard}
+                handleSave={handleSave}
+                setIsEditing={setIsEditing}
+                setDebugCounter={setDebugCounter}
+              />
+            )}
+          {activeTab === "events" &&
+            eventsData && <ManageEvents events={eventsData} />}
+          {activeTab === "classifieds" &&
+            classifiedData && (
+              <ManageClassifieds classifieds={classifiedData} />
+            )}
         </div>
       </div>
       {imagePickerOpen && (

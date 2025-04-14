@@ -277,7 +277,10 @@ function HomePage2() {
                   communityEvents.map((event, index) => (
                     <HappeningCard
                       key={event.id || index}
-                      image={event.cover_image}
+                      image={
+                        event.cover_image ||
+                        "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                      }
                       imageAlt="Gender Reveal Party"
                       category={{
                         name: "Community",
@@ -336,7 +339,10 @@ function HomePage2() {
           communityEvents.map((event, index) => (
             <HappeningCard
               key={event.id || index}
-              image={event.cover_image}
+              image={
+                event.cover_image ||
+                "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+              }
               imageAlt="Gender Reveal Party"
               category={{
                 name: "Community",
