@@ -10,7 +10,7 @@ function Card({ item, type }) {
           className="w-full h-full object-cover"
         />
       </div>
-      <div className="mt-2 p-4">
+      <div className="mt-2 p-2">
         <h3 className="font-medium text-sm text-gray-800 mb-2">{item.name}</h3>
         <div className="flex items-center mt-1 space-x-2">
           <div className="flex items-center bg-purple-100 px-3 py-1 rounded-sm">
