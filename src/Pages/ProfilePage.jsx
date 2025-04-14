@@ -3,14 +3,7 @@
 
 import { useState, useEffect } from "react";
 import {
-  User,
-  Home,
-  Calendar,
-  LogOut,
-  Pencil,
-  Menu,
   X,
-  Trash2,
 } from "lucide-react";
 import { useIsMobile } from "../hooks/use-mobile";
 import MainLayout from "../components/MainLayout";
@@ -43,6 +36,7 @@ function ProfilePage() {
     async function fetchProfile() {
       try {
         const profile = await GetProfile();
+        console.log('profile',profile)
         setFormData(profile.data);
         setUserData(profile.data);
       } catch (error) {
