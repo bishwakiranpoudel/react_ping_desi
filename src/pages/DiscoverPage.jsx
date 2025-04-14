@@ -17,6 +17,7 @@ const DiscoverPage = () => {
   const [loading, setLoading] = useState(true);
 
   const currentCategory = tabs.find((tab) => tab.title === activeTab);
+  console.log(currentCategory, "current category");
 
   useEffect(() => {
     const getUserLocation = () => {
