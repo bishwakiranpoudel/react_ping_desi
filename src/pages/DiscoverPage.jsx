@@ -6,6 +6,7 @@ import ContentView from "../components/discover_components/ContentView";
 import { tabs } from "../components/discover_components/data/tabs-data";
 import { useState, useEffect } from "react";
 import { googleMapHandler } from "../services/googlemap";
+import { toast } from "react-toastify";
 
 const DiscoverPage = () => {
   const isMobile = useIsMobile();
@@ -17,7 +18,6 @@ const DiscoverPage = () => {
   const [loading, setLoading] = useState(true);
 
   const currentCategory = tabs.find((tab) => tab.title === activeTab);
-  console.log(currentCategory, "current category");
 
   useEffect(() => {
     const getUserLocation = () => {
@@ -43,12 +43,11 @@ const DiscoverPage = () => {
     getUserLocation();
   }, []);
 
-  console.log(location, "locations", currentCategory, "currentCategory");
-
   useEffect(() => {
     const fetchPlaces = async () => {
       if (!location || !currentCategory) return;
 
+      console.log("location", location, currentCategory);
       setLoading(true);
       try {
         const data = await googleMapHandler({
@@ -63,6 +62,7 @@ const DiscoverPage = () => {
         setResults(data.results || []);
       } catch (err) {
         console.error("Fetch error:", err.message);
+        toast.error("Something went wrong while fetching places.");
         setError("Something went wrong while fetching places.");
       } finally {
         setLoading(false);
@@ -71,8 +71,6 @@ const DiscoverPage = () => {
 
     fetchPlaces();
   }, [location, activeTab, currentMile]);
-
-  console.log(results, "results");
 
   return (
     <MainLayout rs={false}>
