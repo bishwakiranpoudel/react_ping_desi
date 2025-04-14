@@ -2,17 +2,17 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { LocationProvider } from "./context/location-context";
-import HomePage2 from "./Pages/HomePage";
-import DiscoverPage from "./Pages/DiscoverPage";
+import HomePage2 from "./pages/HomePage";
+import DiscoverPage from "./pages/DiscoverPage";
 
-import SigninPage from "./Pages/Signin";
-import UserSignup from "./Pages/Signup";
-import OTPVerification from "./Pages/OtpVerification";
-import UsernameRegistration from "./Pages/UsernameRegistration";
+import SigninPage from "./pages/Signin";
+import UserSignup from "./pages/Signup";
+import OTPVerification from "./pages/OtpVerification";
+import UsernameRegistration from "./pages/UsernameRegistration";
 import { useEffect } from "react";
-import CategoryTabs from "./Pages/ClassFieldsPage";
-import ProfilePage from "./Pages/ProfilePage";
-import ScoopsPage from "./Pages/ScoopsPage";
+import CategoryTabs from "./pages/ClassFieldsPage";
+import ProfilePage from "./pages/ProfilePage";
+import ScoopsPage from "./pages/ScoopsPage";
 
 // Remove the CSS import that's causing the error
 

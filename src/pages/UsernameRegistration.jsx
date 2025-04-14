@@ -52,11 +52,12 @@ const UsernameRegistration = () => {
       });
       return;
     }
+    */
 
     if (!isAgeConfirmed) {
       toast.error("Please confirm that you are 18 years or older", {
         position: "top-right",
-        autoClose: 3000,
+        autoClose: 3000
       });
       return;
     }
@@ -91,7 +92,7 @@ const UsernameRegistration = () => {
         {
           position: "top-right",
           autoClose: 5000,
-          hideProgressBar: false,
+          hideProgressBar: false
         }
       );
     } finally {

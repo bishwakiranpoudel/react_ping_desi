@@ -10,7 +10,7 @@ function UserProfile({
   handleDiscard,
   handleSave,
   setIsEditing,
-  setDebugCounter,
+  setDebugCounter
 }) {
   return (
     <div className="space-y-4">
@@ -23,7 +23,7 @@ function UserProfile({
               onClick={handleAvatarClick}
             >
               <img
-                src={formData.profileImage || "/placeholder.svg"}
+                src={formData.avatarurl || "/placeholder.svg"}
                 alt="User Avatar"
                 className="w-full h-full object-cover"
               />
@@ -35,7 +35,7 @@ function UserProfile({
                 Lives in {formData.location}
               </p>
               <div className="flex items-center mt-1">
-                <div className="w-1 h-4 bg-[#7B189F] mr-2"></div>
+                <div className="w-1 h-4 bg-[#7B189F] mr-2" />
                 <span className="text-sm">@{formData.username}</span>
               </div>
             </div>
@@ -46,7 +46,7 @@ function UserProfile({
               className="bg-[#7B189F] hover:bg-[#6A1587] text-white rounded-full px-4 py-2 flex items-center gap-1"
               onClick={() => {
                 setIsEditing(true);
-                setDebugCounter((prev) => prev + 1);
+                setDebugCounter(prev => prev + 1);
               }}
             >
               <Pencil size={16} />
@@ -78,12 +78,12 @@ function UserProfile({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-gray-700 text-sm font-medium mb-2">
-              Name
+              UserName
             </label>
             {isEditing ? (
               <input
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
-                name="name"
+                name="username"
                 value={formData.username}
                 onChange={handleInputChange}
               />
@@ -119,8 +119,8 @@ function UserProfile({
             {isEditing ? (
               <input
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
-                name="email"
-                value={formData.userloginname}
+                name="userloginname"
+                value={formData.userloginname || ""}
                 onChange={handleInputChange}
               />
             ) : (
@@ -129,8 +129,64 @@ function UserProfile({
               </div>
             )}
           </div>
+          <div>
+            <label className="block text-gray-700 text-sm font-medium mb-2">
+              First Name
+            </label>
+            {isEditing ? (
+              <input
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
+                name="firstname"
+                value={formData.firstname}
+                onChange={handleInputChange}
+              />
+            ) : (
+              <div className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
+                {formData.firstname}
+              </div>
+            )}
+          </div>
 
-          {/* <div>
+          <div>
+            <label className="block text-gray-700 text-sm font-medium mb-2">
+              Last Name
+            </label>
+            {isEditing ? (
+              <input
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
+                name="lastname"
+                value={formData.lastname}
+                onChange={handleInputChange}
+              />
+            ) : (
+              <div className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
+                {formData.lastname}
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block text-gray-700 text-sm font-medium mb-2">
+              Phone Number
+            </label>
+            {isEditing ? (
+              <input
+                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
+                name="mobileno"
+                value={formData.mobileno}
+                onChange={handleInputChange}
+              />
+            ) : (
+              <div className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
+                {formData.mobileno}
+              </div>
+            )}
+          </div>
+
+          {/*
+
+{/*
+          <div>
+
             <label className="block text-gray-700 text-sm font-medium mb-2">
               {isEditing ? "Phone" : "Address"}
             </label>
@@ -146,7 +202,9 @@ function UserProfile({
                 {formData.phone}
               </div>
             )}
-          </div> */}
+          </div> 
+            *****}
+
 
           {isEditing && (
             <div>
@@ -184,6 +242,7 @@ function UserProfile({
               </div>
             </div>
           )}
+          */}
         </div>
       </div>
     </div>
