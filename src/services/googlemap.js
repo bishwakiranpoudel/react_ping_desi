@@ -3,7 +3,7 @@ export async function googleMapHandler({
   longitude,
   radius,
   type,
-  keyword,
+  keyword
 }) {
   console.log(
     latitude,
@@ -15,12 +15,20 @@ export async function googleMapHandler({
   );
 
   try {
-    const response = await fetch("/api/places", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ latitude, longitude, radius, type, keyword }),
+    const googleApiKey = process.env.REACT_APP_GOOGLEMAP_API;
+
+    if (!googleApiKey) {
+      throw new Error("Api Key missing");
+    }
+
+    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&type=${type}&keyword=${keyword}&key=${googleApiKey}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" }
     });
 
+    console.log("response", response);
     if (!response.ok) {
       throw new Error("API request failed");
     }
