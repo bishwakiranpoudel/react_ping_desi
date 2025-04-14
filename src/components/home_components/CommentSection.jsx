@@ -11,81 +11,87 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch comments when component mounts or postid changes
-  useEffect(() => {
-    const fetchComments = async () => {
-      if (!postid) return;
+  useEffect(
+    () => {
+      const fetchComments = async () => {
+        if (!postid) return;
 
-      setIsLoading(true);
-      try {
-        const response = await getComments(postid);
-        if (response.status === "success" && response.data?.comments) {
-          // Transform API comments to match our component structure
-          const formattedComments = response.data.comments.map((comment) => ({
-            id: comment.id,
-            author: {
-              name: comment.username || "Unknown User",
-              username: comment.username || "unknown",
-              avatar: null, // Set default avatar if needed
-            },
-            content: comment.comment,
-            timestamp: formatDate(comment.createddate),
-            likes: 0,
-            // Make sure replies have the same structure as main comments
-            replies: Array.isArray(comment.replies)
-              ? comment.replies.map((reply) => ({
-                  id: reply.id,
-                  author: {
-                    name: reply.username || "Unknown User",
-                    username: reply.username || "unknown",
-                    avatar: null, // Set default avatar if needed
-                  },
-                  content: reply.comment,
-                  timestamp: formatDate(reply.createddate),
-                  likes: 0,
-                }))
-              : [],
-          }));
+        setIsLoading(true);
+        try {
+          const response = await getComments(postid);
+          if (response.status === "success" && response.data?.comments) {
+            // Transform API comments to match our component structure
+            const formattedComments = response.data.comments.map(comment => ({
+              id: comment.id,
+              author: {
+                name: comment.username || "Unknown User",
+                username: comment.username || "unknown",
+                avatar: comment.avatar_url // Set default avatar if needed
+              },
+              content: comment.comment,
+              timestamp: formatDate(comment.createddate),
+              likes: 0,
+              // Make sure replies have the same structure as main comments
+              replies: Array.isArray(comment.replies)
+                ? comment.replies.map(reply => ({
+                    id: reply.id,
+                    author: {
+                      name: reply.username || "Unknown User",
+                      username: reply.username || "unknown",
+                      avatar: reply.avatar_url // Set default avatar if needed
+                    },
+                    content: reply.comment,
+                    timestamp: formatDate(reply.createddate),
+                    likes: 0
+                  }))
+                : []
+            }));
 
-          setComments(formattedComments);
-        }
-      } catch (error) {
-        toast.error(
-          "" +
-            (error.response?.data?.message ??
-              error.data?.message ??
-              "Failed to load comments"),
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
+            setComments(formattedComments);
           }
-        );
-        console.error("Failed to fetch comments:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+        } catch (error) {
+          toast.error(
+            "" +
+              (error.response?.data?.message ??
+                error.data?.message ??
+                "Failed to load comments"),
+            {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true
+            }
+          );
+          console.error("Failed to fetch comments:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
-    fetchComments();
-  }, [postid]);
+      fetchComments();
+    },
+    [postid]
+  );
 
   // Calculate total comments (including replies) and update parent component
-  useEffect(() => {
-    const calculateTotalComments = () => {
-      let total = comments.length;
-      comments.forEach((comment) => {
-        total += comment.replies ? comment.replies.length : 0;
-      });
-      return total;
-    };
+  useEffect(
+    () => {
+      const calculateTotalComments = () => {
+        let total = comments.length;
+        comments.forEach(comment => {
+          total += comment.replies ? comment.replies.length : 0;
+        });
+        return total;
+      };
 
-    const total = calculateTotalComments();
-    onCommentCountChange(total);
-  }, [comments, onCommentCountChange]);
+      const total = calculateTotalComments();
+      onCommentCountChange(total);
+    },
+    [comments, onCommentCountChange]
+  );
 
   // Helper function to format date
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     if (!dateString) return "Unknown date";
 
     const date = new Date(dateString);
@@ -116,13 +122,13 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
       author: {
         name: "You", // This will be replaced when we refresh comments
         username: "user",
-        avatar: null,
+        avatar: null
       },
       content: text,
       image: image,
       timestamp: "Just now",
       likes: 0,
-      replies: [],
+      replies: []
     };
 
     // Optimistically add comment to UI
@@ -132,14 +138,14 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
       const response = await postComments({
         postid: postid,
         comment: text,
-        image: image,
+        image: image
       });
 
       toast.success("Comment added successfully!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true,
+        closeOnClick: true
       });
 
       // Refresh comments to get the updated list with server-generated IDs
@@ -149,30 +155,30 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
         updatedCommentsResponse.data?.comments
       ) {
         const formattedComments = updatedCommentsResponse.data.comments.map(
-          (comment) => ({
+          comment => ({
             id: comment.id,
             author: {
               name: comment.username || "Unknown User",
               username: comment.username || "unknown",
-              avatar: null,
+              avatar: comment.avatar_url
             },
             content: comment.comment,
             timestamp: formatDate(comment.createddate),
             likes: 0,
             // Make sure replies have the same structure as main comments
             replies: Array.isArray(comment.replies)
-              ? comment.replies.map((reply) => ({
+              ? comment.replies.map(reply => ({
                   id: reply.id,
                   author: {
                     name: reply.username || "Unknown User",
                     username: reply.username || "unknown",
-                    avatar: null,
+                    avatar: reply.avatar_url
                   },
                   content: reply.comment,
                   timestamp: formatDate(reply.createddate),
-                  likes: 0,
+                  likes: 0
                 }))
-              : [],
+              : []
           })
         );
 
@@ -189,7 +195,7 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true,
+          closeOnClick: true
         }
       );
     }
@@ -204,20 +210,20 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
       author: {
         name: "You",
         username: "user",
-        avatar: null, // Make sure avatar is defined
+        avatar: null // Make sure avatar is defined
       },
       content: text,
       image: image,
       timestamp: "Just now",
-      likes: 0,
+      likes: 0
     };
 
     // Optimistically update UI
-    const updatedComments = comments.map((comment) => {
+    const updatedComments = comments.map(comment => {
       if (comment.id === commentId) {
         return {
           ...comment,
-          replies: [...(comment.replies || []), reply],
+          replies: [...(comment.replies || []), reply]
         };
       }
       return comment;
@@ -231,14 +237,14 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
         postid: postid,
         comment: text,
         image: image,
-        parentid: commentId, // Add the parent comment ID
+        parentid: commentId // Add the parent comment ID
       });
 
       toast.success("Reply added successfully!", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true,
+        closeOnClick: true
       });
 
       // Refresh comments to get the updated list with server-generated IDs
@@ -248,30 +254,30 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
         updatedCommentsResponse.data?.comments
       ) {
         const formattedComments = updatedCommentsResponse.data.comments.map(
-          (comment) => ({
+          comment => ({
             id: comment.id,
             author: {
               name: comment.username || "Unknown User",
               username: comment.username || "unknown",
-              avatar: null,
+              avatar: comment.avatar_url
             },
             content: comment.comment,
             timestamp: formatDate(comment.createddate),
             likes: 0,
             // Make sure replies have the same structure as main comments
             replies: Array.isArray(comment.replies)
-              ? comment.replies.map((reply) => ({
+              ? comment.replies.map(reply => ({
                   id: reply.id,
                   author: {
                     name: reply.username || "Unknown User",
                     username: reply.username || "unknown",
-                    avatar: null,
+                    avatar: reply.avatar_url
                   },
                   content: reply.comment,
                   timestamp: formatDate(reply.createddate),
-                  likes: 0,
+                  likes: 0
                 }))
-              : [],
+              : []
           })
         );
 
@@ -280,11 +286,11 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
     } catch (error) {
       // Revert to previous state on error
       setComments(
-        comments.map((comment) => {
+        comments.map(comment => {
           if (comment.id === commentId) {
             return {
               ...comment,
-              replies: comment.replies.filter((r) => r.id !== reply.id),
+              replies: comment.replies.filter(r => r.id !== reply.id)
             };
           }
           return comment;
@@ -297,29 +303,29 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true,
+          closeOnClick: true
         }
       );
       console.error("Failed to post reply:", error);
     }
   };
 
-  const handleLike = (commentId) => {
-    const updatedComments = comments.map((comment) => {
+  const handleLike = commentId => {
+    const updatedComments = comments.map(comment => {
       if (comment.id === commentId) {
         return {
           ...comment,
-          likes: comment.likes + 1,
+          likes: comment.likes + 1
         };
       }
 
       // Check if the comment is in replies
       const updatedReplies = comment.replies
-        ? comment.replies.map((reply) => {
+        ? comment.replies.map(reply => {
             if (reply.id === commentId) {
               return {
                 ...reply,
-                likes: reply.likes + 1,
+                likes: reply.likes + 1
               };
             }
             return reply;
@@ -328,7 +334,7 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
 
       return {
         ...comment,
-        replies: updatedReplies,
+        replies: updatedReplies
       };
     });
 
@@ -339,7 +345,7 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
       position: "top-right",
       autoClose: 2000,
       hideProgressBar: false,
-      closeOnClick: true,
+      closeOnClick: true
     });
   };
 
@@ -355,7 +361,7 @@ const CommentSection = ({ onCommentCountChange, postid }) => {
         {isLoading ? (
           <div className="text-center py-4">Loading comments...</div>
         ) : comments.length > 0 ? (
-          comments.map((comment) => (
+          comments.map(comment => (
             <Comment
               key={comment.id}
               comment={comment}

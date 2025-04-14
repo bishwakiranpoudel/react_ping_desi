@@ -507,7 +507,7 @@ const SocialPostCard = ({
             <div className="flex items-center">
               <div className="h-10 w-10 bg-gray-200 rounded-full mr-3 overflow-hidden">
                 <img
-                  src="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                  src={post.avatar_url}
                   alt={post.username}
                   className="w-full h-full object-cover"
                 />
@@ -706,7 +706,7 @@ const SocialPostCard = ({
       <div className="flex items-center p-4">
         <div className="h-10 w-10 rounded-full overflow-hidden relative">
           <img
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image%20%281%29-VNHYdwoXdSCUtVSUkbo0TIIpdt9Mzf.png"
+            src={post.avatar_url}
             alt={post.username}
             className="w-full h-full object-cover"
             style={{ position: "absolute", top: 0, left: 0 }}

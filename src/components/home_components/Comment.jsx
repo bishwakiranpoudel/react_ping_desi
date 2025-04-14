@@ -80,21 +80,22 @@ const Comment = ({ comment, onReply, onLike }) => {
             </div>
           )}
 
-          {comment.replies && comment.replies.length > 0 && (
-            <div className="mt-3 pl-4 border-l-2 border-gray-200">
-              {comment.replies.map((reply) => (
-                <Comment
-                  key={reply.id}
-                  comment={{
-                    ...reply,
-                    replyingTo: comment.author.username || comment.author.name,
-                  }}
-                  onReply={onReply}
-                  onLike={onLike}
-                />
-              ))}
-            </div>
-          )}
+          {comment.replies &&
+            comment.replies.length > 0 && (
+              <div className="mt-3 pl-4 border-l-2 border-gray-200">
+                {comment.replies.map(reply => (
+                  <Comment
+                    key={reply.id}
+                    comment={{
+                      ...reply,
+                      replyingTo: comment.author.username || comment.author.name
+                    }}
+                    onReply={onReply}
+                    onLike={onLike}
+                  />
+                ))}
+              </div>
+            )}
         </div>
       </div>
     </div>
