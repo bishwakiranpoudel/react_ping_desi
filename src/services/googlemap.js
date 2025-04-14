@@ -1,3 +1,5 @@
+import { handlePostRequest } from "../hooks/api";
+
 export async function googleMapHandler({
   latitude,
   longitude,
@@ -21,20 +23,26 @@ export async function googleMapHandler({
       throw new Error("Api Key missing");
     }
 
-    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&type=${type}&keyword=${keyword}&key=${googleApiKey}`;
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" }
-    });
-
-    console.log("response", response);
-    if (!response.ok) {
+    const payload = {
+      googleApiKey: googleApiKey,
+      latitude,
+      longitude,
+      type,
+      keyword,
+      radius
+    };
+    console.log("payyload", payload);
+    const response = await handlePostRequest(
+      "/location/retrieveGoogleMapsApiData",
+      payload,
+      undefined,
+      false
+    );
+    if (response.status != "success") {
       throw new Error("API request failed");
     }
 
-    const data = await response.json();
-    return data;
+    return response.data;
   } catch (error) {
     console.error("Client fetch error:", error);
     throw error;
