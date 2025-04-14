@@ -15,13 +15,18 @@ export default function SigninPage() {
       toast.error("Please enter a mobile number", {
         position: "top-right",
         autoClose: 5000,
-        hideProgressBar: false,
+        hideProgressBar: false
       });
       return;
     }
 
     setIsProcessing(true);
-    const payload = { phoneNumber, otpMethod };
+    let formattedPhoneNumber = phoneNumber;
+    if (!phoneNumber.startsWith("+977")) {
+      formattedPhoneNumber = `+1${phoneNumber}`;
+    }
+
+    const payload = { phoneNumber: formattedPhoneNumber, otpMethod };
     try {
       const otpResponse = await handlePostRequest(
         "/auth/request-otp",
@@ -39,7 +44,7 @@ export default function SigninPage() {
         {
           position: "top-right",
           autoClose: 5000,
-          hideProgressBar: false,
+          hideProgressBar: false
         }
       );
     } finally {
@@ -79,14 +84,14 @@ export default function SigninPage() {
                 </label>
                 <div className="flex rounded-md shadow-sm">
                   <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                    (555)
+                    (+1)
                   </span>
                   <input
                     type="tel"
                     className="flex-1 min-w-0 block w-full px-3 py-3 rounded-none rounded-r-md border border-gray-300 focus:ring-purple-500 focus:border-purple-500 text-sm"
                     placeholder="Enter mobile number"
                     value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    onChange={e => setPhoneNumber(e.target.value)}
                   />
                 </div>
               </div>
