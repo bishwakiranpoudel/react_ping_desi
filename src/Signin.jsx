@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSpinner } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { handlePostRequest } from "../hooks/api";
+import { handlePostRequest } from "./hooks/api";
 
 export default function SigninPage() {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ export default function SigninPage() {
       toast.error("Please enter a mobile number", {
         position: "top-right",
         autoClose: 5000,
-        hideProgressBar: false
+        hideProgressBar: false,
       });
       return;
     }
@@ -44,7 +44,7 @@ export default function SigninPage() {
         {
           position: "top-right",
           autoClose: 5000,
-          hideProgressBar: false
+          hideProgressBar: false,
         }
       );
     } finally {
@@ -91,7 +91,7 @@ export default function SigninPage() {
                     className="flex-1 min-w-0 block w-full px-3 py-3 rounded-none rounded-r-md border border-gray-300 focus:ring-purple-500 focus:border-purple-500 text-sm"
                     placeholder="Enter mobile number"
                     value={phoneNumber}
-                    onChange={e => setPhoneNumber(e.target.value)}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </div>
               </div>

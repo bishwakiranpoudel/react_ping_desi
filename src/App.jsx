@@ -5,14 +5,13 @@ import { LocationProvider } from "./context/location-context";
 import HomePage2 from "./pages/HomePage";
 import DiscoverPage from "./pages/DiscoverPage";
 
-import SigninPage from "./pages/Signin";
-import UserSignup from "./pages/Signup";
 import OTPVerification from "./pages/OtpVerification";
 import UsernameRegistration from "./pages/UsernameRegistration";
 import { useEffect } from "react";
 import CategoryTabs from "./pages/ClassFieldsPage";
 import ProfilePage from "./pages/ProfilePage";
 import ScoopsPage from "./pages/ScoopsPage";
+import SigninPage from "./Signin";
 
 // Remove the CSS import that's causing the error
 
