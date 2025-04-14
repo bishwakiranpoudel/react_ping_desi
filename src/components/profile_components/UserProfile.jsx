@@ -83,7 +83,7 @@ function UserProfile({
             {isEditing ? (
               <input
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
-                name="name"
+                name="username"
                 value={formData.username}
                 onChange={handleInputChange}
               />
@@ -119,8 +119,8 @@ function UserProfile({
             {isEditing ? (
               <input
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
-                name="email"
-                value={formData.userloginname}
+                name="userloginname"
+                value={formData.userloginname || ""}
                 onChange={handleInputChange}
               />
             ) : (
@@ -136,7 +136,7 @@ function UserProfile({
             {isEditing ? (
               <input
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
-                name="email"
+                name="firstname"
                 value={formData.firstname}
                 onChange={handleInputChange}
               />
@@ -154,7 +154,7 @@ function UserProfile({
             {isEditing ? (
               <input
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
-                name="email"
+                name="lastname"
                 value={formData.lastname}
                 onChange={handleInputChange}
               />
@@ -171,7 +171,7 @@ function UserProfile({
             {isEditing ? (
               <input
                 className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
-                name="email"
+                name="mobileno"
                 value={formData.mobileno}
                 onChange={handleInputChange}
               />
