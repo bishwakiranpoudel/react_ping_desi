@@ -1,16 +1,17 @@
 "use client";
 
 function TabNavigation({ tabs, activeTab, onTabChange }) {
+  console.log(tabs, "tabs");
   return (
     <div className="mt-4 overflow-x-auto">
       <div className="flex space-x-6 pb-2 min-w-max">
         {tabs.map((tab, index) => (
           <TabItem
             key={index}
-            name={tab.name}
+            name={tab.title}
             icon={tab.icon}
-            isActive={tab.name === activeTab}
-            onClick={() => onTabChange(tab.name)}
+            isActive={tab.title === activeTab}
+            onClick={() => onTabChange(tab.title)}
           />
         ))}
       </div>

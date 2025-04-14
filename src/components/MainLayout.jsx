@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useIsMobile } from "../hooks/use-mobile";
-import LeftSidebar from "../Pages/LeftSidebar";
-import MobileHeader from "../Pages/MobileHeader";
+import LeftSidebar from "../pages/LeftSidebar";
+import MobileHeader from "../pages/MobileHeader";
 import BottomNavbar from "./home_components/BottomNavBar";
 import MobileSidebar from "./home_components/MobileSidebar";
 

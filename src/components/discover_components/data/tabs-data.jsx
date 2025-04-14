@@ -56,15 +56,28 @@ const UserIcon = () => (
 );
 
 export const tabs = [
-  { name: "Restaurants", icon: <UtensilsIcon /> },
-  { name: "Groceries", icon: <ShoppingBagIcon /> },
-  { name: "Home Based", icon: <HomeIcon /> },
-  { name: "Place holder 1", icon: <UserIcon /> },
-  { name: "Place holder 2", icon: <UserIcon /> },
-  { name: "Place holder 3", icon: <UserIcon /> },
-  { name: "Place holder 4", icon: <UserIcon /> },
-  { name: "Place holder 5", icon: <UserIcon /> },
-  { name: "Place holder 6", icon: <UserIcon /> },
-  { name: "Place holder 7", icon: <UserIcon /> },
-  { name: "Place holder 8", icon: <UserIcon /> },
+  {
+    title: "Restaurants",
+    type: "restaurant",
+    keyword: "indian",
+    icon: <UtensilsIcon />,
+  },
+  {
+    title: "Groceries",
+    type: "supermarket|grocery_or_supermarket|food|store",
+    keyword: "indian",
+    icon: <ShoppingBagIcon />,
+  },
+  {
+    title: "Professionals",
+    type: "doctors",
+    keyword: "doctors+near+me+that+speak-desi+language",
+    icon: <HomeIcon />,
+  },
+  {
+    title: "Small Businesses",
+    type: "florist|convenience_store|liquor_store|pet_store|clothing_store|jewelry_store|book_store|hardware_store|pharmacy|beauty_salon|hair_care|laundry|shoe_store",
+    keyword: "",
+    icon: <UserIcon />,
+  },
 ];
