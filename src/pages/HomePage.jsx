@@ -14,7 +14,7 @@ import HomeRightSidebar from "../components/home_components/HomeRightSidebar";
 
 import {
   fetchMasterCities,
-  retrieveMasterCity,
+  retrieveMasterCity
 } from "../services/locationServices";
 import { fetchCommunityEvents } from "../services/events";
 import { convertDateToObject } from "../lib/utils";
@@ -69,7 +69,7 @@ function HomePage2() {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true,
+        closeOnClick: true
       });
     } finally {
       setLoading(false);
@@ -91,7 +91,7 @@ function HomePage2() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState({
     state: "",
-    city: "",
+    city: ""
   });
   const [communityEvents, setCommunityEvents] = useState([]);
 
@@ -112,7 +112,7 @@ function HomePage2() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true,
+            closeOnClick: true
           }
         );
       } finally {
@@ -132,7 +132,7 @@ function HomePage2() {
         const location = await fetchMasterCities(payload);
         const eventsResponse = await fetchCommunityEvents({
           state: location.data[0].state,
-          city: location.data[0].city,
+          city: location.data[0].city
         });
         setCommunityEvents(eventsResponse.data);
       } catch (error) {
@@ -142,7 +142,7 @@ function HomePage2() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true,
+            closeOnClick: true
           }
         );
       } finally {
@@ -158,7 +158,7 @@ function HomePage2() {
       latitude: 0.0,
       longitude: 0.0,
       city: selectedLocation.city,
-      state: selectedLocation.state,
+      state: selectedLocation.state
     };
     try {
       if (isProcessing) {
@@ -175,7 +175,7 @@ function HomePage2() {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true,
+          closeOnClick: true
         }
       );
     } finally {
@@ -277,13 +277,13 @@ function HomePage2() {
                   communityEvents.map((event, index) => (
                     <HappeningCard
                       key={event.id || index}
-                      image="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+                      image={event.cover_image}
                       imageAlt="Gender Reveal Party"
                       category={{
                         name: "Community",
                         icon: "👨‍👩‍👧‍👦",
                         bgColor: "bg-blue-100",
-                        textColor: "text-blue-800",
+                        textColor: "text-blue-800"
                       }}
                       title={event.name}
                       description={event.description}
@@ -336,13 +336,13 @@ function HomePage2() {
           communityEvents.map((event, index) => (
             <HappeningCard
               key={event.id || index}
-              image="https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png"
+              image={event.cover_image}
               imageAlt="Gender Reveal Party"
               category={{
                 name: "Community",
                 icon: "👨‍👩‍👧‍👦",
                 bgColor: "bg-blue-100",
-                textColor: "text-blue-800",
+                textColor: "text-blue-800"
               }}
               title={event.name}
               description={event.description}
