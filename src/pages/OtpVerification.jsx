@@ -44,24 +44,21 @@ const OTPVerification = () => {
       toast.error(error.response?.data?.message || "Error sending OTP", {
         position: "top-right",
         autoClose: 5000,
-        hideProgressBar: false
+        hideProgressBar: false,
       });
     } finally {
       setIsProcessing(false);
     }
   };
 
-  useEffect(
-    () => {
-      if (countdown > 0) {
-        const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-        return () => clearTimeout(timer);
-      }
-    },
-    [countdown]
-  );
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
 
-  const formatTime = seconds => `00:${seconds < 10 ? "0" : ""}${seconds}`;
+  const formatTime = (seconds) => `00:${seconds < 10 ? "0" : ""}${seconds}`;
 
   const handleChange = (index, value) => {
     if (value.length <= 1 && /^[0-9]*$/.test(value)) {
@@ -81,12 +78,9 @@ const OTPVerification = () => {
     }
   };
 
-  const handlePaste = e => {
+  const handlePaste = (e) => {
     e.preventDefault();
-    const pastedData = e.clipboardData
-      .getData("text")
-      .slice(0, 6)
-      .split("");
+    const pastedData = e.clipboardData.getData("text").slice(0, 6).split("");
 
     if (/^[0-9]+$/.test(pastedData.join(""))) {
       const newOtp = [...otp];
@@ -99,11 +93,11 @@ const OTPVerification = () => {
   };
 
   const handleVerify = async () => {
-    if (otp.some(digit => digit === "")) {
+    if (otp.some((digit) => digit === "")) {
       toast.error("Please enter the complete OTP", {
         position: "top-right",
         autoClose: 3000,
-        hideProgressBar: false
+        hideProgressBar: false,
       });
       return;
     }
@@ -121,12 +115,12 @@ const OTPVerification = () => {
       if (otpResponse.token) {
         localStorage.setItem("token", JSON.stringify(otpResponse.token));
         toast.success("OTP Verified. Proceeding to Dashboard.", {
-          position: "top-right"
+          position: "top-right",
         });
         navigate("/home");
       } else {
         toast.success("OTP Verified. Proceeding to User Registration.", {
-          position: "top-right"
+          position: "top-right",
         });
         navigate("/username");
       }
@@ -134,7 +128,7 @@ const OTPVerification = () => {
       toast.error(error.response?.data?.message || "Invalid OTP", {
         position: "top-right",
         autoClose: 5000,
-        hideProgressBar: false
+        hideProgressBar: false,
       });
     } finally {
       setIsProcessing(false);
@@ -176,7 +170,7 @@ const OTPVerification = () => {
               </div>
               <p onClick={goBack} className="text-sm text-gray-600 ml-7">
                 {phoneNumber}{" "}
-                <span className="text-purple-600 cursor-pointer font-medium">
+                <span className="text-[#7B189F] cursor-pointer font-medium">
                   Change
                 </span>
               </p>
@@ -186,13 +180,13 @@ const OTPVerification = () => {
               {otp.map((digit, index) => (
                 <input
                   key={index}
-                  ref={el => (inputRefs.current[index] = el)}
+                  ref={(el) => (inputRefs.current[index] = el)}
                   type="text"
                   inputMode="numeric"
                   maxLength={1}
                   value={digit}
-                  onChange={e => handleChange(index, e.target.value)}
-                  onKeyDown={e => handleKeyDown(index, e)}
+                  onChange={(e) => handleChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
                   onPaste={index === 0 ? handlePaste : undefined}
                   className="rounded-lg w-full h-12 sm:h-14 flex items-center justify-center text-center font-semibold text-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 text-black"
                 />
@@ -206,7 +200,7 @@ const OTPVerification = () => {
             ) : (
               <button
                 onClick={retryOtp}
-                className="w-full mb-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-md flex items-center justify-center"
+                className="w-full mb-3 bg-[#7b189fd9] hover:bg-[#7B189F] text-white font-semibold py-3 rounded-md flex items-center justify-center"
               >
                 {isProcessing ? (
                   <FaSpinner className="animate-spin" />
@@ -222,7 +216,7 @@ const OTPVerification = () => {
               className={`w-full font-semibold py-3 rounded-md flex items-center justify-center ${
                 isProcessing || otp.includes("")
                   ? "bg-purple-400 text-gray-200 cursor-not-allowed"
-                  : "bg-purple-600 hover:bg-purple-700 text-white"
+                  : "bg-[#7b189fd3] hover:bg-[#7B189F] text-white"
               }`}
             >
               {isProcessing ? (

@@ -75,8 +75,8 @@ export default function HoroscopeCard() {
             <img
               src={
                 activeTab === "sun"
-                  ? "/images/zodiac-sun.png"
-                  : "/images/zodiac-moon.png"
+                  ? "/images/zodiac-moon.png"
+                  : "/images/zodiac-sun.png"
               }
               alt="Zodiac background"
               className="w-full h-full object-cover"
@@ -87,7 +87,7 @@ export default function HoroscopeCard() {
             <button
               className={`flex-1 flex items-center justify-center pb-2 relative ${
                 activeTab === "sun"
-                  ? "text-purple-700 font-medium"
+                  ? "text-[#7B189F] font-medium"
                   : "text-gray-500"
               }`}
               onClick={() => handleTabChange("sun")}
@@ -101,7 +101,7 @@ export default function HoroscopeCard() {
               </span>
 
               {activeTab === "sun" && (
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-purple-600" />
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-[#7B189F]" />
               )}
             </button>
 
@@ -109,7 +109,7 @@ export default function HoroscopeCard() {
             <button
               className={`flex-1 flex items-center justify-center pb-2 relative ${
                 activeTab === "moon"
-                  ? "text-purple-700 font-medium"
+                  ? "text-[#7B189F] font-medium"
                   : "text-gray-500"
               }`}
               onClick={() => handleTabChange("moon")}
@@ -125,7 +125,7 @@ export default function HoroscopeCard() {
               </span>
 
               {activeTab === "moon" && (
-                <div className="absolute bottom-0 left-0 w-full h-1 bg-purple-600" />
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-[#7B189F]" />
               )}
             </button>
           </div>
@@ -161,7 +161,7 @@ export default function HoroscopeCard() {
                   </span>
                 </div>
                 <button
-                  className="text-sm text-purple-500 hover:text-purple-700"
+                  className="text-sm text-purple-500 hover:text-[#7B189F]"
                   onClick={() =>
                     handleTabChange(activeTab === "sun" ? "moon" : "sun")
                   }
@@ -173,7 +173,7 @@ export default function HoroscopeCard() {
 
             {/* Change button */}
             <button
-              className="flex items-center text-purple-500 hover:text-purple-700"
+              className="flex items-center text-purple-500 hover:text-[#7B189F]"
               onClick={handleChange}
               disabled={isChanging}
             >

@@ -154,7 +154,7 @@ const UsernameRegistration = () => {
                     value="male"
                     checked={gender === "male"}
                     onChange={() => setGender("male")}
-                    className="h-4 w-4 text-purple-600 border"
+                    className="h-4 w-4 text-[#7B189F] border"
                   />
                   <label
                     htmlFor="gender-male"
@@ -171,7 +171,7 @@ const UsernameRegistration = () => {
                     value="female"
                     checked={gender === "female"}
                     onChange={() => setGender("female")}
-                    className="h-4 w-4 text-purple-600 border"
+                    className="h-4 w-4 text-[#7B189F] border"
                   />
                   <label
                     htmlFor="gender-female"
@@ -188,7 +188,7 @@ const UsernameRegistration = () => {
                     value="other"
                     checked={gender === "other"}
                     onChange={() => setGender("other")}
-                    className="h-4 w-4 text-purple-600 border"
+                    className="h-4 w-4 text-[#7B189F] border"
                   />
                   <label
                     htmlFor="gender-other"
@@ -208,7 +208,7 @@ const UsernameRegistration = () => {
               className={`w-full font-semibold py-3 px-4 rounded-md flex items-center justify-center ${
                 isProcessing || !firstName.trim() || !lastName.trim() || !gender
                   ? "bg-purple-400 cursor-not-allowed text-gray-200"
-                  : "bg-purple-600 hover:bg-purple-700 text-white"
+                  : "bg-[#7b189fce] hover:bg-[#7B189F] text-white"
               }`}
             >
               {isProcessing ? (
