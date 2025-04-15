@@ -240,7 +240,7 @@ const ClassifiedPage = () => {
           // Detail View
           <ClassifiedDetailsView
             listing={selectedListing}
-            category={selectedListing?.category || ""}
+            category={selectedListing?.category_name || ""}
             onBack={handleBackToList}
           />
         )}
