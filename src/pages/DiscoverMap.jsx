@@ -37,39 +37,42 @@ const GoogleMapsScript = ({ apiKey }) => {
 };
 const apiKey = process.env.REACT_APP_GOOGLEMAP_API;
 
+// Get category icon based on place type or category
+const getCategoryIcon = (category) => {
+  const iconMap = {
+    Restaurants: "🍽️",
+    Cafes: "☕",
+    Bars: "🍸",
+    Shopping: "🛍️",
+    Entertainment: "🎭",
+    Parks: "🌳",
+    Gyms: "💪",
+    Beauty: "💇",
+    Hotels: "🏨",
+    default: "🏪",
+    Groceries: "🛒",
+    Professionals: "👔",
+    SmallBusiness: "🏪",
+  };
+
+  return iconMap[category] || iconMap.default;
+};
+
 // Custom InfoWindow Content
-const createInfoWindowContent = (place) => {
+const createInfoWindowContent = (place, category) => {
+  const categoryIcon = getCategoryIcon(category);
+
   return `
-    <div class="map-card-container" style="width: 250px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative;">
-      ${
-        place.photos && place.photos[0]
-          ? `<div style="width: 80px; height: 80px; overflow: hidden; float: left; margin-right: 10px;">
-          <img src="https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=${place.photos[0].photo_reference}&key=${apiKey}" 
-            style="width: 100%; height: 100%; object-fit: cover;" alt="${place.name}">
-        </div>`
-          : `<div style="width: 80px; height: 80px; overflow: hidden; float: left; margin-right: 10px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-          <span style="color: #888; font-size: 10px; text-align: center;">No Image</span>
-        </div>`
-      }
-      <div style="padding: 10px 10px 10px 0;">
-        <h3 style="margin: 0 0 5px 0; font-size: 14px; font-weight: 600; color: #333;">${
-          place.name
-        }</h3>
-        <div style="font-size: 11px; color: #666; margin-bottom: 5px; display: flex; align-items: center;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style="margin-right: 4px;">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-            <circle cx="12" cy="10" r="3"></circle>
-          </svg>
-          ${place.vicinity ? place.vicinity : "Address not available"}
-        </div>
-        <div style="font-size: 12px; font-weight: 500; color: #7b189f; display: flex; align-items: center;">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style="margin-right: 4px;">
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-          </svg>
-          ${place.distance} miles
-        </div>
-      </div>
-    </div>
+<div class="relative">
+  <div class="w-5 h-5 bg-[#7b189f] rounded-full flex items-center justify-center text-white shadow-md cursor-pointer">
+    <span class="flex items-center justify-center w-full h-full text-2xl leading-none">
+      ${categoryIcon}
+    </span>
+  </div>
+</div>
+
+
+
   `;
 };
 
@@ -83,6 +86,7 @@ const DiscoverMap = () => {
   const [resultsWithDistance, setResultsWithDistance] = useState([]);
   const [currentMile, setCurrentMile] = useState(5);
   const [loading, setLoading] = useState(true);
+  const [expandedMarker, setExpandedMarker] = useState(null);
   const mapRef = useRef(null);
   const googleMapRef = useRef(null);
   const markersRef = useRef([]);
@@ -156,8 +160,6 @@ const DiscoverMap = () => {
     fetchPlaces();
   }, [location, activeTab, currentMile]);
 
-  console.log(results, "results");
-
   useEffect(() => {
     if (results.length > 0 && location) {
       const placesWithDistance = results.map((place) => {
@@ -187,7 +189,7 @@ const DiscoverMap = () => {
 
     // Clear previous markers and infowindows
     if (markersRef.current.length > 0) {
-      markersRef.current.forEach((marker) => marker.setMap(null));
+      markersRef.current.forEach((item) => item.marker.setMap(null));
       markersRef.current = [];
     }
 
@@ -226,6 +228,7 @@ const DiscoverMap = () => {
 
     // Add markers and info windows for all places
     resultsWithDistance.forEach((place) => {
+      // Create marker with category icon
       const marker = new window.google.maps.Marker({
         position: {
           lat: place.geometry.location.lat,
@@ -233,53 +236,25 @@ const DiscoverMap = () => {
         },
         map: googleMap,
         title: place.name,
+        // Use visible marker with custom icon
         icon: {
-          path: window.google.maps.SymbolPath.CIRCLE,
-          scale: 0, // Make the marker invisible
-          strokeWeight: 0,
+          url: `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="%237b189f" opacity="${
+            selectedPlace && selectedPlace.place_id === place.place_id
+              ? "1"
+              : "1"
+          }"/><text x="50%" y="50%" fontSize="18" textAnchor="middle" dominantBaseline="middle" fill="white">${getCategoryIcon(
+            activeTab
+          )}</text></svg>`,
+          scaledSize: new window.google.maps.Size(36, 36),
+          anchor: new window.google.maps.Point(18, 18),
         },
+        opacity: 1, // Start with full opacity
       });
 
-      // Create info window with custom content
-      const infoWindow = new window.google.maps.InfoWindow({
-        content: createInfoWindowContent(place),
-        maxWidth: 300,
-        pixelOffset: new window.google.maps.Size(0, -5),
-        disableAutoPan: true,
-      });
-
-      // Add to refs for cleanup
-      markersRef.current.push(marker);
-      infoWindowsRef.current.push(infoWindow);
-
-      // Show info window by default
-      infoWindow.open(googleMap, marker);
-
-      // Add click listener to marker and info window
-      window.google.maps.event.addListener(infoWindow, "domready", () => {
-        // Add click event to the info window content
-        const container = document.querySelector(".map-card-container");
-        if (container) {
-          container.addEventListener("click", () => {
-            // Center map on the clicked marker
-            googleMap.panTo({
-              lat: place.geometry.location.lat,
-              lng: place.geometry.location.lng,
-            });
-
-            setSelectedPlace(place);
-
-            // Close all other info windows
-            infoWindowsRef.current.forEach((iw) => {
-              if (iw !== infoWindow) {
-                iw.close();
-              }
-            });
-
-            // Store the active info window
-            activeInfoWindowRef.current = infoWindow;
-          });
-        }
+      // Add to refs for cleanup with place_id for identification
+      markersRef.current.push({
+        marker,
+        place_id: place.place_id,
       });
 
       // Add click listener to marker
@@ -290,32 +265,78 @@ const DiscoverMap = () => {
           lng: place.geometry.location.lng,
         });
 
-        // Close all other info windows
-        infoWindowsRef.current.forEach((iw) => {
-          if (iw !== infoWindow) {
-            iw.close();
-          }
-        });
-
-        // Open this info window
-        infoWindow.open(googleMap, marker);
-
-        // Store the active info window
-        activeInfoWindowRef.current = infoWindow;
-
+        // Set the selected place
         setSelectedPlace(place);
+
+        // Update all markers to show active/inactive state
+        markersRef.current.forEach((item) => {
+          const isActive = place.place_id === item.place_id;
+          item.marker.setIcon({
+            url: `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="%237b189f" opacity="${
+              isActive ? "1" : "0.5"
+            }"/><text x="50%" y="50%" fontSize="18" textAnchor="middle" dominantBaseline="middle" fill="white">${getCategoryIcon(
+              activeTab
+            )}</text></svg>`,
+            scaledSize: new window.google.maps.Size(36, 36),
+            anchor: new window.google.maps.Point(18, 18),
+          });
+          item.marker.setZIndex(isActive ? 999 : 1); // Bring active marker to front
+        });
       });
+
+      // Create info window with custom content
+      const infoWindow = new window.google.maps.InfoWindow({
+        content: createInfoWindowContent(place, activeTab),
+        disableAutoPan: true,
+      });
+
+      // Add to refs for cleanup
+      // markersRef.current.push(marker);
+      infoWindowsRef.current.push(infoWindow);
+
+      // Add click listener to marker
+      // marker.addListener("click", () => {
+      //   // Center map on the clicked marker
+      //   googleMap.panTo({
+      //     lat: place.geometry.location.lat,
+      //     lng: place.geometry.location.lng,
+      //   });
+
+      //   // Set the selected place
+      //   setSelectedPlace(place);
+      //   setExpandedMarker(marker);
+      // });
     });
 
-    // Add map click listener to close info windows when clicking elsewhere
-    googleMap.addListener("click", () => {
-      if (activeInfoWindowRef.current) {
-        activeInfoWindowRef.current.close();
-        activeInfoWindowRef.current = null;
+    // Add map click listener to close info windows when clicking elsewhere on the map
+    googleMap.addListener("click", (e) => {
+      // Check if the click is on a marker
+      let clickedOnMarker = false;
+      for (const item of markersRef.current) {
+        if (item.marker.getPosition().equals(e.latLng)) {
+          clickedOnMarker = true;
+          break;
+        }
       }
-      setSelectedPlace(null);
+
+      // Only close the detail view if not clicking on a marker
+      if (!clickedOnMarker) {
+        setSelectedPlace(null);
+
+        // Reset all markers to full opacity
+        markersRef.current.forEach((item) => {
+          item.marker.setIcon({
+            url: `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="%237b189f" opacity="1"/><text x="50%" y="50%" fontSize="18" textAnchor="middle" dominantBaseline="middle" fill="white">${getCategoryIcon(
+              activeTab
+            )}</text></svg>`,
+            scaledSize: new window.google.maps.Size(36, 36),
+            anchor: new window.google.maps.Point(18, 18),
+          });
+          item.marker.setZIndex(1);
+        });
+      }
     });
-  }, [location, resultsWithDistance, isMobile]);
+  }, [location, resultsWithDistance, isMobile, activeTab, selectedPlace]);
 
   // Error display component
   const ErrorDisplay = () => (
@@ -354,7 +375,22 @@ const DiscoverMap = () => {
             />
           )}
           <button
-            onClick={() => setSelectedPlace(null)}
+            onClick={() => {
+              setSelectedPlace(null);
+              // Reset all markers to full opacity
+              if (markersRef.current) {
+                markersRef.current.forEach((item) => {
+                  item.marker.setIcon({
+                    url: `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="%237b189f" opacity="1"/><text x="50%" y="50%" fontSize="18" textAnchor="middle" dominantBaseline="middle" fill="white">${getCategoryIcon(
+                      activeTab
+                    )}</text></svg>`,
+                    scaledSize: new window.google.maps.Size(36, 36),
+                    anchor: new window.google.maps.Point(18, 18),
+                  });
+                  item.marker.setZIndex(1);
+                });
+              }
+            }}
             className="absolute top-2 right-2 bg-white rounded-full p-1 shadow-md"
           >
             <XCircle size={20} className="text-gray-600" />
