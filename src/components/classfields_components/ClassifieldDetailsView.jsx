@@ -34,17 +34,25 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
   };
 
   const categoryId = listing.categoryId || getCategoryId(category);
-  console.log(categoryId, "id");
 
   // Render property details with icons
   const renderPropertyDetails = () => {
+    const result = {
+      specific_details: {}
+    };
+    listing.specific_details.forEach(item => {
+      const key = Object.keys(item)[0];
+      result.specific_details[key] = item[key];
+    });
+
     if (
       categoryId === CATEGORY_IDS.HOUSE ||
       categoryId === CATEGORY_IDS.SUBLEASE
     ) {
+      console.log("here");
       return (
         <div className="flex border-t border-b py-4 my-4">
-          {listing.bedrooms && (
+          {result.specific_details.bedNo && (
             <div className="flex-1 flex flex-col items-center">
               <div className="w-10 h-10 mb-1">
                 <svg
@@ -90,10 +98,10 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
                 </svg>
               </div>
               <div className="text-sm text-gray-500">Bedrooms</div>
-              <div className="font-medium">{listing.bedrooms}</div>
+              <div className="font-medium">{result.specific_details.bedNo}</div>
             </div>
           )}
-          {listing.bathrooms && (
+          {result.specific_details.bathNo && (
             <div className="flex-1 flex flex-col items-center">
               <div className="w-10 h-10 mb-1">
                 <svg
@@ -126,10 +134,12 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
                 </svg>
               </div>
               <div className="text-sm text-gray-500">Baths</div>
-              <div className="font-medium">{listing.bathrooms}</div>
+              <div className="font-medium">
+                {result.specific_details.bathNo}
+              </div>
             </div>
           )}
-          {listing.size && (
+          {result.specific_details.squareFoot && (
             <div className="flex-1 flex flex-col items-center">
               <div className="w-10 h-10 mb-1">
                 <svg
@@ -159,7 +169,9 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
                 </svg>
               </div>
               <div className="text-sm text-gray-500">Size</div>
-              <div className="font-medium">{listing.size} sq ft</div>
+              <div className="font-medium">
+                {result.specific_details.squareFoot} sq ft
+              </div>
             </div>
           )}
         </div>
@@ -578,13 +590,11 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
 
     // Create a details object with all relevant properties
     const details = {};
-    console.log(categoryId, "categoryid");
 
     // Add properties based on category
     switch (categoryId) {
       case CATEGORY_IDS.HOUSE:
-        console.log(categoryId, "categoryid im in");
-        details.bedrooms = listing.bedrooms;
+        details.bedrooms = listing.specific_details.bedrooms;
         details.bathrooms = listing.bathrooms;
         details.propertyType = listing.propertyType;
         details.size = listing.size;
@@ -663,7 +673,6 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
         });
     }
 
-    console.log("objects", details);
     return (
       <div className="grid grid-cols-2 gap-4 py-4 border-t border-b">
         {Object.entries(details)
@@ -810,7 +819,6 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
 
           {/* Property-specific details with icons */}
           {renderPropertyDetails()}
-          {console.log("property details")}
 
           {/* Generic details grid for other categories */}
           {renderDetails()}

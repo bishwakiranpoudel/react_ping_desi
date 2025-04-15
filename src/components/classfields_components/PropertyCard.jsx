@@ -104,11 +104,11 @@ const PropertyCard = ({
           >
             <div className="flex row items-center gap-1">
               <img src="/images/bed-icon.svg" alt="Bed" className="w-4 h-4" />
-              <span>{detailsMap.bedNo || beds || "3"} bed</span>
+              <span>{detailsMap.bedNo || beds ||0} bed</span>
             </div>
             <div className="flex items-center gap-1">
               <img src="/images/bath-icon.svg" alt="Bath" className="w-4 h-4" />
-              <span>{detailsMap.bathNo || baths || "2"} bath</span>
+              <span>{detailsMap.bathNo || baths || 0} bath</span>
             </div>
           </div>
           <div className="mt-auto flex items-center justify-between">
