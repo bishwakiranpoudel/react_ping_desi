@@ -1,6 +1,6 @@
 function SectionHeader({ title }) {
   return (
-    <div className="flex justify-between items-center mb-4">
+    <div className="flex justify-between items-center mb-4 font-fraunces">
       <h2 className="text-xl font-bold text-gray-800">{title}</h2>
       <button className="text-xs text-gray-600 flex items-center">
         View all →
