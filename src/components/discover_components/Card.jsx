@@ -5,7 +5,7 @@ function Card({ item, type }) {
     <div className="flex flex-col border shadow-sm rounded-lg">
       <div className="relative h-[180px] w-full rounded-lg overflow-hidden ">
         <img
-          src={item.imageUrl || "/placeholder.svg?height=180&width=244"}
+          src={item.imageUrl || "/image/discover-list.png"}
           alt={item.name}
           className="w-full h-full object-cover"
         />
@@ -23,16 +23,14 @@ function Card({ item, type }) {
               {item.distance} miles
             </span>
           </div>
-          {item.freeDelivery && (
-            <div className="flex items-center bg-green-100 px-3 py-1 rounded-sm">
-              <img
-                src="/images/delivery.png"
-                alt="Delivery"
-                className="w-4 h-4"
-              />
-              <span className="text-xs text-green-700 ml-1">Free Delivery</span>
-            </div>
-          )}
+          <div className="flex items-center bg-green-100 px-3 py-1 rounded-sm">
+            <img
+              src="/images/delivery.png"
+              alt="Delivery"
+              className="w-4 h-4"
+            />
+            <span className="text-xs text-green-700 ml-1">Free Delivery</span>
+          </div>
         </div>
       </div>
     </div>
