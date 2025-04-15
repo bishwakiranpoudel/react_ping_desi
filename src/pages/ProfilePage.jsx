@@ -16,6 +16,7 @@ import { queryListings } from "../services/classified";
 import { jwtDecode } from "jwt-decode";
 import { getPersonalEvents } from "../services/events";
 import { handlePatchRequest, handlePostRequest } from "../hooks/api";
+import { base64ToFile } from "../utils/helpers";
 
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState("profile");
@@ -95,10 +96,22 @@ function ProfilePage() {
       payload.append("createddate", formData.createddate);
       payload.append("firstname", formData.firstname);
       payload.append("lastname", formData.lastname);
-      payload.append("avatar_id", formData.avatar_id.toString());
+      if (formData.profileImage) {
+        const mimeType = formData.profileImage.match(/data:(.*);base64/)[1];
+        const file = base64ToFile(
+          formData.profileImage,
+          `${formData.username}_profile.jpeg`,
+          mimeType
+        );
+        payload.append("profile_picture", file);
+      } else {
+        payload.append("avatar_id", formData.avatar_id.toString());
+      }
+      console.log("payload", payload);
       const editProfileResponse = await handlePatchRequest(
         "/auth/edit-profile",
-        payload
+        payload,
+        true
       );
       toast.success("UserProfile Details Updated Successfully");
     } catch (error) {

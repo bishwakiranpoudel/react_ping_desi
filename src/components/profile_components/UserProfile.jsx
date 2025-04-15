@@ -23,7 +23,7 @@ function UserProfile({
               onClick={handleAvatarClick}
             >
               <img
-                src={formData.avatarurl || "/placeholder.svg"}
+                src={formData.profileImage || formData.avatarurl || "/placeholder.svg"}
                 alt="User Avatar"
                 className="w-full h-full object-cover"
               />

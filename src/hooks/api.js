@@ -164,7 +164,7 @@ export const handlePostRequest = async (
   }
 };
 
-export const handlePatchRequest = async (endpoint, data) => {
+export const handlePatchRequest = async (endpoint, data, multipart = false) => {
   const API_URL = getApiUrl();
   const token = handleGetToken();
   if (!isTokenValid(token)) {
@@ -174,11 +174,19 @@ export const handlePatchRequest = async (endpoint, data) => {
       //pass
     }
   }
+  let headers = {
+    Authorization: `Bearer ${token}`
+  };
+  if (multipart) {
+    headers = {
+      ...headers,
+      "Content-Type": "multipart/form-data"
+    };
+  }
+
   try {
     const response = await axios.patch(`${API_URL}${endpoint}`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      headers: headers
     });
     return response.data;
   } catch (error) {
