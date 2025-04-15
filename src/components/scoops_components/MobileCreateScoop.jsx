@@ -25,8 +25,8 @@ function Hashtag({ tag, onClick, selected }) {
       className={classNames(
         "px-3 py-1 rounded-full text-sm font-medium",
         selected
-          ? "bg-primary text-white"
-          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          ? "bg-black text-white"
+          : "border text-black hover:bg-gray-800 hover:text-white"
       )}
     >
       {tag}
@@ -414,7 +414,15 @@ function MobileCreateScoop({ onClose, onPost, isProcessing = false }) {
               onClick={() => handleSelectCategory(scoop.scoopid)}
             >
               <div className="w-10 h-10 rounded-full flex items-center justify-center bg-gray-100">
-                <span className="text-xl">{scoop.emoji}</span>
+                <span className="text-xl">
+                  <img
+                    src={`/scoops/${scoop.scoopname.toLowerCase()}.png`}
+                    alt="Ping Desi logo"
+                    width={20}
+                    height={20}
+                    className="object-contain "
+                  />
+                </span>
               </div>
               <span className="font-medium">{scoop.scoopname}</span>
             </button>

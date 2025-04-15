@@ -306,7 +306,17 @@ function CreateScoopForm({
     return scoops.map((scoop) => ({
       id: scoop.scoopid.toString(),
       name: scoop.scoopname,
-      icon: <span style={{ fontSize: "1.5rem" }}>{scoop.emoji}</span>,
+      icon: (
+        <span style={{ fontSize: "1.5rem" }}>
+          <img
+            src={`/scoops/${scoop.scoopname.toLowerCase()}.png`}
+            alt="Ping Desi logo"
+            width={20}
+            height={20}
+            className="object-contain "
+          />
+        </span>
+      ),
       description: `${scoop.scoopname} scoop`,
     }));
   };
@@ -394,7 +404,13 @@ function CreateScoopForm({
               className="rounded-full flex items-center gap-2 bg-amber-100 text-gray-700"
             >
               <div className="w-6 h-6 rounded-full bg-amber-300 text-amber-800 flex items-center justify-center">
-                <Hash size={14} />
+                <img
+                  src="/images/scoops_icon.svg"
+                  alt="scoops icon"
+                  width={16}
+                  height={16}
+                  className="object-contain "
+                />
               </div>
               <span>
                 {selectedCategory ? selectedCategory.name : "Select a scoop"}
