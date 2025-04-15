@@ -153,6 +153,7 @@ const DiscoverPage = () => {
           type: currentCategory.type,
           keyword: currentCategory.keyword,
         });
+        console.log(data, "results");
 
         setResults(data.results || []);
       } catch (err) {
