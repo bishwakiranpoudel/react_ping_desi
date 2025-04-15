@@ -12,6 +12,7 @@ import CategoryTabs from "./pages/ClassFieldsPage";
 import ProfilePage from "./pages/ProfilePage";
 import ScoopsPage from "./pages/ScoopsPage";
 import SigninPage from "./Signin";
+import DiscoverMap from "./pages/DiscoverMap";
 
 // Remove the CSS import that's causing the error
 
@@ -30,6 +31,7 @@ function App() {
           <Route path="/home" element={<HomePage2 />} />
           <Route path="/discover" element={<DiscoverPage />} />
           <Route path="/signin" element={<SigninPage />} />
+          <Route path="/discovermap" element={<DiscoverMap />} />
 
           <Route path="/otpverification" element={<OTPVerification />} />
           <Route path="/username" element={<UsernameRegistration />} />
