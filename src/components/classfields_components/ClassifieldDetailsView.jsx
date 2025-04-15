@@ -754,7 +754,11 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
           {/* Main image */}
           <div className="relative w-full aspect-[4/3] mb-2 overflow-hidden rounded-lg">
             <img
-              src={listing.coverPhoto || "/placeholder.svg"}
+              src={
+                images[selectedImage] ||
+                listing.coverPhoto ||
+                "/placeholder.svg"
+              }
               alt={`${listing.title} - Image ${selectedImage + 1}`}
               className="w-full h-full object-cover"
             />
@@ -948,7 +952,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
           )}
 
           {/* Seller information */}
-          {listing.seller && (
+          {listing.fullName && (
             <div className="mt-6 p-4 bg-white rounded-lg border">
               <div className="uppercase text-xs font-medium text-gray-500 mb-3">
                 SELLER LOCATION:
@@ -956,32 +960,37 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center space-x-2 mb-2">
-                    <span className="font-medium">{listing.fullname}</span>
-                    {listing.seller.verified && (
+                    <span className="font-medium">{listing.fullName}</span>
+                    {listing.fullName && (
                       <span className="bg-gray-800 text-white text-xs px-2 py-0.5 rounded">
                         Verified Neighbor
                       </span>
                     )}
                   </div>
-                  {listing.seller.address && (
+                  {listing.addressLine1 && (
                     <div className="text-sm text-gray-600">
-                      {listing.seller.address}
+                      {listing.addressLine1}
+                    </div>
+                  )}
+                  {listing.addressLine2 && (
+                    <div className="text-sm text-gray-600">
+                      {listing.addressLine2}
                     </div>
                   )}
                 </div>
                 <div className="flex flex-col items-end gap-2">
-                  {listing.seller.address && (
+                  {listing.addressLine1 && (
                     <button className="flex items-center text-sm text-gray-700">
                       <MapPin size={16} className="mr-1" />
                       View in map
                     </button>
                   )}
-                  {listing.seller.phone && (
+                  {/*listing.seller.phone && (
                     <button className="flex items-center text-sm text-gray-700">
                       <Phone size={16} className="mr-1" />
                       Call seller
                     </button>
-                  )}
+                  )*/}
                 </div>
               </div>
             </div>
