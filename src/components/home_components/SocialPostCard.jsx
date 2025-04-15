@@ -30,6 +30,12 @@ const SocialPostCard = ({
   const [commentCount, setCommentCount] = useState(0);
   const [commentsLoaded, setCommentsLoaded] = useState(false);
   const commentSectionRef = useRef(null);
+  // In the component, add a new state for tracking if content is expanded
+  const [isContentExpanded, setIsContentExpanded] = useState(false);
+  // Add a state to track if content is long enough to need truncation
+  const [isContentLong, setIsContentLong] = useState(false);
+  // Add a ref to measure content height
+  const contentRef = useRef(null);
 
   // Function to be passed to CommentSection to update comment count
   const updateCommentCount = (count) => {
@@ -96,6 +102,19 @@ const SocialPostCard = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Add this useEffect to check content length after component mounts
+  useEffect(() => {
+    if (contentRef.current) {
+      // For mobile view, check if content is taller than 60px (matches your current h-[60px])
+      // For desktop view, we'll use a different threshold
+      const isMobileContent = isMobile && contentRef.current.scrollHeight > 60;
+      const isDesktopContent =
+        !isMobile && contentRef.current.scrollHeight > 48; // 3 lines of text approx
+
+      setIsContentLong(isMobileContent || isDesktopContent);
+    }
+  }, [post.contentinfo, isMobile]);
 
   const handlePrevImage = () => {
     setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : prev));
@@ -356,15 +375,6 @@ const SocialPostCard = ({
     }
 
     // Less than a month
-    const diffInWeeks = Math.floor(diffInDays / 7);
-    if (diffInWeeks === 1) {
-      return "1 week ago";
-    }
-    if (diffInWeeks < 4) {
-      return `${diffInWeeks} weeks ago`;
-    }
-
-    // Less than a year
     const diffInMonths = Math.floor(diffInDays / 30);
     if (diffInMonths === 1) {
       return "1 month ago";
@@ -494,6 +504,11 @@ const SocialPostCard = ({
     );
   };
 
+  // Add a function to toggle content expansion
+  const toggleContentExpansion = () => {
+    setIsContentExpanded(!isContentExpanded);
+  };
+
   const toggleComments = () => {
     setShowComments(!showComments);
   };
@@ -507,7 +522,7 @@ const SocialPostCard = ({
             <div className="flex items-center">
               <div className="h-10 w-10 bg-gray-200 rounded-full mr-3 overflow-hidden">
                 <img
-                  src={post.avatar_url}
+                  src={post.avatar_url || "/placeholder.svg"}
                   alt={post.username}
                   className="w-full h-full object-cover"
                 />
@@ -591,12 +606,22 @@ const SocialPostCard = ({
 
           {/* Content */}
           <div className="mb-3">
-            <p className="text-sm text-gray-800 h-[60px] overflow-clip">
+            <p
+              ref={contentRef}
+              className={`text-sm text-gray-800 ${
+                isContentExpanded ? "" : "h-[60px] overflow-hidden"
+              }`}
+            >
               {post.contentinfo}
             </p>
-            <button className="text-sm text-purple-600 font-medium mt-1">
-              Read more
-            </button>
+            {isContentLong && (
+              <button
+                className="text-sm text-purple-600 font-medium mt-1"
+                onClick={toggleContentExpansion}
+              >
+                {isContentExpanded ? "Show less" : "Read more"}
+              </button>
+            )}
           </div>
 
           {/* Hashtags */}
@@ -706,7 +731,7 @@ const SocialPostCard = ({
       <div className="flex items-center p-4">
         <div className="h-10 w-10 rounded-full overflow-hidden relative">
           <img
-            src={post.avatar_url}
+            src={post.avatar_url || "/placeholder.svg"}
             alt={post.username}
             className="w-full h-full object-cover"
             style={{ position: "absolute", top: 0, left: 0 }}
@@ -800,10 +825,22 @@ const SocialPostCard = ({
 
       {/* Content */}
       <div className="p-4 pt-2">
-        <p className="text-sm text-gray-800 mb-2">{post.contentinfo}</p>
-        <button className="text-sm text-gray-800 font-medium italic border-b border-gray-800 pb-0.5 inline-block">
-          Read more
-        </button>
+        <p
+          ref={contentRef}
+          className={`text-sm text-gray-800 mb-2 ${
+            isContentExpanded ? "" : "line-clamp-3"
+          }`}
+        >
+          {post.contentinfo}
+        </p>
+        {isContentLong && (
+          <button
+            className="text-sm text-gray-800 font-medium italic border-b border-gray-800 pb-0.5 inline-block"
+            onClick={toggleContentExpansion}
+          >
+            {isContentExpanded ? "Show less" : "Read more"}
+          </button>
+        )}
       </div>
 
       {/* Hashtags */}
