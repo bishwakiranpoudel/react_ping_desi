@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import { ArrowRight, PlusCircle } from "lucide-react";
 import { ClassifiedModal } from "../components/classfields_components/ClassifiedModal";
@@ -14,27 +12,41 @@ import SubleaseListing from "../components/classfields_components/SubleaseListin
 import { useIsMobile } from "../hooks/use-mobile";
 import {
   getInitialListings,
-  getListingCategories,
+  getListing,
+  getListingCategories
 } from "../services/classified";
 import { toast } from "react-toastify";
 import ClassifiedDetailsView from "../components/classfields_components/ClassifieldDetailsView";
+import { isAuthenticated } from "../utils/helpers";
+import { useNavigate } from "react-router-dom";
 
 const ClassifiedPage = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("All");
   const [categoryData, setCategoryData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [viewMode, setViewMode] = useState("list"); // "list" or "detail"
   const isMobile = useIsMobile();
-  const handleTabChange = (value) => {
+  const handleTabChange = value => {
     setActiveTab(value);
     setViewMode("list"); // Reset to list view when changing tabs
     setSelectedListing(null);
   };
 
-  const handleListingClick = (listing) => {
-    setSelectedListing(listing);
-    setViewMode("detail");
+  const handleListingClick = async listing => {
+    setIsProcessing(true);
+    try {
+      const listingDetail = await getListing(listing.id);
+
+      setSelectedListing(listingDetail.data);
+      setViewMode("detail");
+    } catch (error) {
+      toast.error("Error while fetching a product");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleBackToList = () => {
@@ -45,32 +57,32 @@ const ClassifiedPage = () => {
   const categoryComponentMap = {
     House: {
       component: PropertyListing,
-      propName: "propertyItems",
+      propName: "propertyItems"
     },
     Auto: {
       component: VehicleListing,
-      propName: "vehicleItems",
+      propName: "vehicleItems"
     },
     Sublease: {
       component: SubleaseListing,
-      propName: "subleaseItems",
+      propName: "subleaseItems"
     },
     Appliances: {
       component: ApplianceListing,
-      propName: "applianceItems",
+      propName: "applianceItems"
     },
     Electronics: {
       component: ElectronicsListing,
-      propName: "electronicsItems",
+      propName: "electronicsItems"
     },
     Apparels: {
       component: ClothingListing,
-      propName: "clothingItems",
+      propName: "clothingItems"
     },
     Roommate: {
       component: RoommateListing,
-      propName: "roommateItems",
-    },
+      propName: "roommateItems"
+    }
   };
 
   /* ------------------ Get all categories ----------------------*/
@@ -79,17 +91,17 @@ const ClassifiedPage = () => {
       try {
         const response = await getListingCategories();
 
-        const responseMap = response.data.map((data) => {
+        const responseMap = response.data.map(data => {
           return {
             value: data.name,
-            label: data.name,
+            label: data.name
           };
         });
 
         // Reverse the responseMap and ensure "All" is at index [0]
         const reversedResponseMap = [
           { value: "All", label: "All" },
-          ...responseMap.reverse(),
+          ...responseMap.reverse()
         ];
         reversedResponseMap.pop();
 
@@ -105,19 +117,22 @@ const ClassifiedPage = () => {
 
   /* -------------------- Get Initial Load -----------------------*/
   const [listingsData, setListingsData] = useState([]);
-  useEffect(() => {
-    async function fetchInitialListings() {
-      try {
-        const response = await getInitialListings();
-        console.log(response.data.data);
-        setListingsData(response.data.data);
-      } catch (error) {
-        console.error("Error occured while fetching categories", error);
-        toast.error("Error occured while fetching categories");
+  useEffect(
+    () => {
+      async function fetchInitialListings() {
+        try {
+          const response = await getInitialListings();
+          console.log(response.data.data);
+          setListingsData(response.data.data);
+        } catch (error) {
+          console.error("Error occured while fetching categories", error);
+          toast.error("Error occured while fetching categories");
+        }
       }
-    }
-    fetchInitialListings();
-  }, [activeTab]);
+      fetchInitialListings();
+    },
+    [activeTab]
+  );
 
   return (
     <MainLayout rs={false}>
@@ -129,10 +144,10 @@ const ClassifiedPage = () => {
               className="flex overflow-x-auto md:overflow-x-hidden"
               style={{
                 scrollbarWidth: "none" /* Firefox */,
-                msOverflowStyle: "none" /* IE and Edge */,
+                msOverflowStyle: "none" /* IE and Edge */
               }}
             >
-              {categoryData?.map((tab) => (
+              {categoryData?.map(tab => (
                 <button
                   key={tab.label.toLowerCase()}
                   className={`py-0 px-4 text-sm font-medium transition-all duration-300 border-b-2 ${
@@ -155,32 +170,39 @@ const ClassifiedPage = () => {
             </div>
             {/* Button for larger screens */}
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                if (isAuthenticated()) {
+                  setIsModalOpen(true);
+                } else {
+                  navigate("/signin");
+                }
+              }}
               className="hidden md:block absolute right-0 py-1.5 px-3 bg-black text-white rounded-lg top-1/2 -translate-y-1/2"
             >
               + Create Classfields
             </button>
             {/* Floating button for smaller screens */}
-            {isMobile && !isModalOpen && (
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="fixed w-14 h-14 rounded-full bg-[#7B189F] flex items-center justify-center shadow-md border-none cursor-pointer"
-                style={{
-                  bottom: "4.5rem",
-                  right: "2rem",
-                  zIndex: 9999 /* Highest z-index */,
-                }}
-              >
-                <PlusCircle size={32} color="white" />
-              </button>
-            )}
+            {isMobile &&
+              !isModalOpen && (
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className="fixed w-14 h-14 rounded-full bg-[#7B189F] flex items-center justify-center shadow-md border-none cursor-pointer"
+                  style={{
+                    bottom: "4.5rem",
+                    right: "2rem",
+                    zIndex: 9999 /* Highest z-index */
+                  }}
+                >
+                  <PlusCircle size={32} color="white" />
+                </button>
+              )}
           </div>
         )}
 
         {/* Conditional rendering based on view mode */}
         {viewMode === "list" ? (
           // List View
-          listingsData?.map((data) => {
+          listingsData?.map(data => {
             const title = data.category.title;
             const config = categoryComponentMap[title];
             if (title === "Roommate") return null; // Skip Roommate category
@@ -192,7 +214,7 @@ const ClassifiedPage = () => {
             const props = {
               isDouble: activeTab === "All" ? false : true,
               [config.propName]: data.category.products || [],
-              onItemClick: handleListingClick,
+              onItemClick: handleListingClick
             };
 
             return (
