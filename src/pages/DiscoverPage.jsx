@@ -6,7 +6,7 @@ import MainLayout from "../components/MainLayout";
 import ContentView from "../components/discover_components/ContentView";
 import { tabs } from "../components/discover_components/data/tabs-data";
 import { useState, useEffect, useRef } from "react";
-import { googleMapHandler } from "../services/googlemap";
+import { googleMapHandler, googleMapImageHandler } from "../services/googlemap";
 import { toast } from "react-toastify";
 import { XCircle, Navigation, MapPin, List, Map } from "lucide-react";
 
@@ -81,6 +81,8 @@ const DiscoverPage = () => {
   const [results, setResults] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [resultsWithDistance, setResultsWithDistance] = useState([]);
+  const [resultsWithDistanceAndImages, setResultsWithDistanceAndImages] =
+    useState([]);
   const [tryNewPlaces, setTryNewPlaces] = useState([]);
   const [currentMile, setCurrentMile] = useState(5);
   const [loading, setLoading] = useState(true);
@@ -130,6 +132,62 @@ const DiscoverPage = () => {
     });
 
     return sortedPlaces.slice(0, 8); // Limit to 8 places
+  };
+
+  // This function adds both distance and images to places
+  const processPlacesWithDistanceAndImages = async (places, userLocation) => {
+    if (!places || places.length === 0) return [];
+
+    // First add distance to all places
+    const placesWithDistance = places.map((place) => {
+      const placeLat = place.geometry.location.lat;
+      const placeLng = place.geometry.location.lng;
+
+      const distance = calculateDistance(
+        userLocation.latitude,
+        userLocation.longitude,
+        placeLat,
+        placeLng
+      );
+
+      return {
+        ...place,
+        distance,
+      };
+    });
+
+    // Then fetch and add images for all places
+    const placesWithDistanceAndImages = await Promise.all(
+      placesWithDistance.map(async (place) => {
+        if (place.photos && place.photos.length > 0) {
+          try {
+            const photoReference = place.photos[0].photo_reference;
+            const imageData = await googleMapImageHandler({
+              photo_reference: photoReference,
+              maxwidth: 400,
+            });
+
+            return {
+              ...place,
+              imageUrl: imageData || null,
+            };
+          } catch (error) {
+            console.error(`Error fetching image for ${place.name}:`, error);
+            return {
+              ...place,
+              imageUrl: null,
+            };
+          }
+        } else {
+          return {
+            ...place,
+            imageUrl: null,
+          };
+        }
+      })
+    );
+
+    return placesWithDistanceAndImages;
   };
 
   useEffect(() => {
@@ -183,33 +241,56 @@ const DiscoverPage = () => {
   }, [location, activeTab, currentMile]);
 
   useEffect(() => {
-    if (results.length > 0 && location) {
-      const placesWithDistance = results.map((place) => {
-        const placeLat = place.geometry.location.lat;
-        const placeLng = place.geometry.location.lng;
+    const processResults = async () => {
+      if (results.length > 0 && location) {
+        setLoading(true);
+        try {
+          // First, set basic distance data for map view
+          const basicPlacesWithDistance = results.map((place) => {
+            const placeLat = place.geometry.location.lat;
+            const placeLng = place.geometry.location.lng;
 
-        const distance = calculateDistance(
-          location.latitude,
-          location.longitude,
-          placeLat,
-          placeLng
-        );
+            const distance = calculateDistance(
+              location.latitude,
+              location.longitude,
+              placeLat,
+              placeLng
+            );
 
-        return {
-          ...place,
-          distance,
-        };
-      });
+            return {
+              ...place,
+              distance,
+            };
+          });
 
-      // Extract Try New places
-      const newPlaces = extractTryNewPlaces(placesWithDistance);
+          // Update resultsWithDistance for map view
+          setResultsWithDistance(basicPlacesWithDistance);
 
-      setResultsWithDistance(placesWithDistance);
-      setTryNewPlaces(newPlaces);
-    } else {
-      setResultsWithDistance([]);
-      setTryNewPlaces([]);
-    }
+          // Process all places to add distance and images for list view
+          const processedPlaces = await processPlacesWithDistanceAndImages(
+            results,
+            location
+          );
+
+          // Extract try new places from processed places
+          const newPlaces = extractTryNewPlaces(processedPlaces);
+
+          setResultsWithDistanceAndImages(processedPlaces);
+          setTryNewPlaces(newPlaces);
+        } catch (error) {
+          console.error("Error processing places:", error);
+          toast.error("Error loading place details");
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setResultsWithDistance([]);
+        setResultsWithDistanceAndImages([]);
+        setTryNewPlaces([]);
+      }
+    };
+
+    processResults();
   }, [results, location]);
 
   // Initialize Google Map
@@ -591,7 +672,7 @@ const DiscoverPage = () => {
       {viewMode === "list" ? (
         <ContentView
           activeTab={activeTab}
-          results={resultsWithDistance}
+          results={resultsWithDistanceAndImages}
           tryNewPlaces={tryNewPlaces}
           loading={loading}
           location={location}
