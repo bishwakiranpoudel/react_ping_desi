@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { ChevronDown, ChevronUp, MapPin, ArrowLeft, Phone } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
@@ -23,11 +21,11 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
 
   // Prepare images array
   const images = listing.images || [
-    listing.image || "/placeholder.svg?height=600&width=800",
+    listing.images || "/placeholder.svg?height=600&width=800"
   ];
 
   // Get category ID from name if needed
-  const getCategoryId = (categoryName) => {
+  const getCategoryId = categoryName => {
     const entries = Object.entries(CATEGORY_IDS);
     const found = entries.find(
       ([key, _]) => key.toLowerCase() === categoryName.toLowerCase()
@@ -627,12 +625,26 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
         break;
       default:
         // Add any other properties that might be available
-        Object.keys(listing).forEach((key) => {
+        Object.keys(listing).forEach(key => {
           if (
             ![
               "id",
               "title",
               "price",
+              "coverPhoto",
+              "reasonToSell",
+              "fullName",
+              "state",
+              "addressLine1",
+              "addressLine2",
+              "phoneNumber",
+              "user_id",
+              "geohash",
+              "specific_details",
+              "created_at",
+              "updated_at",
+              "category_name",
+              "category_id",
               "images",
               "image",
               "description",
@@ -641,7 +653,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
               "story",
               "seller",
               "used",
-              "distance",
+              "distance"
             ].includes(key) &&
             listing[key] !== null &&
             listing[key] !== undefined
@@ -651,6 +663,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
         });
     }
 
+    console.log("objects", details);
     return (
       <div className="grid grid-cols-2 gap-4 py-4 border-t border-b">
         {Object.entries(details)
@@ -741,7 +754,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
           {/* Main image */}
           <div className="relative w-full aspect-[4/3] mb-2 overflow-hidden rounded-lg">
             <img
-              src={images[selectedImage]?.image_url || "/placeholder.svg"}
+              src={listing.coverPhoto || "/placeholder.svg"}
               alt={`${listing.title} - Image ${selectedImage + 1}`}
               className="w-full h-full object-cover"
             />
@@ -762,7 +775,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
                     onClick={() => setSelectedImage(index)}
                   >
                     <img
-                      src={image?.image_url || "/placeholder.svg"}
+                      src={image || "/placeholder.svg"}
                       alt={`Thumbnail ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
@@ -797,7 +810,6 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
 
           {/* Generic details grid for other categories */}
           {renderDetails()}
-
           {/* Reason for Selling section */}
           {listing.story && (
             <div className="mt-4 bg-gray-50 rounded-lg">
@@ -844,6 +856,45 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
             </div>
           )}
 
+          {/* reason for selling */}
+          {listing.reasonToSell && (
+            <div className="mt-4 bg-gray-50 rounded-lg">
+              <button
+                className="flex items-center justify-between w-full p-4 text-left"
+                onClick={() => setReasonExpanded(!reasonExpanded)}
+              >
+                <div className="flex items-center">
+                  <span className="text-gray-400 mr-2">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6.5 6.5L6.52733 6.48667C6.61282 6.44396 6.70875 6.42664 6.80378 6.43677C6.8988 6.4469 6.98893 6.48404 7.0635 6.54381C7.13806 6.60357 7.19394 6.68345 7.22451 6.77399C7.25508 6.86453 7.25907 6.96193 7.236 7.05467L6.764 8.94533C6.74076 9.03811 6.74463 9.13561 6.77513 9.22626C6.80563 9.31691 6.86149 9.39691 6.93609 9.45678C7.01069 9.51664 7.10089 9.55384 7.196 9.56399C7.2911 9.57413 7.38712 9.55678 7.47267 9.514L7.5 9.5M13 7C13 7.78793 12.8448 8.56815 12.5433 9.2961C12.2417 10.0241 11.7998 10.6855 11.2426 11.2426C10.6855 11.7998 10.0241 12.2417 9.2961 12.5433C8.56815 12.8448 7.78793 13 7 13C6.21207 13 5.43185 12.8448 4.7039 12.5433C3.97595 12.2417 3.31451 11.7998 2.75736 11.2426C2.20021 10.6855 1.75825 10.0241 1.45672 9.2961C1.15519 8.56815 1 7.78793 1 7C1 5.4087 1.63214 3.88258 2.75736 2.75736C3.88258 1.63214 5.4087 1 7 1C8.5913 1 10.1174 1.63214 11.2426 2.75736C12.3679 3.88258 13 5.4087 13 7ZM7 4.5H7.00533V4.50533H7V4.5Z"
+                        stroke="#928E99"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <span className="font-medium">Reason To Sell</span>
+                </div>
+                {reasonExpanded ? (
+                  <ChevronUp size={20} />
+                ) : (
+                  <ChevronDown size={20} />
+                )}
+              </button>
+              {reasonExpanded && (
+                <div className="px-4 pb-4 text-gray-700">
+                  {listing.reasonToSell}
+                </div>
+              )}
+            </div>
+          )}
           {/* Description section */}
           {listing.description && (
             <div className="mt-4 bg-gray-50 rounded-lg">

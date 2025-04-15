@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ArrowRight, PlusCircle } from "lucide-react";
 import { ClassifiedModal } from "../components/classfields_components/ClassifiedModal";
@@ -13,6 +12,7 @@ import SubleaseListing from "../components/classfields_components/SubleaseListin
 import { useIsMobile } from "../hooks/use-mobile";
 import {
   getInitialListings,
+  getListing,
   getListingCategories
 } from "../services/classified";
 import { toast } from "react-toastify";
@@ -21,11 +21,12 @@ import { isAuthenticated } from "../utils/helpers";
 import { useNavigate } from "react-router-dom";
 
 const ClassifiedPage = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("All");
   const [categoryData, setCategoryData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedListing, setSelectedListing] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [viewMode, setViewMode] = useState("list"); // "list" or "detail"
   const isMobile = useIsMobile();
   const handleTabChange = value => {
@@ -34,9 +35,18 @@ const ClassifiedPage = () => {
     setSelectedListing(null);
   };
 
-  const handleListingClick = listing => {
-    setSelectedListing(listing);
-    setViewMode("detail");
+  const handleListingClick = async listing => {
+    setIsProcessing(true);
+    try {
+      const listingDetail = await getListing(listing.id);
+
+      setSelectedListing(listingDetail.data);
+      setViewMode("detail");
+    } catch (error) {
+      toast.error("Error while fetching a product");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleBackToList = () => {
