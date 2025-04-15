@@ -90,12 +90,12 @@ export function ClassifiedContent({ onClose }) {
           formData.description || ""
         );
 
-        submissionFormData.append("contactName", formData.fullName || "");
+        submissionFormData.append("full_name", formData.fullName || "");
 
-        submissionFormData.append("contactPhone", formData.phoneNumber || "");
+        submissionFormData.append("phone_number", formData.phoneNumber || "");
 
-        submissionFormData.append("addressline1", formData.addressLine1 || "");
-        submissionFormData.append("addressline2", formData.addressLine2 || "");
+        submissionFormData.append("address", formData.addressLine1 || "");
+        submissionFormData.append("address2", formData.addressLine2 || "");
 
         submissionFormData.append("state", formData.state || "");
 
