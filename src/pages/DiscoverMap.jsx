@@ -46,6 +46,12 @@ const DiscoverMap = () => {
   return (
     <MainLayout rs={false}>
       <Header />
+      <TabNavigation
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+      />
+      {/* <ContentView activeTab={activeTab} results={results} loading={loading} /> */}
     </MainLayout>
   );
 };
