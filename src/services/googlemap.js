@@ -1,11 +1,12 @@
 import { handlePostRequest } from "../hooks/api";
 
+const googleApiKey = process.env.REACT_APP_GOOGLEMAP_API;
 export async function googleMapHandler({
   latitude,
   longitude,
   radius,
   type,
-  keyword
+  keyword,
 }) {
   console.log(
     latitude,
@@ -17,19 +18,13 @@ export async function googleMapHandler({
   );
 
   try {
-    const googleApiKey = process.env.REACT_APP_GOOGLEMAP_API;
-
-    if (!googleApiKey) {
-      throw new Error("Api Key missing");
-    }
-
     const payload = {
-      googleApiKey: googleApiKey,
+      googleApiKey,
       latitude,
       longitude,
       type,
       keyword,
-      radius
+      radius,
     };
     console.log("payyload", payload);
     const response = await handlePostRequest(
@@ -48,3 +43,13 @@ export async function googleMapHandler({
     throw error;
   }
 }
+
+// export async function googleMapHandler(requestBody) {
+//   const endpoint = "/location/retrieveGoogleMapsApiData";
+//   console.log(requestBody, "body");
+//   const response = await handlePostRequest(endpoint, requestBody, {}, false);
+//   if (response?.error) {
+//     throw new Error(response.error);
+//   }
+//   return response;
+// }
