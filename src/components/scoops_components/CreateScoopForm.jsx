@@ -10,7 +10,7 @@ import {
   Hash,
   Check,
   X,
-  Loader2,
+  Loader2
 } from "lucide-react";
 import Button from "./Button";
 import Popover from "./Popover";
@@ -19,6 +19,7 @@ import ImagePickerModal from "./ImagePickerModal";
 import { toast } from "react-toastify";
 import SocialPostCard from "../home_components/SocialPostCard";
 import { postScoops, getScoops, getHoops } from "../../services/scoops";
+import { isAuthenticated } from "../../utils/helpers";
 
 function Hashtag({ tag, onClick, selected }) {
   return (
@@ -43,7 +44,7 @@ function CreateScoopForm({
   error = null,
   hasMore = true,
   lastPostElementRef = () => {},
-  refreshFeed = () => {},
+  refreshFeed = () => {}
 }) {
   const [content, setContent] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -71,7 +72,7 @@ function CreateScoopForm({
         // Fetch scoops and hoops in parallel
         const [scoopsData, hoopsData] = await Promise.all([
           getScoops(),
-          getHoops(),
+          getHoops()
         ]);
 
         setScoops(scoopsData);
@@ -87,7 +88,7 @@ function CreateScoopForm({
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true,
+            closeOnClick: true
           }
         );
       } finally {
@@ -99,7 +100,7 @@ function CreateScoopForm({
   }, []);
 
   // Group hoops into arrays for display
-  const groupHoopsByCategory = (hoopsData) => {
+  const groupHoopsByCategory = hoopsData => {
     // Create groups of 6 hoops each
     const groups = [];
     for (let i = 0; i < hoopsData.length; i += 6) {
@@ -112,12 +113,12 @@ function CreateScoopForm({
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        position => {
           // In a real app, you would convert lat/long to geohash
           // For now, we'll use a default value
           setGeohash("9v6m");
         },
-        (error) => {
+        error => {
           console.error("Error getting geolocation:", error);
         }
       );
@@ -125,49 +126,52 @@ function CreateScoopForm({
   }, []);
 
   // Update available hoops when selected category changes
-  useEffect(() => {
-    if (selectedCategory && scoops.length > 0) {
-      // Find the selected scoop
-      const scoop = scoops.find(
-        (s) => s.scoopid.toString() === selectedCategory.id
-      );
-
-      if (scoop && scoop.hoops) {
-        // Group the hoops for this scoop
-        const scoopHoops = scoop.hoops.map((h) => h.hoopid);
-
-        // Filter all hoops to only include those for this scoop
-        const filteredHoops = hoops.filter((h) =>
-          scoopHoops.includes(h.hoopid)
+  useEffect(
+    () => {
+      if (selectedCategory && scoops.length > 0) {
+        // Find the selected scoop
+        const scoop = scoops.find(
+          s => s.scoopid.toString() === selectedCategory.id
         );
 
-        // Group the filtered hoops
-        const groupedHoops = groupHoopsByCategory(filteredHoops);
-        setAvailableHoops(groupedHoops);
+        if (scoop && scoop.hoops) {
+          // Group the hoops for this scoop
+          const scoopHoops = scoop.hoops.map(h => h.hoopid);
 
-        // Clear selected hashtags when category changes
-        setSelectedHashtags([]);
+          // Filter all hoops to only include those for this scoop
+          const filteredHoops = hoops.filter(h =>
+            scoopHoops.includes(h.hoopid)
+          );
+
+          // Group the filtered hoops
+          const groupedHoops = groupHoopsByCategory(filteredHoops);
+          setAvailableHoops(groupedHoops);
+
+          // Clear selected hashtags when category changes
+          setSelectedHashtags([]);
+        }
       }
-    }
-  }, [selectedCategory, scoops, hoops]);
+    },
+    [selectedCategory, scoops, hoops]
+  );
 
-  const toggleHashtag = (hoop) => {
-    if (selectedHashtags.some((h) => h.hoopid === hoop.hoopid)) {
+  const toggleHashtag = hoop => {
+    if (selectedHashtags.some(h => h.hoopid === hoop.hoopid)) {
       setSelectedHashtags(
-        selectedHashtags.filter((h) => h.hoopid !== hoop.hoopid)
+        selectedHashtags.filter(h => h.hoopid !== hoop.hoopid)
       );
     } else {
       setSelectedHashtags([...selectedHashtags, hoop]);
     }
   };
 
-  const openImagePicker = (mode) => {
+  const openImagePicker = mode => {
     setImagePickerMode(mode);
     setIsImagePickerOpen(true);
   };
 
   // Handle multiple image selection
-  const handleImageSelected = (imageData) => {
+  const handleImageSelected = imageData => {
     if (Array.isArray(imageData)) {
       // If we receive an array of images, limit to max 2 images total
       const newImages = [...images];
@@ -177,7 +181,7 @@ function CreateScoopForm({
         } else {
           toast.warning("Maximum 2 images allowed", {
             position: "top-right",
-            autoClose: 3000,
+            autoClose: 3000
           });
           break;
         }
@@ -190,14 +194,14 @@ function CreateScoopForm({
       } else {
         toast.warning("Maximum 2 images allowed", {
           position: "top-right",
-          autoClose: 3000,
+          autoClose: 3000
         });
       }
     }
   };
 
   // Remove a specific image
-  const removeImage = (index) => {
+  const removeImage = index => {
     const newImages = [...images];
     newImages.splice(index, 1);
     setImages(newImages);
@@ -212,7 +216,7 @@ function CreateScoopForm({
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true,
+          closeOnClick: true
         });
         return;
       }
@@ -222,7 +226,7 @@ function CreateScoopForm({
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true,
+          closeOnClick: true
         });
         return;
       }
@@ -238,7 +242,7 @@ function CreateScoopForm({
       // Add hoopids as JSON string
       formData.append(
         "hoopids",
-        JSON.stringify(selectedHashtags.map((h) => h.hoopid))
+        JSON.stringify(selectedHashtags.map(h => h.hoopid))
       );
 
       // Add image files directly - maximum 2 files
@@ -256,7 +260,7 @@ function CreateScoopForm({
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true,
+        closeOnClick: true
       });
 
       // Reset form
@@ -274,7 +278,7 @@ function CreateScoopForm({
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true,
+          closeOnClick: true
         }
       );
     } finally {
@@ -293,7 +297,7 @@ function CreateScoopForm({
     setGeohash("9v6m");
     toast.info("Location added", {
       position: "top-right",
-      autoClose: 3000,
+      autoClose: 3000
     });
   };
 
@@ -303,7 +307,7 @@ function CreateScoopForm({
       return [];
     }
 
-    return scoops.map((scoop) => ({
+    return scoops.map(scoop => ({
       id: scoop.scoopid.toString(),
       name: scoop.scoopname,
       icon: (
@@ -317,7 +321,7 @@ function CreateScoopForm({
           />
         </span>
       ),
-      description: `${scoop.scoopname} scoop`,
+      description: `${scoop.scoopname} scoop`
     }));
   };
 
@@ -341,7 +345,7 @@ function CreateScoopForm({
       {isLoading ? (
         <div className="p-4 text-center">Loading categories...</div>
       ) : (
-        getCategoryItems().map((category) => (
+        getCategoryItems().map(category => (
           <CategoryItem
             key={category.id}
             category={category}
@@ -365,12 +369,12 @@ function CreateScoopForm({
         <>
           {availableHoops.map((group, index) => (
             <div key={index} className="flex flex-wrap gap-2">
-              {group.map((hoop) => (
+              {group.map(hoop => (
                 <Hashtag
                   key={hoop.hoopid}
                   tag={hoop.hooptag}
                   selected={selectedHashtags.some(
-                    (h) => h.hoopid === hoop.hoopid
+                    h => h.hoopid === hoop.hoopid
                   )}
                   onClick={() => toggleHashtag(hoop)}
                 />
@@ -391,147 +395,149 @@ function CreateScoopForm({
 
   return (
     <>
-      <div className="bg-white rounded-lg border p-4 mb-4">
-        <div className="flex items-center gap-2 mb-4">
-          <Popover
-            content={categoryPopoverContent}
-            align="start"
-            open={isCategoryPopoverOpen}
-            onOpenChange={setIsCategoryPopoverOpen}
-          >
-            <Button
-              variant="outline"
-              className="rounded-full flex items-center gap-2 bg-amber-100 text-gray-700"
+      {isAuthenticated() && (
+        <div className="bg-white rounded-lg border p-4 mb-4">
+          <div className="flex items-center gap-2 mb-4">
+            <Popover
+              content={categoryPopoverContent}
+              align="start"
+              open={isCategoryPopoverOpen}
+              onOpenChange={setIsCategoryPopoverOpen}
             >
-              <div className="w-6 h-6 rounded-full bg-amber-300 text-amber-800 flex items-center justify-center">
-                <img
-                  src="/images/scoops_icon.svg"
-                  alt="scoops icon"
-                  width={16}
-                  height={16}
-                  className="object-contain "
-                />
-              </div>
-              <span>
-                {selectedCategory ? selectedCategory.name : "Select a scoop"}
-              </span>
-              <ChevronDown size={16} />
-            </Button>
-          </Popover>
-          <Popover
-            content={hashtagPopoverContent}
-            align="start"
-            open={isHashtagPopoverOpen}
-            onOpenChange={(open) => {
-              // Only allow opening if a category is selected
-              if (open && !selectedCategory) {
-                return;
-              }
-              setIsHashtagPopoverOpen(open);
-            }}
-          >
-            <Button
-              variant="outline"
-              className="rounded-full flex items-center gap-2  text-gray-700 bg-fuchsia-100"
-              disabled={!selectedCategory}
+              <Button
+                variant="outline"
+                className="rounded-full flex items-center gap-2 bg-amber-100 text-gray-700"
+              >
+                <div className="w-6 h-6 rounded-full bg-amber-300 text-amber-800 flex items-center justify-center">
+                  <img
+                    src="/images/scoops_icon.svg"
+                    alt="scoops icon"
+                    width={16}
+                    height={16}
+                    className="object-contain "
+                  />
+                </div>
+                <span>
+                  {selectedCategory ? selectedCategory.name : "Select a scoop"}
+                </span>
+                <ChevronDown size={16} />
+              </Button>
+            </Popover>
+            <Popover
+              content={hashtagPopoverContent}
+              align="start"
+              open={isHashtagPopoverOpen}
+              onOpenChange={open => {
+                // Only allow opening if a category is selected
+                if (open && !selectedCategory) {
+                  return;
+                }
+                setIsHashtagPopoverOpen(open);
+              }}
             >
-              <div className="w-6 h-6 rounded-full bg-fuchsia-300 text-fuchsia-800 flex items-center justify-center">
-                <Hash size={14} />
-              </div>
-              <span>Add Hoop</span>
-              <ChevronDown size={16} />
-            </Button>
-          </Popover>
-        </div>
+              <Button
+                variant="outline"
+                className="rounded-full flex items-center gap-2  text-gray-700 bg-fuchsia-100"
+                disabled={!selectedCategory}
+              >
+                <div className="w-6 h-6 rounded-full bg-fuchsia-300 text-fuchsia-800 flex items-center justify-center">
+                  <Hash size={14} />
+                </div>
+                <span>Add Hoop</span>
+                <ChevronDown size={16} />
+              </Button>
+            </Popover>
+          </div>
 
-        <div className="mb-4">
-          <textarea
-            className="w-full p-2 min-h-[100px] border-none outline-none resize-none"
-            placeholder="What's in your mind?"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+          <div className="mb-4">
+            <textarea
+              className="w-full p-2 min-h-[100px] border-none outline-none resize-none"
+              placeholder="What's in your mind?"
+              value={content}
+              onChange={e => setContent(e.target.value)}
+            />
+          </div>
+
+          {/* Display multiple images */}
+          {images.length > 0 && (
+            <div className="mb-4 grid grid-cols-2 gap-2">
+              {images.map((img, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={img instanceof File ? URL.createObjectURL(img) : img}
+                    alt={`Uploaded content ${index + 1}`}
+                    className="w-full h-auto rounded-md object-cover aspect-square"
+                  />
+                  <button
+                    className="absolute top-2 right-2 bg-white/80 rounded-full p-1 hover:bg-white"
+                    onClick={() => removeImage(index)}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {selectedHashtags.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-4">
+              {selectedHashtags.map(hoop => (
+                <Hashtag
+                  key={hoop.hoopid}
+                  tag={hoop.hooptag}
+                  selected
+                  onClick={() => toggleHashtag(hoop)}
+                />
+              ))}
+            </div>
+          )}
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => openImagePicker("camera")}
+                className="text-gray-500 hover:text-gray-800 transition-colors"
+              >
+                <Camera size={20} />
+              </button>
+              <button
+                onClick={() => openImagePicker("upload")}
+                className="text-gray-500 hover:text-gray-800 transition-colors"
+              >
+                <ImageIcon size={20} />
+              </button>
+              <button
+                onClick={handleAddLocation}
+                className="text-gray-500 hover:text-gray-800 transition-colors"
+              >
+                <MapPin size={20} />
+              </button>
+              <button className="text-gray-500 hover:text-gray-800 transition-colors">
+                <Link2 size={20} />
+              </button>
+            </div>
+
+            {(content || images.length > 0 || selectedHashtags.length > 0) && (
+              <Button
+                variant="primary"
+                className="rounded-full px-6 bg-[#7B189F] text-white hover:bg-[#8823ad]"
+                onClick={handlePost}
+                disabled={isProcessing}
+              >
+                {isProcessing ? "Posting..." : "Post"}
+              </Button>
+            )}
+          </div>
+
+          <ImagePickerModal
+            isOpen={isImagePickerOpen}
+            onClose={() => setIsImagePickerOpen(false)}
+            onImageSelected={handleImageSelected}
+            mode={imagePickerMode}
+            allowMultiple={true}
           />
         </div>
-
-        {/* Display multiple images */}
-        {images.length > 0 && (
-          <div className="mb-4 grid grid-cols-2 gap-2">
-            {images.map((img, index) => (
-              <div key={index} className="relative">
-                <img
-                  src={img instanceof File ? URL.createObjectURL(img) : img}
-                  alt={`Uploaded content ${index + 1}`}
-                  className="w-full h-auto rounded-md object-cover aspect-square"
-                />
-                <button
-                  className="absolute top-2 right-2 bg-white/80 rounded-full p-1 hover:bg-white"
-                  onClick={() => removeImage(index)}
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {selectedHashtags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {selectedHashtags.map((hoop) => (
-              <Hashtag
-                key={hoop.hoopid}
-                tag={hoop.hooptag}
-                selected
-                onClick={() => toggleHashtag(hoop)}
-              />
-            ))}
-          </div>
-        )}
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => openImagePicker("camera")}
-              className="text-gray-500 hover:text-gray-800 transition-colors"
-            >
-              <Camera size={20} />
-            </button>
-            <button
-              onClick={() => openImagePicker("upload")}
-              className="text-gray-500 hover:text-gray-800 transition-colors"
-            >
-              <ImageIcon size={20} />
-            </button>
-            <button
-              onClick={handleAddLocation}
-              className="text-gray-500 hover:text-gray-800 transition-colors"
-            >
-              <MapPin size={20} />
-            </button>
-            <button className="text-gray-500 hover:text-gray-800 transition-colors">
-              <Link2 size={20} />
-            </button>
-          </div>
-
-          {(content || images.length > 0 || selectedHashtags.length > 0) && (
-            <Button
-              variant="primary"
-              className="rounded-full px-6 bg-[#7B189F] text-white hover:bg-[#8823ad]"
-              onClick={handlePost}
-              disabled={isProcessing}
-            >
-              {isProcessing ? "Posting..." : "Post"}
-            </Button>
-          )}
-        </div>
-
-        <ImagePickerModal
-          isOpen={isImagePickerOpen}
-          onClose={() => setIsImagePickerOpen(false)}
-          onImageSelected={handleImageSelected}
-          mode={imagePickerMode}
-          allowMultiple={true}
-        />
-      </div>
+      )}
 
       {/* Social Feed Section */}
       <div className="social-feed">
@@ -548,63 +554,72 @@ function CreateScoopForm({
         )}
 
         {/* Error state */}
-        {error && !initialLoading && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-4">
-            <p>Failed to load posts: {error}</p>
-            <button
-              className="mt-2 text-sm font-medium underline"
-              onClick={refreshFeed}
-            >
-              Try again
-            </button>
-          </div>
-        )}
+        {error &&
+          !initialLoading && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-4">
+              <p>Failed to load posts: {error}</p>
+              <button
+                className="mt-2 text-sm font-medium underline"
+                onClick={refreshFeed}
+              >
+                Try again
+              </button>
+            </div>
+          )}
 
         {/* Empty state */}
-        {!initialLoading && !error && postings.length === 0 && (
-          <div className="bg-gray-50 border border-gray-200 rounded-md p-8 text-center">
-            <p className="text-gray-500 mb-2">No posts found</p>
-            <p className="text-sm text-gray-400">
-              Be the first to create a post!
-            </p>
-          </div>
-        )}
+        {!initialLoading &&
+          !error &&
+          postings.length === 0 && (
+            <div className="bg-gray-50 border border-gray-200 rounded-md p-8 text-center">
+              <p className="text-gray-500 mb-2">No posts found</p>
+              <p className="text-sm text-gray-400">
+                Be the first to create a post!
+              </p>
+            </div>
+          )}
 
         {/* Posts list */}
-        {!initialLoading && postings.length > 0 && (
-          <div className="space-y-4">
-            {postings.map((post, index) => (
-              <div
-                key={post.id || post._id || index}
-                ref={index === postings.length - 1 ? lastPostElementRef : null}
-                className="transition-all duration-300 ease-in-out"
-              >
-                <SocialPostCard
-                  post={post}
-                  username={post.username}
-                  images={post.photopath ? post.photopath.split(",") : []}
-                />
-              </div>
-            ))}
+        {!initialLoading &&
+          postings.length > 0 && (
+            <div className="space-y-4">
+              {postings.map((post, index) => (
+                <div
+                  key={post.id || post._id || index}
+                  ref={
+                    index === postings.length - 1 ? lastPostElementRef : null
+                  }
+                  className="transition-all duration-300 ease-in-out"
+                >
+                  <SocialPostCard
+                    post={post}
+                    username={post.username}
+                    images={post.photopath ? post.photopath.split(",") : []}
+                  />
+                </div>
+              ))}
 
-            {/* Loading more indicator */}
-            {feedLoading && !initialLoading && (
-              <div className="flex justify-center items-center py-4">
-                <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
-                <span className="ml-2 text-sm text-gray-500">
-                  Loading more...
-                </span>
-              </div>
-            )}
+              {/* Loading more indicator */}
+              {feedLoading &&
+                !initialLoading && (
+                  <div className="flex justify-center items-center py-4">
+                    <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+                    <span className="ml-2 text-sm text-gray-500">
+                      Loading more...
+                    </span>
+                  </div>
+                )}
 
-            {/* End of feed indicator */}
-            {!hasMore && !feedLoading && postings.length > 0 && (
-              <div className="text-center py-6 text-gray-500 text-sm border-t border-gray-100">
-                You've reached the end of the feed
-              </div>
-            )}
-          </div>
-        )}
+              {/* End of feed indicator */}
+              {!hasMore &&
+                !feedLoading &&
+                postings.length > 0 && (
+                  <div className="text-center py-6 text-gray-500 text-sm border-t border-gray-100">
+                    You've reached the end of the feed
+                  </div>
+                )}
+            </div>
+          )}
       </div>
     </>
   );
