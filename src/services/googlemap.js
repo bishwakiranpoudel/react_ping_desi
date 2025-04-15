@@ -8,15 +8,6 @@ export async function googleMapHandler({
   type,
   keyword,
 }) {
-  console.log(
-    latitude,
-    longitude,
-    radius,
-    type,
-    keyword,
-    "at google map handler"
-  );
-
   try {
     const payload = {
       googleApiKey,
@@ -40,6 +31,34 @@ export async function googleMapHandler({
     return response.data;
   } catch (error) {
     console.error("Client fetch error:", error);
+    throw error;
+  }
+}
+
+export async function googleMapImageHandler({ photo_reference }) {
+  try {
+    const payload = {
+      apiKey: googleApiKey,
+      photoReference: photo_reference,
+    };
+
+    console.log("Photo payload:", payload);
+
+    const response = await handlePostRequest(
+      "/location/retrieveGoogleMapsApiImages",
+      payload,
+      undefined,
+      false
+    );
+
+    if (response.status !== "success") {
+      throw new Error("Image API request failed");
+    }
+    console.log(response.imageUrl, "image url");
+
+    return response.imageUrl;
+  } catch (error) {
+    console.error("Client image fetch error:", error);
     throw error;
   }
 }

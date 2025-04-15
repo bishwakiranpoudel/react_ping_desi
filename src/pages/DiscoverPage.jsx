@@ -5,7 +5,7 @@ import MainLayout from "../components/MainLayout";
 import ContentView from "../components/discover_components/ContentView";
 import { tabs } from "../components/discover_components/data/tabs-data";
 import { useState, useEffect } from "react";
-import { googleMapHandler } from "../services/googlemap";
+import { googleMapHandler, googleMapImageHandler } from "../services/googlemap";
 import { toast } from "react-toastify";
 
 const DiscoverPage = () => {
@@ -14,7 +14,8 @@ const DiscoverPage = () => {
   const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
   const [results, setResults] = useState([]);
-  const [resultsWithDistance, setResultsWithDistance] = useState([]);
+  const [resultsWithDistanceAndImages, setResultsWithDistanceAndImages] =
+    useState([]);
   const [tryNewPlaces, setTryNewPlaces] = useState([]);
   const [currentMile, setCurrentMile] = useState(5);
   const [loading, setLoading] = useState(true);
@@ -57,6 +58,63 @@ const DiscoverPage = () => {
     });
 
     return sortedPlaces.slice(0, 8); // Limit to 8 places
+  };
+
+  // This function adds both distance and images to places
+  const processPlacesWithDistanceAndImages = async (places, userLocation) => {
+    if (!places || places.length === 0) return [];
+
+    // First add distance to all places
+    const placesWithDistance = places.map((place) => {
+      const placeLat = place.geometry.location.lat;
+      const placeLng = place.geometry.location.lng;
+
+      const distance = calculateDistance(
+        userLocation.latitude,
+        userLocation.longitude,
+        placeLat,
+        placeLng
+      );
+
+      return {
+        ...place,
+        distance,
+      };
+    });
+
+    // Then fetch and add images for all places
+    const placesWithDistanceAndImages = await Promise.all(
+      placesWithDistance.map(async (place) => {
+        console.log(place, "place");
+        if (place.photos && place.photos.length > 0) {
+          try {
+            const photoReference = place.photos[0].photo_reference;
+            const imageData = await googleMapImageHandler({
+              photo_reference: photoReference,
+              maxwidth: 400,
+            });
+
+            return {
+              ...place,
+              imageUrl: imageData || null,
+            };
+          } catch (error) {
+            console.error(`Error fetching image for ${place.name}:`, error);
+            return {
+              ...place,
+              imageUrl: null,
+            };
+          }
+        } else {
+          return {
+            ...place,
+            imageUrl: null,
+          };
+        }
+      })
+    );
+
+    return placesWithDistanceAndImages;
   };
 
   useEffect(() => {
@@ -110,33 +168,34 @@ const DiscoverPage = () => {
   }, [location, activeTab, currentMile]);
 
   useEffect(() => {
-    if (results.length > 0 && location) {
-      const placesWithDistance = results.map((place) => {
-        const placeLat = place.geometry.location.lat;
-        const placeLng = place.geometry.location.lng;
+    const processResults = async () => {
+      if (results.length > 0 && location) {
+        setLoading(true);
+        try {
+          // Process all places to add distance and images
+          const processedPlaces = await processPlacesWithDistanceAndImages(
+            results,
+            location
+          );
 
-        const distance = calculateDistance(
-          location.latitude,
-          location.longitude,
-          placeLat,
-          placeLng
-        );
+          // Extract try new places from processed places
+          const newPlaces = extractTryNewPlaces(processedPlaces);
 
-        return {
-          ...place,
-          distance,
-        };
-      });
+          setResultsWithDistanceAndImages(processedPlaces);
+          setTryNewPlaces(newPlaces);
+        } catch (error) {
+          console.error("Error processing places:", error);
+          toast.error("Error loading place details");
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setResultsWithDistanceAndImages([]);
+        setTryNewPlaces([]);
+      }
+    };
 
-      // Extract Try New places
-      const newPlaces = extractTryNewPlaces(placesWithDistance);
-
-      setResultsWithDistance(placesWithDistance);
-      setTryNewPlaces(newPlaces);
-    } else {
-      setResultsWithDistance([]);
-      setTryNewPlaces([]);
-    }
+    processResults();
   }, [results, location]);
 
   return (
@@ -149,7 +208,7 @@ const DiscoverPage = () => {
       />
       <ContentView
         activeTab={activeTab}
-        results={resultsWithDistance}
+        results={resultsWithDistanceAndImages}
         tryNewPlaces={tryNewPlaces}
         loading={loading}
         location={location}

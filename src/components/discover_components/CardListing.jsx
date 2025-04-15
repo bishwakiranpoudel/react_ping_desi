@@ -5,6 +5,7 @@ import Card from "./Card";
 
 function CardListing({ items, type }) {
   const scrollContainerRef = useRef(null);
+  console.log(items, "items");
 
   const noItemsFound = !items || items.length === 0;
 
