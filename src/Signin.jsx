@@ -104,7 +104,7 @@ export default function SigninPage() {
                   <button
                     className={`flex items-center px-4 py-2 rounded-full text-sm ${
                       otpMethod === "sms"
-                        ? "bg-[#f2e8f5] text-purple-600 border border-purple-500"
+                        ? "bg-[#f2e8f5] text-[#7B189F] border border-[#7B189F]"
                         : "bg-gray-100 text-purple-500 border border-transparent hover:border-purple-500"
                     }`}
                     onClick={() => setOtpMethod("sms")}
@@ -119,7 +119,7 @@ export default function SigninPage() {
                   <button
                     className={`flex items-center px-4 py-2 rounded-full text-sm ${
                       otpMethod === "whatsapp"
-                        ? "bg-[#f2e8f5] text-purple-600 border border-purple-500"
+                        ? "bg-[#f2e8f5] text-[#7B189F] border border-[#7B189F]"
                         : "bg-gray-100 text-purple-500 border border-transparent hover:border-purple-500"
                     }`}
                     onClick={() => setOtpMethod("whatsapp")}
@@ -136,11 +136,11 @@ export default function SigninPage() {
 
               <p className="text-xs text-black mt-6 mb-6 text-center">
                 By Clicking Continue, I accept the{" "}
-                <a href="#" className="text-purple-600 underline">
+                <a href="#" className="text-[#7B189F] underline">
                   terms of services
                 </a>{" "}
                 and{" "}
-                <a href="#" className="text-purple-600 underline">
+                <a href="#" className="text-[#7B189F] underline">
                   privacy policy
                 </a>
               </p>
@@ -152,7 +152,7 @@ export default function SigninPage() {
                 ${
                   isProcessing || phoneNumber.length < 1
                     ? "bg-purple-400 cursor-not-allowed text-gray-200"
-                    : "bg-purple-600 hover:bg-purple-700 text-white"
+                    : "bg-[#7b189fc6] hover:bg-[#7B189F] text-white"
                 }`}
               >
                 {isProcessing ? (

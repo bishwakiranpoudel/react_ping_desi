@@ -1,9 +1,17 @@
+import { isAuthenticated } from "../../utils/helpers";
+import { useNavigate } from "react-router-dom";
+
 const HomePromotionCard = ({
   title = "Feel at Home Again",
   subtitle = "Connect with Your Desi Roots!",
-  buttonText = "Explore Community",
-  onButtonClick = () => {},
+  buttonText = "Explore Community"
 }) => {
+  const navigate = useNavigate();
+  function onButtonClick() {
+    if (!isAuthenticated()) {
+      navigate("/signin");
+    }
+  }
   return (
     <div className="w-full max-w-full rounded-lg p-6 shadow-sm bg-[#F2F5EB] relative overflow-hidden font-afacad text-center">
       <div className="flex justify-center mb-4">

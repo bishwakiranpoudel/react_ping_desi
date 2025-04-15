@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { ChevronDown, ChevronUp, MapPin, ArrowLeft, Phone } from "lucide-react";
 import { formatPrice } from "../../utils/helpers";
@@ -23,11 +21,11 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
 
   // Prepare images array
   const images = listing.images || [
-    listing.image || "/placeholder.svg?height=600&width=800",
+    listing.images || "/placeholder.svg?height=600&width=800"
   ];
 
   // Get category ID from name if needed
-  const getCategoryId = (categoryName) => {
+  const getCategoryId = categoryName => {
     const entries = Object.entries(CATEGORY_IDS);
     const found = entries.find(
       ([key, _]) => key.toLowerCase() === categoryName.toLowerCase()
@@ -36,17 +34,25 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
   };
 
   const categoryId = listing.categoryId || getCategoryId(category);
-  console.log(categoryId, "id");
 
   // Render property details with icons
   const renderPropertyDetails = () => {
+    const result = {
+      specific_details: {}
+    };
+    listing.specific_details.forEach(item => {
+      const key = Object.keys(item)[0];
+      result.specific_details[key] = item[key];
+    });
+
     if (
       categoryId === CATEGORY_IDS.HOUSE ||
       categoryId === CATEGORY_IDS.SUBLEASE
     ) {
+      console.log("here");
       return (
         <div className="flex border-t border-b py-4 my-4">
-          {listing.bedrooms && (
+          {result.specific_details.bedNo && (
             <div className="flex-1 flex flex-col items-center">
               <div className="w-10 h-10 mb-1">
                 <svg
@@ -92,10 +98,10 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
                 </svg>
               </div>
               <div className="text-sm text-gray-500">Bedrooms</div>
-              <div className="font-medium">{listing.bedrooms}</div>
+              <div className="font-medium">{result.specific_details.bedNo}</div>
             </div>
           )}
-          {listing.bathrooms && (
+          {result.specific_details.bathNo && (
             <div className="flex-1 flex flex-col items-center">
               <div className="w-10 h-10 mb-1">
                 <svg
@@ -128,10 +134,12 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
                 </svg>
               </div>
               <div className="text-sm text-gray-500">Baths</div>
-              <div className="font-medium">{listing.bathrooms}</div>
+              <div className="font-medium">
+                {result.specific_details.bathNo}
+              </div>
             </div>
           )}
-          {listing.size && (
+          {result.specific_details.squareFoot && (
             <div className="flex-1 flex flex-col items-center">
               <div className="w-10 h-10 mb-1">
                 <svg
@@ -161,7 +169,9 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
                 </svg>
               </div>
               <div className="text-sm text-gray-500">Size</div>
-              <div className="font-medium">{listing.size} sq ft</div>
+              <div className="font-medium">
+                {result.specific_details.squareFoot} sq ft
+              </div>
             </div>
           )}
         </div>
@@ -580,13 +590,11 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
 
     // Create a details object with all relevant properties
     const details = {};
-    console.log(categoryId, "categoryid");
 
     // Add properties based on category
     switch (categoryId) {
       case CATEGORY_IDS.HOUSE:
-        console.log(categoryId, "categoryid im in");
-        details.bedrooms = listing.bedrooms;
+        details.bedrooms = listing.specific_details.bedrooms;
         details.bathrooms = listing.bathrooms;
         details.propertyType = listing.propertyType;
         details.size = listing.size;
@@ -627,12 +635,26 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
         break;
       default:
         // Add any other properties that might be available
-        Object.keys(listing).forEach((key) => {
+        Object.keys(listing).forEach(key => {
           if (
             ![
               "id",
               "title",
               "price",
+              "coverPhoto",
+              "reasonToSell",
+              "fullName",
+              "state",
+              "addressLine1",
+              "addressLine2",
+              "phoneNumber",
+              "user_id",
+              "geohash",
+              "specific_details",
+              "created_at",
+              "updated_at",
+              "category_name",
+              "category_id",
               "images",
               "image",
               "description",
@@ -641,7 +663,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
               "story",
               "seller",
               "used",
-              "distance",
+              "distance"
             ].includes(key) &&
             listing[key] !== null &&
             listing[key] !== undefined
@@ -741,7 +763,11 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
           {/* Main image */}
           <div className="relative w-full aspect-[4/3] mb-2 overflow-hidden rounded-lg">
             <img
-              src={images[selectedImage]?.image_url || "/placeholder.svg"}
+              src={
+                images[selectedImage] ||
+                listing.coverPhoto ||
+                "/placeholder.svg"
+              }
               alt={`${listing.title} - Image ${selectedImage + 1}`}
               className="w-full h-full object-cover"
             />
@@ -762,7 +788,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
                     onClick={() => setSelectedImage(index)}
                   >
                     <img
-                      src={image?.image_url || "/placeholder.svg"}
+                      src={image || "/placeholder.svg"}
                       alt={`Thumbnail ${index + 1}`}
                       className="w-full h-full object-cover"
                     />
@@ -793,11 +819,9 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
 
           {/* Property-specific details with icons */}
           {renderPropertyDetails()}
-          {console.log("property details")}
 
           {/* Generic details grid for other categories */}
           {renderDetails()}
-
           {/* Reason for Selling section */}
           {listing.story && (
             <div className="mt-4 bg-gray-50 rounded-lg">
@@ -844,6 +868,45 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
             </div>
           )}
 
+          {/* reason for selling */}
+          {listing.reasonToSell && (
+            <div className="mt-4 bg-gray-50 rounded-lg">
+              <button
+                className="flex items-center justify-between w-full p-4 text-left"
+                onClick={() => setReasonExpanded(!reasonExpanded)}
+              >
+                <div className="flex items-center">
+                  <span className="text-gray-400 mr-2">
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 14 14"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M6.5 6.5L6.52733 6.48667C6.61282 6.44396 6.70875 6.42664 6.80378 6.43677C6.8988 6.4469 6.98893 6.48404 7.0635 6.54381C7.13806 6.60357 7.19394 6.68345 7.22451 6.77399C7.25508 6.86453 7.25907 6.96193 7.236 7.05467L6.764 8.94533C6.74076 9.03811 6.74463 9.13561 6.77513 9.22626C6.80563 9.31691 6.86149 9.39691 6.93609 9.45678C7.01069 9.51664 7.10089 9.55384 7.196 9.56399C7.2911 9.57413 7.38712 9.55678 7.47267 9.514L7.5 9.5M13 7C13 7.78793 12.8448 8.56815 12.5433 9.2961C12.2417 10.0241 11.7998 10.6855 11.2426 11.2426C10.6855 11.7998 10.0241 12.2417 9.2961 12.5433C8.56815 12.8448 7.78793 13 7 13C6.21207 13 5.43185 12.8448 4.7039 12.5433C3.97595 12.2417 3.31451 11.7998 2.75736 11.2426C2.20021 10.6855 1.75825 10.0241 1.45672 9.2961C1.15519 8.56815 1 7.78793 1 7C1 5.4087 1.63214 3.88258 2.75736 2.75736C3.88258 1.63214 5.4087 1 7 1C8.5913 1 10.1174 1.63214 11.2426 2.75736C12.3679 3.88258 13 5.4087 13 7ZM7 4.5H7.00533V4.50533H7V4.5Z"
+                        stroke="#928E99"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </span>
+                  <span className="font-medium">Reason To Sell</span>
+                </div>
+                {reasonExpanded ? (
+                  <ChevronUp size={20} />
+                ) : (
+                  <ChevronDown size={20} />
+                )}
+              </button>
+              {reasonExpanded && (
+                <div className="px-4 pb-4 text-gray-700">
+                  {listing.reasonToSell}
+                </div>
+              )}
+            </div>
+          )}
           {/* Description section */}
           {listing.description && (
             <div className="mt-4 bg-gray-50 rounded-lg">
@@ -897,7 +960,7 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
           )}
 
           {/* Seller information */}
-          {listing.seller && (
+          {listing.fullName && (
             <div className="mt-6 p-4 bg-white rounded-lg border">
               <div className="uppercase text-xs font-medium text-gray-500 mb-3">
                 SELLER LOCATION:
@@ -905,32 +968,37 @@ function ClassifiedDetailsView({ listing, category, onBack }) {
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center space-x-2 mb-2">
-                    <span className="font-medium">{listing.fullname}</span>
-                    {listing.seller.verified && (
+                    <span className="font-medium">{listing.fullName}</span>
+                    {listing.fullName && (
                       <span className="bg-gray-800 text-white text-xs px-2 py-0.5 rounded">
                         Verified Neighbor
                       </span>
                     )}
                   </div>
-                  {listing.seller.address && (
+                  {listing.addressLine1 && (
                     <div className="text-sm text-gray-600">
-                      {listing.seller.address}
+                      {listing.addressLine1}
+                    </div>
+                  )}
+                  {listing.addressLine2 && (
+                    <div className="text-sm text-gray-600">
+                      {listing.addressLine2}
                     </div>
                   )}
                 </div>
                 <div className="flex flex-col items-end gap-2">
-                  {listing.seller.address && (
+                  {listing.addressLine1 && (
                     <button className="flex items-center text-sm text-gray-700">
                       <MapPin size={16} className="mr-1" />
                       View in map
                     </button>
                   )}
-                  {listing.seller.phone && (
+                  {/*listing.seller.phone && (
                     <button className="flex items-center text-sm text-gray-700">
                       <Phone size={16} className="mr-1" />
                       Call seller
                     </button>
-                  )}
+                  )*/}
                 </div>
               </div>
             </div>

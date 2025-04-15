@@ -14,7 +14,7 @@ import HomeRightSidebar from "../components/home_components/HomeRightSidebar";
 
 import {
   fetchMasterCities,
-  retrieveMasterCity
+  retrieveMasterCity,
 } from "../services/locationServices";
 import { fetchCommunityEvents } from "../services/events";
 import { convertDateToObject } from "../lib/utils";
@@ -41,7 +41,7 @@ function HomePage2() {
     async function fetchNews() {
       try {
         const news = await getNews();
-        setNewsData(news[0].news.slice(0, 2));
+        setNewsData(news[0].news.slice(0, 4));
       } catch (error) {
         toast.error("Error while fetching News");
       }
@@ -69,7 +69,7 @@ function HomePage2() {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
-        closeOnClick: true
+        closeOnClick: true,
       });
     } finally {
       setLoading(false);
@@ -91,7 +91,7 @@ function HomePage2() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState({
     state: "",
-    city: ""
+    city: "",
   });
   const [communityEvents, setCommunityEvents] = useState([]);
 
@@ -112,7 +112,7 @@ function HomePage2() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true
+            closeOnClick: true,
           }
         );
       } finally {
@@ -132,7 +132,7 @@ function HomePage2() {
         const location = await fetchMasterCities(payload);
         const eventsResponse = await fetchCommunityEvents({
           state: location.data[0].state,
-          city: location.data[0].city
+          city: location.data[0].city,
         });
         setCommunityEvents(eventsResponse.data);
       } catch (error) {
@@ -142,7 +142,7 @@ function HomePage2() {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true
+            closeOnClick: true,
           }
         );
       } finally {
@@ -158,7 +158,7 @@ function HomePage2() {
       latitude: 0.0,
       longitude: 0.0,
       city: selectedLocation.city,
-      state: selectedLocation.state
+      state: selectedLocation.state,
     };
     try {
       if (isProcessing) {
@@ -175,7 +175,7 @@ function HomePage2() {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
-          closeOnClick: true
+          closeOnClick: true,
         }
       );
     } finally {
@@ -286,7 +286,7 @@ function HomePage2() {
                         name: "Community",
                         icon: "👨‍👩‍👧‍👦",
                         bgColor: "bg-blue-100",
-                        textColor: "text-blue-800"
+                        textColor: "text-blue-800",
                       }}
                       title={event.name}
                       description={event.description}
@@ -348,7 +348,7 @@ function HomePage2() {
                 name: "Community",
                 icon: "👨‍👩‍👧‍👦",
                 bgColor: "bg-blue-100",
-                textColor: "text-blue-800"
+                textColor: "text-blue-800",
               }}
               title={event.name}
               description={event.description}
@@ -361,6 +361,32 @@ function HomePage2() {
               }
             />
           ))}
+        <section className="mb-6">
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-xl lg:text-2xl font-semibold font-fraunces">
+              Local Buzz
+            </h2>
+            <a href="#" className="text-sm text-gray-600 flex items-center">
+              Explore More <span className="ml-1">→</span>
+            </a>
+          </div>
+          <div
+            className="overflow-x-auto pb-2 "
+            style={{ scrollbarWidth: "none" }}
+          >
+            <div className="flex space-x-4">
+              {newsData &&
+                newsData.map((item, index) => (
+                  <NewsCard
+                    key={index}
+                    item={item}
+                    index={index}
+                    isMobile="true"
+                  />
+                ))}
+            </div>
+          </div>
+        </section>
       </>
     );
   };
