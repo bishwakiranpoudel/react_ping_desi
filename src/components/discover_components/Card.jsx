@@ -3,7 +3,7 @@
 function Card({ item, type }) {
   return (
     <div className="flex flex-col border shadow-sm rounded-lg">
-      <div className="relative h-[180px] w-full rounded-lg overflow-hidden ">
+      <div className="relative h-[180px] w-full rounded-t-lg overflow-hidden ">
         <img
           src={item.imageUrl || "/image/discover-list.png"}
           alt={item.name}
