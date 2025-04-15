@@ -10,7 +10,7 @@ function UserProfile({
   handleDiscard,
   handleSave,
   setIsEditing,
-  setDebugCounter
+  setDebugCounter,
 }) {
   return (
     <div className="space-y-4">
@@ -46,7 +46,7 @@ function UserProfile({
               className="bg-[#7B189F] hover:bg-[#6A1587] text-white rounded-full px-4 py-2 flex items-center gap-1"
               onClick={() => {
                 setIsEditing(true);
-                setDebugCounter(prev => prev + 1);
+                setDebugCounter((prev) => prev + 1);
               }}
             >
               <Pencil size={16} />
@@ -114,23 +114,6 @@ function UserProfile({
 
           <div>
             <label className="block text-gray-700 text-sm font-medium mb-2">
-              Email
-            </label>
-            {isEditing ? (
-              <input
-                className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F]"
-                name="userloginname"
-                value={formData.userloginname || ""}
-                onChange={handleInputChange}
-              />
-            ) : (
-              <div className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
-                {formData.userloginname}
-              </div>
-            )}
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-medium mb-2">
               First Name
             </label>
             {isEditing ? (
@@ -178,6 +161,33 @@ function UserProfile({
             ) : (
               <div className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
                 {formData.mobileno}
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block text-gray-700 text-sm font-medium mb-2">
+              Gender
+            </label>
+            {isEditing ? (
+              <div className="relative">
+                <select
+                  className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#7B189F] appearance-none"
+                  name="gender"
+                  value={formData.gender || ""}
+                  onChange={handleInputChange}
+                >
+                  <option value="">Select Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+                <ChevronDown
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  size={18}
+                />
+              </div>
+            ) : (
+              <div className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50">
+                {formData.gender || "Not specified"}
               </div>
             )}
           </div>
