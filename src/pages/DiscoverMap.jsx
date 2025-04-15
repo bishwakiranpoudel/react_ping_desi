@@ -64,7 +64,7 @@ const createInfoWindowContent = (place, category) => {
 
   return `
 <div class="relative">
-  <div class="w-5 h-5 bg-[#7b189f] rounded-full flex items-center justify-center text-white shadow-md cursor-pointer">
+  <div class="w-10 h-10 bg-[#7b189f] rounded-lg flex items-center justify-center text-white shadow-md cursor-pointer">
     <span class="flex items-center justify-center w-full h-full text-2xl leading-none">
       ${categoryIcon}
     </span>
@@ -238,15 +238,47 @@ const DiscoverMap = () => {
         title: place.name,
         // Use visible marker with custom icon
         icon: {
-          url: `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="%237b189f" opacity="${
+          url: `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <rect 
+    x="0" y="0" 
+    width="36" height="36" 
+    rx="8" ry="8" 
+    fill="%237b189f" 
+    opacity="${
+      selectedPlace && selectedPlace.place_id === place.place_id ? "1" : "1"
+    }" 
+    stroke="${
+      selectedPlace && selectedPlace.place_id === place.place_id
+        ? "black "
+        : "none"
+    }" 
+    stroke-width="${
+      selectedPlace && selectedPlace.place_id === place.place_id ? "2" : "0"
+    }"
+  />
+  <text 
+    x="50%" 
+    y="50%" 
+    font-size="18" 
+    text-anchor="middle" 
+    alignment-baseline="central" 
+    fill="white"
+  >
+    ${getCategoryIcon(activeTab)}
+  </text>
+</svg>`,
+          scaledSize: new window.google.maps.Size(
             selectedPlace && selectedPlace.place_id === place.place_id
-              ? "1"
-              : "1"
-          }"/><text x="50%" y="50%" fontSize="18" textAnchor="middle" dominantBaseline="middle" fill="white">${getCategoryIcon(
-            activeTab
-          )}</text></svg>`,
-          scaledSize: new window.google.maps.Size(36, 36),
-          anchor: new window.google.maps.Point(18, 18),
+              ? 44
+              : 36,
+            selectedPlace && selectedPlace.place_id === place.place_id ? 44 : 36
+          ),
+          anchor: new window.google.maps.Point(
+            selectedPlace && selectedPlace.place_id === place.place_id
+              ? 22
+              : 18,
+            selectedPlace && selectedPlace.place_id === place.place_id ? 22 : 18
+          ),
         },
         opacity: 1, // Start with full opacity
       });
@@ -272,13 +304,31 @@ const DiscoverMap = () => {
         markersRef.current.forEach((item) => {
           const isActive = place.place_id === item.place_id;
           item.marker.setIcon({
-            url: `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="%237b189f" opacity="${
-              isActive ? "1" : "0.5"
-            }"/><text x="50%" y="50%" fontSize="18" textAnchor="middle" dominantBaseline="middle" fill="white">${getCategoryIcon(
-              activeTab
-            )}</text></svg>`,
-            scaledSize: new window.google.maps.Size(36, 36),
-            anchor: new window.google.maps.Point(18, 18),
+            url: `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+  <circle cx="18" cy="18" r="${isActive ? "22" : "16"}" fill="${
+              isActive ? "%237b189f" : "white"
+            }" opacity="1" stroke="${
+              isActive ? "white" : "%237b189f"
+            }" stroke-width="${isActive ? "2" : "0"}"/>
+  <text 
+    x="50%" 
+    y="50%" 
+    font-size="${isActive ? "20" : "18"}" 
+    text-anchor="middle" 
+    alignment-baseline="central" 
+    fill="white"
+  >
+    ${getCategoryIcon(activeTab)}
+  </text>
+</svg>`,
+            scaledSize: new window.google.maps.Size(
+              isActive ? 44 : 36,
+              isActive ? 44 : 36
+            ),
+            anchor: new window.google.maps.Point(
+              isActive ? 22 : 18,
+              isActive ? 22 : 18
+            ),
           });
           item.marker.setZIndex(isActive ? 999 : 1); // Bring active marker to front
         });
@@ -326,7 +376,7 @@ const DiscoverMap = () => {
         // Reset all markers to full opacity
         markersRef.current.forEach((item) => {
           item.marker.setIcon({
-            url: `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="%237b189f" opacity="1"/><text x="50%" y="50%" fontSize="18" textAnchor="middle" dominantBaseline="middle" fill="white">${getCategoryIcon(
+            url: `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" fill="%237b189f" opacity="1" stroke="none" strokeWidth="0"/><text x="50%" y="52%" fontSize="18" textAnchor="middle" dominantBaseline="middle" fill="white">${getCategoryIcon(
               activeTab
             )}</text></svg>`,
             scaledSize: new window.google.maps.Size(36, 36),
@@ -381,7 +431,7 @@ const DiscoverMap = () => {
               if (markersRef.current) {
                 markersRef.current.forEach((item) => {
                   item.marker.setIcon({
-                    url: `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="18" fill="%237b189f" opacity="1"/><text x="50%" y="50%" fontSize="18" textAnchor="middle" dominantBaseline="middle" fill="white">${getCategoryIcon(
+                    url: `data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" fill="%237b189f" opacity="1" stroke="none" strokeWidth="0"/><text x="50%" y="52%" fontSize="18" textAnchor="middle" dominantBaseline="middle" fill="white">${getCategoryIcon(
                       activeTab
                     )}</text></svg>`,
                     scaledSize: new window.google.maps.Size(36, 36),
