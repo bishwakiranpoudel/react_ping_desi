@@ -1,7 +1,7 @@
 function SearchBar() {
   return (
     <div className="relative w-full">
-      <div className="relative rounded-full bg-white shadow-sm flex items-center px-4 py-2">
+      <div className="relative rounded-full bg-white shadow-sm border-1 flex items-center px-4 py-2">
         <svg
           className="h-5 w-5 text-gray-400"
           viewBox="0 0 24 24"
@@ -17,7 +17,7 @@ function SearchBar() {
         </svg>
         <input
           type="text"
-          placeholder="Nearby Indian restaurant, Roommates eat..."
+          placeholder="Nearby restaurant, Roommates eat..."
           className="ml-2 flex-1 border-none outline-none bg-transparent text-sm text-gray-600"
         />
       </div>

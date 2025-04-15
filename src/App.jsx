@@ -13,7 +13,7 @@ import ProfilePage from "./pages/ProfilePage";
 import ScoopsPage from "./pages/ScoopsPage";
 import SigninPage from "./Signin";
 import DiscoverMap from "./pages/DiscoverMap";
-
+import Custom404 from "./pages/404";
 // Remove the CSS import that's causing the error
 
 function App() {
@@ -39,6 +39,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           {/* Add more routes as needed */}
           <Route path="/scoops" element={<ScoopsPage />} />
+          <Route path="*" element={<Custom404 mode="404" />} />
         </Routes>
         <ToastContainer />
       </Router>

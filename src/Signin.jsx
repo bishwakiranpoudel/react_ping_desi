@@ -88,7 +88,7 @@ export default function SigninPage() {
                   </span>
                   <input
                     type="tel"
-                    className="flex-1 min-w-0 block w-full px-3 py-3 rounded-none rounded-r-md border border-gray-300 focus:ring-purple-500 focus:border-purple-500 text-sm"
+                    className="flex-1 min-w-0 block w-full px-3 py-3 rounded-none rounded-r-md border border-gray-300 focus:ring-purple-700 focus:border-purple-700 text-sm"
                     placeholder="Enter mobile number"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
@@ -105,7 +105,7 @@ export default function SigninPage() {
                     className={`flex items-center px-4 py-2 rounded-full text-sm ${
                       otpMethod === "sms"
                         ? "bg-[#f2e8f5] text-[#7B189F] border border-[#7B189F]"
-                        : "bg-gray-100 text-purple-500 border border-transparent hover:border-purple-500"
+                        : "bg-gray-100 text-purple-700 border border-transparent hover:border-purple-700"
                     }`}
                     onClick={() => setOtpMethod("sms")}
                   >
@@ -120,7 +120,7 @@ export default function SigninPage() {
                     className={`flex items-center px-4 py-2 rounded-full text-sm ${
                       otpMethod === "whatsapp"
                         ? "bg-[#f2e8f5] text-[#7B189F] border border-[#7B189F]"
-                        : "bg-gray-100 text-purple-500 border border-transparent hover:border-purple-500"
+                        : "bg-gray-100 text-purple-700 border border-transparent hover:border-purple-700"
                     }`}
                     onClick={() => setOtpMethod("whatsapp")}
                   >

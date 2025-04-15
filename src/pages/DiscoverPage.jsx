@@ -639,7 +639,7 @@ const DiscoverPage = () => {
       <div className="flex justify-between items-center mb-4">
         <div className="flex-1 mr-4">
           <div className="relative w-full">
-            <div className="relative rounded-full bg-white shadow-sm flex items-center px-4 py-2">
+            <div className="relative rounded-full bg-white shadow-sm border flex items-center px-4 py-2">
               <svg
                 className="h-5 w-5 text-gray-400"
                 viewBox="0 0 24 24"

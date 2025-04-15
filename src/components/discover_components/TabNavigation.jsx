@@ -3,7 +3,7 @@
 function TabNavigation({ tabs, activeTab, onTabChange }) {
   console.log(tabs, "tabs");
   return (
-    <div className="mt-4 overflow-x-auto">
+    <div className="mt-4 overflow-x-auto borfer-t ">
       <div className="flex space-x-6 pb-2 min-w-max">
         {tabs.map((tab, index) => (
           <TabItem
@@ -28,11 +28,7 @@ function TabItem({ name, icon, isActive, onClick }) {
       }`}
       onClick={onClick}
     >
-      <div
-        className={`p-2 bg-white rounded-full shadow-sm ${
-          isActive ? "ring-1 ring-gray-200" : ""
-        }`}
-      >
+      <div className={`p-2 bg-white  shadow-sm ${isActive ? "" : ""}`}>
         {icon}
       </div>
       <span

@@ -188,7 +188,7 @@ const OTPVerification = () => {
                   onChange={(e) => handleChange(index, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(index, e)}
                   onPaste={index === 0 ? handlePaste : undefined}
-                  className="rounded-lg w-full h-12 sm:h-14 flex items-center justify-center text-center font-semibold text-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500 text-black"
+                  className="rounded-lg w-full h-12 sm:h-14 flex items-center justify-center text-center font-semibold text-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-700 text-black"
                 />
               ))}
             </div>
