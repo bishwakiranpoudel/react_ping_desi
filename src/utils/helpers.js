@@ -16,4 +16,14 @@ export function classNames(...classes) {
       maximumFractionDigits: 0,
     }).format(numPrice)
   }
-  
+export  function base64ToFile(base64String, filename, mimeType) {
+  const byteString = atob(base64String.split(',')[1]); // decode base64
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+
+  return new File([ab], filename, { type: mimeType });
+} 
