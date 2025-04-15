@@ -637,7 +637,7 @@ const DiscoverPage = () => {
   return (
     <MainLayout rs={false}>
       <GoogleMapsScript apiKey={apiKey} />
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 pr-4 pl-4">
         <div className="flex-1 mr-4">
           <div className="relative w-full">
             <div className="relative rounded-full bg-white shadow-sm border flex items-center px-4 py-2">
@@ -670,35 +670,37 @@ const DiscoverPage = () => {
         onTabChange={setActiveTab}
       />
 
-      {viewMode === "list" ? (
-        <ContentView
-          activeTab={activeTab}
-          results={resultsWithDistanceAndImages}
-          tryNewPlaces={tryNewPlaces}
-          loading={loading}
-          location={location}
-        />
-      ) : (
-        <div className="relative h-[calc(100vh-120px)]">
-          {error && <ErrorDisplay />}
+      <div className="pr-4 pl-4">
+        {viewMode === "list" ? (
+          <ContentView
+            activeTab={activeTab}
+            results={resultsWithDistanceAndImages}
+            tryNewPlaces={tryNewPlaces}
+            loading={loading}
+            location={location}
+          />
+        ) : (
+          <div className="relative h-[calc(100vh-120px)]">
+            {error && <ErrorDisplay />}
 
-          {/* Map Container */}
-          <div ref={mapRef} className="h-full w-full" />
+            {/* Map Container */}
+            <div ref={mapRef} className="h-full w-full" />
 
-          {/* Loading Indicator */}
-          {loading && (
-            <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center">
-              <div className="flex flex-col items-center">
-                <div className="h-12 w-12 border-4 border-t-4 border-purple-500 rounded-full animate-spin"></div>
-                <p className="mt-4 text-lg">Loading places...</p>
+            {/* Loading Indicator */}
+            {loading && (
+              <div className="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center">
+                <div className="flex flex-col items-center">
+                  <div className="h-12 w-12 border-4 border-t-4 border-purple-500 rounded-full animate-spin"></div>
+                  <p className="mt-4 text-lg">Loading places...</p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Detailed Place View */}
-          {selectedPlace && <DetailedPlaceView place={selectedPlace} />}
-        </div>
-      )}
+            {/* Detailed Place View */}
+            {selectedPlace && <DetailedPlaceView place={selectedPlace} />}
+          </div>
+        )}
+      </div>
     </MainLayout>
   );
 };

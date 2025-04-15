@@ -37,7 +37,7 @@ function CardListing({ items, type }) {
               display: none;
             }
           `}</style>
-          <div className="flex space-x-10">
+          <div className="flex space-x-4">
             {items.map((item, index) => (
               <div key={index} className="flex-shrink-0 w-[244px]">
                 <Card item={item} type={type} />
