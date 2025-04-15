@@ -3,47 +3,27 @@
 import { useState, useEffect } from "react";
 
 export function ContactForm({ formData, updateFormData }) {
-  const [name, setName] = useState(formData.contactName || "");
-  const [email, setEmail] = useState(formData.contactEmail || "");
-  const [phone, setPhone] = useState(formData.contactPhone || "");
-  const [preferredContact, setPreferredContact] = useState(
-    formData.preferredContact || ""
-  );
-  const [address, setAddress] = useState(formData.address || "");
-  const [city, setCity] = useState(formData.city || "");
+  const [fullName, setFullName] = useState(formData.fullName || "");
   const [state, setState] = useState(formData.state || "");
-  const [zip, setZip] = useState(formData.zip || "");
-  const [agreeTerms, setAgreeTerms] = useState(formData.agreeTerms || false);
+  const [addressLine1, setAddressLine1] = useState(formData.addressLine1 || "");
+  const [addressLine2, setAddressLine2] = useState(formData.addressLine2 || "");
+  const [phoneNumber, setPhoneNumber] = useState(formData.phoneNumber || "");
 
   // Automatically update parent data on change
   const handleSubmit = () => {
     updateFormData({
-      contactName: name,
-      contactEmail: email,
-      contactPhone: phone,
-      preferredContact,
-      address,
-      city,
+      fullName,
       state,
-      zip,
-      agreeTerms,
+      addressLine1,
+      addressLine2,
+      phoneNumber,
     });
   };
 
   // Call handleSubmit whenever a field changes
   useEffect(() => {
     handleSubmit();
-  }, [
-    name,
-    email,
-    phone,
-    preferredContact,
-    address,
-    city,
-    state,
-    zip,
-    agreeTerms,
-  ]);
+  }, [fullName, state, addressLine1, addressLine2, phoneNumber]);
 
   return (
     <div className="space-y-5">
@@ -60,156 +40,87 @@ export function ContactForm({ formData, updateFormData }) {
       <div className="space-y-4">
         <div className="space-y-2">
           <label
-            htmlFor="name"
+            htmlFor="fullName"
             className="block text-sm font-medium text-gray-700"
           >
             Full Name
           </label>
           <input
-            id="name"
+            id="fullName"
             type="text"
             placeholder="Enter your full name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <label
-              htmlFor="phone"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Phone Number
-            </label>
-            <input
-              id="phone"
-              type="tel"
-              placeholder="Enter your phone number"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
-        </div>
-
         <div className="space-y-2">
           <label
-            htmlFor="preferred-contact"
+            htmlFor="addressLine1"
             className="block text-sm font-medium text-gray-700"
           >
-            Preferred Contact Method
-          </label>
-          <select
-            id="preferred-contact"
-            value={preferredContact}
-            onChange={(e) => setPreferredContact(e.target.value)}
-            className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white"
-          >
-            <option value="">Select preferred contact method</option>
-            <option value="email">Email</option>
-            <option value="phone">Phone</option>
-            <option value="both">Both Email and Phone</option>
-          </select>
-        </div>
-
-        <div className="space-y-2">
-          <label
-            htmlFor="address"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Address
+            Address Line 1
           </label>
           <input
-            id="address"
+            id="addressLine1"
             type="text"
-            placeholder="Enter your address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            placeholder="Enter your street address"
+            value={addressLine1}
+            onChange={(e) => setAddressLine1(e.target.value)}
+            className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label
-              htmlFor="city"
-              className="block text-sm font-medium text-gray-700"
-            >
-              City
-            </label>
-            <input
-              id="city"
-              type="text"
-              placeholder="Enter city"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
-          <div className="space-y-2">
-            <label
-              htmlFor="state"
-              className="block text-sm font-medium text-gray-700"
-            >
-              State
-            </label>
-            <input
-              id="state"
-              type="text"
-              placeholder="Enter state"
-              value={state}
-              onChange={(e) => setState(e.target.value)}
-              className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
-          </div>
         </div>
 
         <div className="space-y-2">
           <label
-            htmlFor="zip"
+            htmlFor="addressLine2"
             className="block text-sm font-medium text-gray-700"
           >
-            Zip Code
+            Address Line 2
           </label>
           <input
-            id="zip"
+            id="addressLine2"
             type="text"
-            placeholder="Enter zip code"
-            value={zip}
-            onChange={(e) => setZip(e.target.value)}
-            className="w-full p-3 pl-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            placeholder="Apartment, suite, unit, etc. (optional)"
+            value={addressLine2}
+            onChange={(e) => setAddressLine2(e.target.value)}
+            className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
           />
         </div>
 
-        <div className="flex items-center space-x-2 pt-2">
-          <input
-            id="terms"
-            type="checkbox"
-            checked={agreeTerms}
-            onChange={(e) => setAgreeTerms(e.target.checked)}
-            className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
-          />
-          <label htmlFor="terms" className="text-sm text-gray-700">
-            I agree to the terms and conditions and privacy policy
+        <div className="space-y-2">
+          <label
+            htmlFor="state"
+            className="block text-sm font-medium text-gray-700"
+          >
+            State
           </label>
+          <input
+            id="state"
+            type="text"
+            placeholder="Enter state"
+            value={state}
+            onChange={(e) => setState(e.target.value)}
+            className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label
+            htmlFor="phoneNumber"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Phone Number
+          </label>
+          <input
+            id="phoneNumber"
+            type="tel"
+            placeholder="Enter your phone number"
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            className="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
         </div>
       </div>
     </div>

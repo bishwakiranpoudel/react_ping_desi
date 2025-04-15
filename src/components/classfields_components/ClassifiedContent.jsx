@@ -90,17 +90,15 @@ export function ClassifiedContent({ onClose }) {
           formData.description || ""
         );
 
-        submissionFormData.append("contactName", formData.contactName || "");
-        submissionFormData.append("contactEmail", formData.contactEmail || "");
-        submissionFormData.append("contactPhone", formData.contactPhone || "");
-        submissionFormData.append(
-          "preferredContact",
-          formData.preferredContact || ""
-        );
-        submissionFormData.append("address", formData.address || "");
-        submissionFormData.append("city", formData.city || "");
+        submissionFormData.append("contactName", formData.fullName || "");
+
+        submissionFormData.append("contactPhone", formData.phoneNumber || "");
+
+        submissionFormData.append("addressline1", formData.addressLine1 || "");
+        submissionFormData.append("addressline2", formData.addressLine2 || "");
+
         submissionFormData.append("state", formData.state || "");
-        submissionFormData.append("zip", formData.zip || "");
+
         submissionFormData.append("geohash", geohash);
 
         console.log("submission form", submissionFormData);
