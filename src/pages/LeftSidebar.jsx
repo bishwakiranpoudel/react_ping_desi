@@ -1,10 +1,11 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import PromotionCardLight from "../components/home_components/PromotionCardLight";
 import LocationDisplay from "../components/home_components/Locations";
 
 function LeftSidebar({ viewportHeight }) {
   // Get current location to determine active route
   const location = useLocation();
+  const navigate = useNavigate();
   const currentPath = location.pathname;
 
   // Helper function to determine if a link is active
@@ -14,6 +15,8 @@ function LeftSidebar({ viewportHeight }) {
     }
     return path !== "/" && currentPath.startsWith(path);
   };
+
+  const isAuthenticated = !!localStorage.getItem("access_token");
 
   // Navigation items
   const navItems = [
@@ -71,22 +74,46 @@ function LeftSidebar({ viewportHeight }) {
         {/* Navigation Menu */}
         <nav className="flex-1 py-4">
           <div className="space-y-1 px-3">
-            {navItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center gap-3 text-sm py-2 px-3 rounded-md ${
-                  isActive(item.path) ? "bg-white" : "hover:bg-white"
-                }`}
-              >
-                <img
-                  src={item.icon || "/placeholder.svg"}
-                  alt={`${item.label} icon`}
-                  className="w-5 h-5"
-                />
-                <span>{item.label}</span>
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isProfile = item.path === "/profile";
+              return isProfile ? (
+                <button
+                  key={item.path}
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      navigate("/signin");
+                    } else {
+                      navigate("/profile");
+                    }
+                  }}
+                  className={`flex items-center gap-3 text-sm py-2 px-3 rounded-md w-full text-left ${
+                    isActive(item.path) ? "bg-white" : "hover:bg-white"
+                  }`}
+                >
+                  <img
+                    src={item.icon || "/placeholder.svg"}
+                    alt={`${item.label} icon`}
+                    className="w-5 h-5"
+                  />
+                  <span>{item.label}</span>
+                </button>
+              ) : (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center gap-3 text-sm py-2 px-3 rounded-md ${
+                    isActive(item.path) ? "bg-white" : "hover:bg-white"
+                  }`}
+                >
+                  <img
+                    src={item.icon || "/placeholder.svg"}
+                    alt={`${item.label} icon`}
+                    className="w-5 h-5"
+                  />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
           </div>
         </nav>
         <PromotionCardLight />
